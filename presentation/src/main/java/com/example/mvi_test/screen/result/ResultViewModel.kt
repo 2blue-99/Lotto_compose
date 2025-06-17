@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.example.mvi_test.screen.result.state.LottoData
 import com.example.mvi_test.screen.result.state.ResultEventState
 import com.example.mvi_test.screen.result.state.ResultUIState
+import com.example.mvi_test.util.CommonUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
@@ -24,17 +25,8 @@ class ResultViewModel @Inject constructor(
     }
 
     private fun makeLotto(){
-        val allList = mutableListOf<List<Int>>()
-        repeat(5){
-            val list = mutableListOf<Int>()
-            repeat(7){
-                val number = Random.nextInt(1, 46)
-                list.add(number)
-            }
-            list.sort()
-            allList.add(list)
-        }
-        resultUIState.value = ResultUIState.Success(LottoData(allList))
+        val lottoList = CommonUtil.makeLotto()
+        resultUIState.value = ResultUIState.Success(LottoData(lottoList))
     }
 
     private fun onRefresh(){

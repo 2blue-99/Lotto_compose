@@ -1,4 +1,4 @@
-package com.example.mvi_test
+package com.example.mvi_test.util
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
