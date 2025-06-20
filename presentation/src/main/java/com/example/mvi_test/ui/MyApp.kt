@@ -1,11 +1,15 @@
 package com.example.mvi_test.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,16 +17,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.mvi_test.navigation.NavigationItem
-import com.example.mvi_test.screen.random.navigation.homeScreen
+import com.example.mvi_test.screen.home.navigation.homeScreen
 import com.example.mvi_test.screen.random.navigation.navigateToRandom
-import com.example.mvi_test.screen.setting.navigation.navigateToSetting
 import com.example.mvi_test.screen.random.navigation.randomScreen
 import com.example.mvi_test.screen.recode.navigation.recodeScreen
+import com.example.mvi_test.screen.setting.navigation.navigateToSetting
 import com.example.mvi_test.screen.setting.navigation.settingScreen
 
 @Composable
@@ -51,22 +57,38 @@ fun BottomNavigationBar(
     val currentRoute = navBackStackEntry?.destination?.route
     val destination: List<NavigationItem> = NavigationItem.toList()
 
-    NavigationBar(
-        contentColor = Color.DarkGray,
-        containerColor = Color.LightGray,
-
+    BottomNavigation (
+        modifier = Modifier.fillMaxWidth().padding(WindowInsets.navigationBars.asPaddingValues()),
+        backgroundColor = Color.White,
+        contentColor = Color(0xFF3F414E)
     ) {
-        destination.forEach { item ->
+        destination.forEachIndexed { index, item ->
             val isSelected = currentRoute == item.route
-            NavigationBarItem(
+            BottomNavigationItem(
+                modifier = Modifier.height(62.dp),
                 selected = isSelected,
-                onClick = { navController.navigate(item.route) },
-                icon = { Icon(imageVector = if(isSelected) item.fillIcon else item.outLineIcon, contentDescription = "test") },
-                label = { Text(stringResource(item.title)) },
-                colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = Color.Transparent
-                )
-
+                onClick = {
+                    navController.navigate(item.route) {
+                        launchSingleTop = true // 하나만 생성
+                        restoreState = true // 버튼 재클릭 시 유지
+                    }
+                },
+                icon = {
+                    Icon(
+                        imageVector = if(isSelected) item.fillIcon else item.outLineIcon,
+                        contentDescription = "test"
+                    )
+                },
+                label = {
+                    Text(
+                        text = stringResource(item.title),
+                        fontSize = 12.sp
+                    )
+                },
+//                colors = NavigationBarItemDefaults.colors(
+//                    indicatorColor = Color.Transparent
+//                ),
+                alwaysShowLabel = false
             )
         }
     }

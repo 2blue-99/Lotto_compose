@@ -1,12 +1,10 @@
-package com.example.mvi_test.screen.random.navigation
+package com.example.mvi_test.screen.home.navigation
 
-import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.example.mvi_test.screen.home.screen.HomeScreen
-import timber.log.Timber
 
 const val homeRoute = "home"
 fun NavController.navigateToHome(navOptions: NavOptions? = null){

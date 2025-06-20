@@ -57,15 +57,21 @@ dependencies {
     implementation(libs.hilt)
     kapt (libs.dagger.hilt.compiler)
     kapt (libs.androidx.hilt.compiler)
+
     // Hilt + Compose hiltViewModel()
     implementation(libs.androidx.hilt.navigation.compose)
+
     // ViewModel + Compose (기본 Compose 상태 관리용)
 //    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
 
     // Compose Navigation
     implementation(libs.androidx.navigation.compose)
 
+    // Log
     implementation(libs.timber)
+
+    // Material
+    implementation("androidx.compose.material:material:1.8.3")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

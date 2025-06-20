@@ -3,15 +3,12 @@ package com.example.mvi_test.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.mvi_test.R
-import com.example.mvi_test.screen.random.navigation.homeRoute
+import com.example.mvi_test.screen.home.navigation.homeRoute
 import com.example.mvi_test.screen.recode.navigation.recodeRoute
-import com.example.mvi_test.screen.setting.navigation.settingRoute
 
 
 sealed class NavigationItem(
