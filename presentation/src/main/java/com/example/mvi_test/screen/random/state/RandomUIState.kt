@@ -1,4 +1,4 @@
-package com.example.mvi_test.screen.result.state
+package com.example.mvi_test.screen.random.state
 
 sealed interface ResultUIState {
 

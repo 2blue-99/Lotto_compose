@@ -1,4 +1,4 @@
-package com.example.mvi_test.screen.result
+package com.example.mvi_test.screen.random.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,13 +14,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.mvi_test.screen.result.state.ResultEventState
-import com.example.mvi_test.screen.result.state.ResultUIState
+import com.example.mvi_test.screen.random.RandomViewModel
+import com.example.mvi_test.screen.random.state.RandomEventState
+import com.example.mvi_test.screen.random.state.ResultUIState
 
 @Composable
-fun ResultScreen(
+fun RandomScreen(
+    popBackStack: () -> Unit = {},
     modifier: Modifier = Modifier,
-    viewModel: ResultViewModel = hiltViewModel()
+    viewModel: RandomViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.resultUIState.collectAsStateWithLifecycle()
 
@@ -37,9 +39,8 @@ fun ResultScreen(
         when(val state = uiState.value){
             is ResultUIState.Loading -> {
                 item {
-//                    Text("로딩중")
                     Button(
-                        onClick = { viewModel.makeEvent(ResultEventState.OnMakeClick("")) }
+                        onClick = { viewModel.makeEvent(RandomEventState.OnMakeClick("")) }
                     ) {
                         Text("번호 추첨하기")
                     }
@@ -52,7 +53,7 @@ fun ResultScreen(
                 }
                 item {
                     Button(
-                        onClick = { viewModel.makeEvent(ResultEventState.OnRefresh) }
+                        onClick = { viewModel.makeEvent(RandomEventState.OnRefresh) }
                     ) {
                         Text("확인")
                     }
@@ -65,6 +66,6 @@ fun ResultScreen(
 
 @Preview
 @Composable
-private fun ResultScreenPreview() {
-    ResultScreen()
+private fun RandomScreenPreview() {
+    RandomScreen()
 }
