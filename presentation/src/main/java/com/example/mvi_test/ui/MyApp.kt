@@ -1,5 +1,8 @@
 package com.example.mvi_test.ui
 
+import android.app.Activity
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -14,8 +17,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -23,6 +30,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.mvi_test.R
 import com.example.mvi_test.navigation.NavigationItem
 import com.example.mvi_test.screen.home.navigation.homeScreen
 import com.example.mvi_test.screen.random.navigation.navigateToRandom
@@ -34,6 +42,9 @@ import com.example.mvi_test.screen.setting.navigation.settingScreen
 @Composable
 fun MyApp() {
     val navController = rememberNavController()
+
+    BackOnPressed(navController)
+
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController)
@@ -115,3 +126,21 @@ fun NavHostContainer(
     }
 }
 
+@Composable
+fun BackOnPressed(
+    navController: NavHostController
+) {
+    val context = LocalContext.current
+    var backPressedState by remember { mutableStateOf(true) }
+    var backPressedTime = 0L
+    val backNoticeMessage = stringResource(R.string.app_back_notice)
+    BackHandler(enabled = backPressedState) {
+        if (System.currentTimeMillis() - backPressedTime <= 1000L) {
+            (context as Activity).finish()
+        } else {
+            backPressedState = true
+            Toast.makeText(context, backNoticeMessage, Toast.LENGTH_SHORT).show()
+            backPressedTime = System.currentTimeMillis()
+        }
+    }
+}

@@ -25,25 +25,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MVI_TestTheme {
-                BackOnPressed()
                 MyApp()
-            }
-        }
-    }
-
-    @Composable
-    fun BackOnPressed() {
-        val context = LocalContext.current
-        var backPressedState by remember { mutableStateOf(true) }
-        var backPressedTime = 0L
-        val backNoticeMessage = stringResource(R.string.app_back_notice)
-        BackHandler(enabled = backPressedState) {
-            if (System.currentTimeMillis() - backPressedTime <= 1000L) {
-                (context as Activity).finish()
-            } else {
-                backPressedState = true
-                Toast.makeText(context, backNoticeMessage, Toast.LENGTH_SHORT).show()
-                backPressedTime = System.currentTimeMillis()
             }
         }
     }
