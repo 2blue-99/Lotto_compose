@@ -18,9 +18,9 @@ sealed class NavigationItem(
     val route: String
 ) {
     data object Home: NavigationItem(R.string.home, Icons.Outlined.Home, Icons.Filled.Home, homeRoute)
-//    data object Random: NavigationItem(R.string.result, Icons.Outlined.PlayArrow, Icons.Filled.PlayArrow, RANDOM)
     data object Recode: NavigationItem(R.string.recode, Icons.Outlined.Create, Icons.Filled.Create, recodeRoute)
 //    data object Setting: NavigationItem(R.string.setting, Icons.Outlined.Settings, Icons.Filled.Settings, settingRoute)
+//    data object Random: NavigationItem(R.string.result, Icons.Outlined.PlayArrow, Icons.Filled.PlayArrow, RANDOM)
 
 
 
