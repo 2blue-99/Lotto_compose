@@ -15,13 +15,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.mvi_test.screen.home.HomeViewModel
 import timber.log.Timber
 
 @Composable
 fun HomeScreen(
     navigateToRandom: () -> Unit = {},
     navigateToSetting: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel = hiltViewModel()
 ){
     Timber.d("homeScreen")
     Column(

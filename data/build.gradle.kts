@@ -2,6 +2,7 @@ plugins {
     kotlin("kapt")
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -34,7 +35,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":domain"))
+    implementation(projects.domain)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -44,6 +45,11 @@ dependencies {
     implementation(libs.hilt)
     kapt (libs.dagger.hilt.compiler)
     kapt (libs.androidx.hilt.compiler)
+
+    /* room */
+    implementation(libs.room.runtime)
+    kapt (libs.room.compiler)
+    implementation (libs.room.ktx) // Room Flow
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
