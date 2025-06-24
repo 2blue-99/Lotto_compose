@@ -1,6 +1,6 @@
-package com.example.data.repository.di
+package com.example.data.repo.di
 
-import com.example.data.repository.LottoRepositoryImpl
+import com.example.data.repo.LottoRepositoryImpl
 import com.example.domain.repository.LottoRepository
 import dagger.Binds
 import dagger.Module

@@ -15,17 +15,20 @@ class HomeViewModel @Inject constructor(
     private val userDataStore: UserDataStore
 ): BaseViewModel() {
     init {
-        ioScope.launch {
-            Timber.d("start")
-            lottoRepo.getLotto().collect {
-                Timber.d("lotto : $it")
-            }
+        modelScope.launch {
+            lottoRepo.requestLotto()
         }
-        ioScope.launch {
-            userDataStore.userNameFlow.collect {
-                Timber.d("userName : $it")
-            }
-        }
+//        ioScope.launch {
+//            Timber.d("start")
+//            lottoRepo.getLotto().collect {
+//                Timber.d("lotto : $it")
+//            }
+//        }
+//        ioScope.launch {
+//            userDataStore.userNameFlow.collect {
+//                Timber.d("userName : $it")
+//            }
+//        }
     }
 
     fun addLotto(){

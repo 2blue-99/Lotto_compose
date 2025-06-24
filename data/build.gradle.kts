@@ -54,6 +54,16 @@ dependencies {
     /* data store */
     implementation(libs.androidx.dataStore.preferences)
 
+    /* retrofit */
+    implementation (libs.retrofit)
+    implementation (libs.retrofit.converter.moshi)
+    implementation (libs.converter.gson)
+    implementation (libs.okhttp)
+    implementation (libs.logging.interceptor)
+
+    // Log
+    implementation(libs.timber)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

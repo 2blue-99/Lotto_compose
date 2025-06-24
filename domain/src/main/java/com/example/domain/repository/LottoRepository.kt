@@ -7,4 +7,6 @@ interface LottoRepository {
     fun getLotto(): Flow<List<Lotto>>
 
     suspend fun updateLotto(data: Lotto)
+
+    suspend fun requestLotto()
 }
