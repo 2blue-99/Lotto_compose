@@ -1,6 +1,6 @@
 package com.example.data.repository
 
-import com.example.data.local.dao.LottoDao
+import com.example.data.room.dao.LottoDao
 import com.example.data.util.Mapper.toEntity
 import com.example.domain.model.Lotto
 import com.example.domain.repository.LottoRepository

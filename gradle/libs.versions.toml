@@ -18,6 +18,7 @@ hilt = "2.51.1"
 hiltCompiler = "1.2.0"
 navigationCompose = "2.9.0"
 room = "2.7.0"
+androidxDataStore = "1.1.7"
 timber = "5.0.1"
 
 
@@ -52,6 +53,9 @@ androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref =
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+
+#dataStore
+androidx-dataStore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidxDataStore" }
 
 #log
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }

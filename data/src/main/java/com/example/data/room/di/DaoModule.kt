@@ -1,7 +1,7 @@
-package com.example.data.local.di
+package com.example.data.room.di
 
-import com.example.data.local.dao.LottoDao
-import com.example.data.local.db.AppDatabase
+import com.example.data.room.dao.LottoDao
+import com.example.data.room.db.AppDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

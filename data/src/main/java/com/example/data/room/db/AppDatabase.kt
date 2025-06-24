@@ -1,9 +1,9 @@
-package com.example.data.local.db
+package com.example.data.room.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.data.local.dao.LottoDao
-import com.example.data.local.entity.LottoEntity
+import com.example.data.room.dao.LottoDao
+import com.example.data.room.entity.LottoEntity
 
 @Database(
     entities = [LottoEntity::class],
