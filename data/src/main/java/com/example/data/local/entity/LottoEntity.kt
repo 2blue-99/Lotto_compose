@@ -2,7 +2,7 @@ package com.example.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.domain.model.Lotto
+import com.example.domain.model.LottoRecode
 
 
 @Entity(tableName = "lotto")
@@ -11,5 +11,5 @@ data class LottoEntity(
     val id: Int,
     val test: String
 ){
-    fun toDomain(): Lotto = Lotto(id, test)
+    fun toDomain(): LottoRecode = LottoRecode(1,"")
 }

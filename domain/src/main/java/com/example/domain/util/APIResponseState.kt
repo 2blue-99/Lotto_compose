@@ -1,6 +1,4 @@
-package com.example.data.util
-
-import com.example.domain.util.ExceptionType
+package com.example.domain.util
 
 sealed class APIResponseState<T> {
 

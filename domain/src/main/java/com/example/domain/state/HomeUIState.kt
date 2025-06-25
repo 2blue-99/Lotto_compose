@@ -1,5 +1,5 @@
 package com.example.domain.state
 
-data class HomeUIState(
+data class HomeUIStates(
     val test: String = ""
 )

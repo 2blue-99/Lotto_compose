@@ -1,5 +1,6 @@
 package com.example.data.remote.model
 
+import com.example.domain.model.Lotto
 import com.google.gson.annotations.SerializedName
 
 data class LottoResponse(
@@ -31,4 +32,22 @@ data class LottoResponse(
     val drwtNo5: Int,
     val drwtNo6: Int,
     val bnusNo: Int,
-)
+) {
+    fun toDomain(): Lotto {
+        return Lotto(
+            drawNumber,
+            drawDate,
+            totalSellAmount,
+            firstWinTotalAmount,
+            firstWinCount,
+            firstWinPerAmount,
+            drwtNo1,
+            drwtNo2,
+            drwtNo3,
+            drwtNo4,
+            drwtNo5,
+            drwtNo6,
+            bnusNo
+        )
+    }
+}
