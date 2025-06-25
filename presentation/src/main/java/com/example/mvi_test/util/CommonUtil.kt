@@ -16,4 +16,6 @@ object CommonUtil {
         }
         return allList
     }
+
+    fun String.stringToLong() = this.map { it.code }.sum().toLong()
 }

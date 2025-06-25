@@ -21,9 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.runBlocking
 import kotlin.math.roundToInt
-import kotlin.random.Random
 
 @Composable
 fun CommonAdBanner(modifier: Modifier = Modifier) {
@@ -68,69 +66,15 @@ private fun CommonAdBannerPreview() {
     CommonAdBanner()
 }
 
-fun main() = runBlocking {
-
-    (1..4).shuffled()
-
-    val timeComponent = System.currentTimeMillis().toString().toList().shuffled().joinToString("")
-    val stringComponent = "Lucky".sumOf { it.code }  // ASCII 합
-    val seed = timeComponent + stringComponent
-    val random = Random(seed)
-    val number = random.nextInt(1, 46)
-
-
-//    val random1 = Random(100)
-//    val random2 = Random(101)
-//
-//    val array1 = Array(46){0}
-//    val array2 = Array(46){0}
-//
+//fun main() = runBlocking {
+//    val word = "Lucky".stringToLong()
+//    val random = Random(UniqueSeed.makeUniqueSeed(word))
 //    var count = 0
-//
-//    while(count < 1000000){
-//        val number = random1.nextInt(1,46)
-//        array1[number]+=1
-//        count++
-//    }
-//
-//    count = 0
-//
-//    while(count < 1000000){
-//        val number = random1.nextInt(1,46)
-//        array2[number]+=1
-//        count++
-//    }
-
-//    println(array1.contentToString())
-//    println(array2.contentToString())
-
-
-
-
-
-//    val input = "Lucky".map { it.code }.sum()
-//
-//    val array = Array(46){0}
-//    var count = 0
-//
-//    while(count < 100000000){
-//        val random = Random(System.currentTimeMillis() + input)
+//    var array = Array(46){0}
+//    while (count < 1000000000){
 //        val number = random.nextInt(1,46)
-//        array[number] += 1
+//        array[number]+=1
 //        count++
-//        println(count)
 //    }
-//
 //    println(array.contentToString())
-
-
-//    println(random.nextInt(1..45))
-//    println(random.nextInt(1..45))
-//    println(random.nextInt(1..45))
-//    println(random.nextInt(1..45))
-//    println((1..45).shuffled(random).take(6).sorted())
-//    println((1..45).shuffled(random).take(6).sorted())
-//    println((1..45).shuffled(random).take(6).sorted())
-//    println((1..45).shuffled(random).take(6).sorted())
-//    println((1..45).shuffled(random).take(6).sorted())
-}
+//}
