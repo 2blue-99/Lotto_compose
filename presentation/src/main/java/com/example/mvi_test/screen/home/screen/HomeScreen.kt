@@ -2,21 +2,26 @@ package com.example.mvi_test.screen.home.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mvi_test.screen.home.HomeViewModel
+import com.example.mvi_test.ui.common.CommonAdBanner
 import timber.log.Timber
 
 @Composable
@@ -27,23 +32,33 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ){
     Timber.d("homeScreen")
-    Column(
+    Surface(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        IconButton(
-            onClick = navigateToSetting
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .background(Color.White),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Icon(imageVector = Icons.Default.Settings, null)
-        }
+            IconButton(
+                onClick = navigateToSetting
+            ) {
+                Icon(imageVector = Icons.Default.Settings, null)
+            }
 
-        Button(
-            onClick = navigateToRandom
+            Button(
+                onClick = navigateToRandom
+            ) {
+                Text("번호 추첨하기")
+            }
+        }
+        Box(
+            contentAlignment = Alignment.BottomCenter
         ) {
-            Text("번호 추첨하기")
+            CommonAdBanner()
         }
     }
 }

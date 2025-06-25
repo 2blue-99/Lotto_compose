@@ -46,9 +46,9 @@ fun MyApp() {
     BackOnPressed(navController)
 
     Scaffold(
-        bottomBar = {
-            BottomNavigationBar(navController)
-        }
+//        bottomBar = {
+//            BottomNavigationBar(navController)
+//        }
     ) { padding ->
         Box(
             modifier = Modifier.padding(padding)

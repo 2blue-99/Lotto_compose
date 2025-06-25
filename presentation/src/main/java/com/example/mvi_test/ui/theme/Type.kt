@@ -2,9 +2,16 @@ package com.example.mvi_test.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.mvi_test.R
+
+val pretendard = FontFamily(
+    Font(R.font.pretendard_regular)
+)
+
 
 // Set of Material typography styles to start with
 val Typography = Typography(
@@ -32,3 +39,18 @@ val Typography = Typography(
     )
     */
 )
+
+object CommonStyle {
+    val text8 = TextStyle(fontFamily = pretendard, fontSize = 8.sp,)
+    val text10 = TextStyle(fontFamily = pretendard, fontSize = 10.sp,)
+    val text12 = TextStyle(fontFamily = pretendard, fontSize = 12.sp)
+    val text14 = TextStyle(fontFamily = pretendard, fontSize = 14.sp)
+    val text16 = TextStyle(fontFamily = pretendard, fontSize = 16.sp)
+    val text18 = TextStyle(fontFamily = pretendard, fontSize = 18.sp)
+    val text20 = TextStyle(fontFamily = pretendard, fontSize = 20.sp)
+    val text22 = TextStyle(fontFamily = pretendard, fontSize = 22.sp)
+    val text24 = TextStyle(fontFamily = pretendard, fontSize = 24.sp)
+    val text30 = TextStyle(fontFamily = pretendard, fontSize = 30.sp)
+    val text40 = TextStyle(fontFamily = pretendard, fontSize = 40.sp)
+    val text50 = TextStyle(fontFamily = pretendard, fontSize = 50.sp)
+}
