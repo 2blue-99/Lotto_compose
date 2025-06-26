@@ -31,11 +31,11 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun CommonExpendableBox(
-    modifier: Modifier = Modifier,
     shrinkColor: List<Color> = listOf(Color(0xFF227DBD), Color(0xFF528B35)),
     expandColor: List<Color> = listOf(Color(0xFFFF8A00), Color(0xFFFFD500)),
     shrinkContent: @Composable () -> Unit,
-    expandContent: @Composable () -> Unit
+    expandContent: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
     val alpha by animateFloatAsState(

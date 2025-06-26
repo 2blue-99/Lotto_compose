@@ -1,22 +1,21 @@
 package com.example.mvi_test.screen.random.screen
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,10 +24,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,6 +37,7 @@ import com.example.mvi_test.screen.random.RandomViewModel
 import com.example.mvi_test.screen.random.state.RandomActionState
 import com.example.mvi_test.screen.random.state.RandomUIState
 import com.example.mvi_test.ui.common.CommonExpendableBox
+import com.example.mvi_test.ui.common.CommonListItem
 import com.example.mvi_test.ui.theme.CommonStyle
 
 @Composable
@@ -84,13 +85,18 @@ fun RandomScreen(
                         )
                     },
                     expandContent = {
-                            Text(
-                                text = "내가 보여요",
-                                style = CommonStyle.text30
-                            )
+                        Text(
+                            text = "내가 보여요",
+                            style = CommonStyle.text30
+                        )
                     }
                 )
             }
+        }
+        item {
+            TextFieldContent(
+                modifier = Modifier.padding(10.dp)
+            )
         }
 //        when(val state = uiState.value){
 //            is RandomUIState.Loading -> {
@@ -126,4 +132,80 @@ private fun RandomScreenPreview() {
     RandomScreen(
         uiState = RandomUIState.Loading
     )
+}
+
+@Composable
+fun TextFieldContent(
+    searchList: List<String> = listOf("aaaaaaa","bbbbbbb","cccccccc","ddddddd"),
+    modifier: Modifier = Modifier
+) {
+    var text by remember { mutableStateOf("") }
+    var expand by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
+        Row(
+            modifier = modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            OutlinedTextField(
+                modifier = Modifier
+                    .weight(7f)
+                    .onFocusEvent {
+                        expand = it.isFocused == true
+                    },
+                value = text,
+                onValueChange = { text = it },
+                label = { Text("test test") },
+                placeholder = { Text("hint") },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                        keyboardController?.hide()
+                    }
+                )
+            )
+
+            Button(
+                modifier = Modifier.weight(3f),
+                onClick = {}
+            ) {
+                Text("추첨하기")
+            }
+        }
+
+        AnimatedVisibility(expand) {
+            Column(
+                modifier = modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // TODO 검색 개수가 5개 미만일 경우 대응 필요
+                searchList.forEach { title ->
+                    CommonListItem(
+                        title = title,
+                        onClick = {
+                            text = it
+                            expand = false
+                            focusManager.clearFocus()
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun TextFieldBoxPreview() {
+    TextFieldContent()
 }
