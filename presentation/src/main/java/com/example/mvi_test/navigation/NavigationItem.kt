@@ -8,6 +8,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.mvi_test.R
 import com.example.mvi_test.screen.home.navigation.homeRoute
+import com.example.mvi_test.screen.random.navigation.randomRoute
 import com.example.mvi_test.screen.recode.navigation.recodeRoute
 
 
@@ -20,7 +21,7 @@ sealed class NavigationItem(
     data object Home: NavigationItem(R.string.home, Icons.Outlined.Home, Icons.Filled.Home, homeRoute)
     data object Recode: NavigationItem(R.string.recode, Icons.Outlined.Create, Icons.Filled.Create, recodeRoute)
 //    data object Setting: NavigationItem(R.string.setting, Icons.Outlined.Settings, Icons.Filled.Settings, settingRoute)
-//    data object Random: NavigationItem(R.string.result, Icons.Outlined.PlayArrow, Icons.Filled.PlayArrow, RANDOM)
+    data object Random: NavigationItem(R.string.random, Icons.Outlined.Home, Icons.Filled.Home, randomRoute)
 
 
 

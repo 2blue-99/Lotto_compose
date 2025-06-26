@@ -1,14 +1,14 @@
 package com.example.mvi_test.screen.random.state
 
-sealed interface ResultUIState {
+sealed interface RandomUIState {
 
-    data object Loading : ResultUIState
+    data object Loading : RandomUIState
 
-    data object Fail : ResultUIState
+    data object Fail : RandomUIState
 
     data class Success(
         val result: LottoData
-    ) : ResultUIState
+    ) : RandomUIState
 }
 
 data class LottoData(
