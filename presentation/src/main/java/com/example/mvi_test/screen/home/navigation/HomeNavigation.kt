@@ -13,6 +13,7 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null){
 
 fun NavGraphBuilder.homeScreen(
     navigateToRandom: () -> Unit,
+    navigateToRecode: () -> Unit,
     navigateToSetting: () -> Unit
 ){
     composable(
@@ -22,6 +23,7 @@ fun NavGraphBuilder.homeScreen(
     ) {
         HomeScreen(
             navigateToRandom,
+            navigateToRecode,
             navigateToSetting
         )
     }

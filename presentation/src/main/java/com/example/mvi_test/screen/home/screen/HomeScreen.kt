@@ -1,8 +1,7 @@
 package com.example.mvi_test.screen.home.screen
 
-import android.graphics.drawable.Icon
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,13 +11,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Menu
@@ -37,19 +36,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mvi_test.screen.home.HomeViewModel
 import com.example.mvi_test.screen.home.state.HomeActionState
 import com.example.mvi_test.screen.home.state.HomeUIState
 import com.example.mvi_test.ui.common.CommonAdBanner
-import com.example.mvi_test.ui.common.CommonTopBar
+import com.example.mvi_test.ui.common.CommonLottoContent
+import com.example.mvi_test.ui.common.VerticalSpacer
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.PrimaryColor
 import com.example.mvi_test.ui.theme.SubColor
@@ -59,6 +63,7 @@ import kotlin.math.absoluteValue
 @Composable
 fun HomeScreen(
     navigateToRandom: () -> Unit = {},
+    navigateToRecode: () -> Unit = {},
     navigateToSetting: () -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
@@ -67,6 +72,7 @@ fun HomeScreen(
 
     HomeScreen(
         navigateToRandom = navigateToRandom,
+        navigateToRecode = navigateToRecode,
         navigateToSetting = navigateToSetting,
         uiState = uiState,
         intentHandler = viewModel::intentHandler,
@@ -77,6 +83,7 @@ fun HomeScreen(
 @Composable
 fun HomeScreen(
     navigateToRandom: () -> Unit = {},
+    navigateToRecode: () -> Unit = {},
     navigateToSetting: () -> Unit = {},
     uiState: HomeUIState = HomeUIState.Loading,
     intentHandler: (HomeActionState) -> Unit = {},
@@ -89,21 +96,27 @@ fun HomeScreen(
     }
     Surface(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxSize(),
     ) {
 
         Column(
             modifier = modifier
-                .fillMaxSize()
-                .background(Color.White),
-            verticalArrangement = Arrangement.spacedBy(30.dp, Alignment.Top),
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             MainTopBar()
 
-            LottoPager()
+            VerticalSpacer(10.dp)
 
-            ButtonLayout(modifier = Modifier.padding(horizontal = 30.dp))
+            LottoPager(modifier = Modifier.zIndex(1f))
+
+            LottoInfo(modifier = Modifier.offset(y = (-20).dp))
+
+            ButtonLayout(
+                navigateToRandom = navigateToRandom,
+                navigateToRecode = navigateToRecode
+            )
         }
         Box(
             contentAlignment = Alignment.BottomCenter
@@ -131,11 +144,12 @@ private fun MainTopBar(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .height(66.dp)
-            .background(Color.White)
+            .height(66.dp),
+        color = Color.Transparent,
     ) {
         Surface(
-            modifier = Modifier.padding(horizontal = 20.dp)
+            modifier = Modifier.padding(horizontal = 20.dp),
+            color = Color.Transparent,
         ) {
             Box(
                 contentAlignment = Alignment.CenterStart
@@ -168,11 +182,11 @@ private fun MainTopBar(
                 }
             }
         }
-        Box(
-            contentAlignment = Alignment.BottomCenter
-        ) {
-            HorizontalDivider()
-        }
+//        Box(
+//            contentAlignment = Alignment.BottomCenter
+//        ) {
+//            HorizontalDivider()
+//        }
     }
 }
 
@@ -186,19 +200,20 @@ private fun MainTopBarPreview() {
 fun LottoPager(modifier: Modifier = Modifier) {
 
     val pagerState = rememberPagerState(pageCount = {1000})
-
-    HorizontalPager(
-        modifier = modifier.fillMaxWidth(),
-        state = pagerState,
-        contentPadding = PaddingValues(horizontal = 36.dp)
-    ) { page ->
-        Card(
-            colors =  CardDefaults.cardColors(containerColor = Color.LightGray),
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .fillMaxWidth()
-                .height(200.dp)
-                .graphicsLayer {
+    Column(
+        modifier = modifier.fillMaxWidth()
+    ) {
+//        TextB
+//
+//        Spacer(modifier = Modifier.height(4.dp))
+//
+        HorizontalPager(
+            modifier = Modifier.fillMaxWidth(),
+            state = pagerState,
+            contentPadding = PaddingValues(horizontal = 36.dp)
+        ) { page ->
+            LottoCardItem(
+                modifier = Modifier.graphicsLayer {
                     val pageOffset = (
                             (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
                             ).absoluteValue
@@ -213,8 +228,7 @@ fun LottoPager(modifier: Modifier = Modifier) {
                         fraction = 1f - pageOffset.coerceIn(0f, 1f)
                     )
                 }
-        ) {
-            Text("Hi")
+            )
         }
     }
 
@@ -228,7 +242,51 @@ private fun LottoPagerPreview() {
 
 @Composable
 fun LottoCardItem(modifier: Modifier = Modifier) {
-    
+    val gradient = Brush.linearGradient(colors = listOf(PrimaryColor, SubColor))
+    Card(
+        elevation = CardDefaults.cardElevation(2.dp),
+        modifier = modifier
+            .padding(horizontal = 8.dp)
+            .fillMaxWidth()
+            .clickable {  }
+    ) {
+        Box(
+            modifier = Modifier
+                .background(gradient)
+                .padding(20.dp),
+        ){
+            Column(
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = "2025.06.27",
+                    style = CommonStyle.text12,
+                    color = Color.White
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "1170회",
+                    style = CommonStyle.text30Bold,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Spacer(modifier = Modifier.height(30.dp))
+                CommonLottoContent()
+            }
+//            Box(
+//                modifier = Modifier.align(Alignment.TopEnd), // 우상단에 정렬
+//            ) {
+//                Text(
+//                    text = "1억",
+//                    style = CommonStyle.text30Bold,
+//                    fontWeight = FontWeight.Bold,
+//                    color = Color.White,
+//                )
+//            }
+
+        }
+    }
 }
 
 @Preview
@@ -238,29 +296,113 @@ private fun LottoCardItemPreview() {
 }
 
 @Composable
-fun ButtonLayout(modifier: Modifier = Modifier) {
+fun LottoInfo(modifier: Modifier = Modifier) {
+    val gradient = Brush.verticalGradient(colors = listOf(PrimaryColor, Color.White))
+
+    Surface (
+        modifier = modifier
+            .padding(horizontal = 30.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(10.dp),
+        color = Color.White,
+        tonalElevation = 0.dp,
+        shadowElevation = 3.dp
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+//                .background(gradient)
+                .padding(horizontal = 20.dp, vertical = 10.dp)
+                .padding(top = 20.dp)
+        ) {
+            LottoInfoItem(
+                titleText = "총 판매금액",
+                valueText = "1,117억원"
+            )
+            HorizontalDivider(color = Color.LightGray)
+            LottoInfoItem(
+                titleText = "1등 총 당첨금",
+                valueText = "1,117억원"
+            )
+            HorizontalDivider(color = Color.LightGray)
+            LottoInfoItem(
+                titleText = "1등 당첨자 수",
+                valueText = "16명"
+            )
+            HorizontalDivider(color = Color.LightGray)
+            LottoInfoItem(
+                titleText = "1등 1명당 당첨금",
+                valueText = "1,117억원"
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun LottoInfoPreview() {
+    LottoInfo()
+}
+
+@Composable
+fun LottoInfoItem(
+    titleText: String = "Title",
+    valueText: String = "Value",
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier.fillMaxWidth().padding(vertical = 10.dp)
+    ) {
+        Text(
+            text = titleText,
+            style = CommonStyle.text12,
+            modifier = Modifier.weight(1f),
+        )
+        Text(
+            text = valueText,
+            style = CommonStyle.text12,
+            modifier = Modifier.weight(1f),
+            textAlign = TextAlign.End
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun LottoInfoItemPreview() {
+    LottoInfoItem()
+}
+
+
+
+@Composable
+fun ButtonLayout(
+    navigateToRandom: () -> Unit = {},
+    navigateToRecode: () -> Unit = {},
+    modifier: Modifier = Modifier
+) {
     Column(
-        modifier = modifier,
+        modifier = Modifier.padding(horizontal = 30.dp)
     ) {
         Row {
             HomeIconButton(
                 containerColor = SubColor,
                 outlineColor = Color.DarkGray,
                 icon = Icons.Default.Settings,
-                title = "랜덤 로또 추첨",
-                description = "행운",
+                titleText = "랜덤 로또 추첨",
+                descriptionText = "행운",
                 modifier = Modifier.weight(1f),
-                onClick = {},
+                onClick = navigateToRandom,
             )
             Spacer(modifier = Modifier.width(16.dp))
             HomeIconButton(
                 containerColor = Color.LightGray,
                 outlineColor = Color.DarkGray,
                 icon = Icons.Default.Create,
-                title = "추첨 기록",
-                description = "",
+                titleText = "추첨 기록",
+                descriptionText = "",
                 modifier = Modifier.weight(1f),
-                onClick = {},
+                onClick = navigateToRecode,
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -269,8 +411,8 @@ fun ButtonLayout(modifier: Modifier = Modifier) {
                 containerColor = PrimaryColor,
                 outlineColor = Color.DarkGray,
                 icon = Icons.Default.Menu,
-                title = "통계 로또 추첨",
-                description = "데이터 기반",
+                titleText = "통계 로또 추첨",
+                descriptionText = "데이터 기반",
                 modifier = Modifier.weight(1f),
                 onClick = {},
             )
@@ -279,8 +421,8 @@ fun ButtonLayout(modifier: Modifier = Modifier) {
                 containerColor = Color.LightGray,
                 outlineColor = Color.DarkGray,
                 icon = Icons.Default.Star,
-                title = "복권 명당",
-                description = "",
+                titleText = "복권 명당",
+                descriptionText = "",
                 modifier = Modifier.weight(1f),
                 onClick = {},
             )
@@ -299,8 +441,8 @@ private fun HomeIconButton(
     containerColor: Color = Color.Gray,
     outlineColor: Color = Color.DarkGray,
     icon: ImageVector = Icons.Default.Settings,
-    title: String?,
-    description: String?,
+    titleText: String?,
+    descriptionText: String?,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
@@ -308,30 +450,31 @@ private fun HomeIconButton(
         onClick = onClick,
         shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.buttonColors(containerColor = containerColor),
-        border = BorderStroke(0.6.dp, outlineColor),
+        elevation = ButtonDefaults.buttonElevation(3.dp),
+//        border = BorderStroke(0.6.dp, outlineColor),
         modifier = modifier
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(vertical = 30.dp)
+            modifier = Modifier.padding(vertical = 24.dp)
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = "추첨 기록"
             )
-            title?.let {
+            titleText?.let {
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "랜덤 로또 추첨",
+                    text = titleText,
                     style = CommonStyle.text18Bold,
                     color = Color.White
                 )
             }
-            description?.let {
+            descriptionText?.let {
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "행운",
+                    text = descriptionText,
                     style = CommonStyle.text14,
                     color = Color.White
                 )
@@ -344,7 +487,7 @@ private fun HomeIconButton(
 @Composable
 private fun CommonIconButtonPreview() {
     HomeIconButton(
-        title = "title",
-        description = "description"
+        titleText = "title",
+        descriptionText = "description"
     )
 }

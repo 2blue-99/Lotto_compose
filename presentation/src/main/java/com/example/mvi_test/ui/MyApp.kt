@@ -35,6 +35,7 @@ import com.example.mvi_test.navigation.NavigationItem
 import com.example.mvi_test.screen.home.navigation.homeScreen
 import com.example.mvi_test.screen.random.navigation.navigateToRandom
 import com.example.mvi_test.screen.random.navigation.randomScreen
+import com.example.mvi_test.screen.recode.navigation.navigateToRecode
 import com.example.mvi_test.screen.recode.navigation.recodeScreen
 import com.example.mvi_test.screen.setting.navigation.navigateToSetting
 import com.example.mvi_test.screen.setting.navigation.settingScreen
@@ -115,6 +116,7 @@ fun NavHostContainer(
     ){
         homeScreen(
             navigateToRandom = navController::navigateToRandom,
+            navigateToRecode = navController::navigateToRecode,
             navigateToSetting = navController::navigateToSetting,
         )
 
