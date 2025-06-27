@@ -2,6 +2,7 @@ package com.example.mvi_test.screen.random.screen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,9 +13,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
@@ -36,9 +42,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mvi_test.screen.random.RandomViewModel
 import com.example.mvi_test.screen.random.state.RandomActionState
 import com.example.mvi_test.screen.random.state.RandomUIState
-import com.example.mvi_test.ui.common.CommonExpendableBox
+import com.example.mvi_test.ui.common.CommonExpandableBox
 import com.example.mvi_test.ui.common.CommonListItem
+import com.example.mvi_test.ui.common.CommonLottoAutoScrollRow
 import com.example.mvi_test.ui.theme.CommonStyle
+import com.example.mvi_test.util.CommonUtil.toAlphabet
 
 @Composable
 fun RandomScreen(
@@ -66,63 +74,41 @@ fun RandomScreen(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White),
+            .background(Color.White)
+            .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
-            Box(modifier = Modifier.padding(10.dp)) {
-                CommonExpendableBox(
-                    shrinkContent = {
-                        Text(
-                            text = "테스트 문구",
-                            style = CommonStyle.text20
-                        )
-                        Spacer(Modifier.height(10.dp))
-                        Text(
-                            text = "테스트 문구",
-                            style = CommonStyle.text20
-                        )
-                    },
-                    expandContent = {
-                        Text(
-                            text = "내가 보여요",
-                            style = CommonStyle.text30
-                        )
-                    }
-                )
-            }
-        }
-        item {
-            TextFieldContent(
-                modifier = Modifier.padding(10.dp)
+            CommonExpandableBox(
+                shrinkContent = {
+                    Text(
+                        text = "테스트 문구",
+                        style = CommonStyle.text20,
+                        color = Color.White
+                    )
+                    Spacer(Modifier.height(10.dp))
+                    Text(
+                        text = "테스트 문구",
+                        style = CommonStyle.text20,
+                        color = Color.White
+                    )
+                },
+                expandContent = {
+                    Text(
+                        text = "내가 보여요",
+                        style = CommonStyle.text30,
+                        color = Color.White
+                    )
+                }
             )
         }
-//        when(val state = uiState.value){
-//            is RandomUIState.Loading -> {
-//                item {
-//                    Button(
-//                        onClick = { viewModel.makeEvent(RandomEventState.OnMakeClick("")) }
-//                    ) {
-//                        Text("번호 추첨하기")
-//                    }
-//                }
-//            }
-//            is RandomUIState.Success -> {
-//                val list = state.result.number
-//                items(list.size) { index ->
-//                    Text("번호 $index : ${list[index]}")
-//                }
-//                item {
-//                    Button(
-//                        onClick = { viewModel.makeEvent(RandomEventState.OnRefresh) }
-//                    ) {
-//                        Text("확인")
-//                    }
-//                }
-//            }
-//            else -> {}
-//        }
+        item {
+            KeywordContent()
+        }
+        item {
+            RandomResultContent()
+        }
     }
 }
 
@@ -135,7 +121,7 @@ private fun RandomScreenPreview() {
 }
 
 @Composable
-fun TextFieldContent(
+fun KeywordContent(
     searchList: List<String> = listOf("aaaaaaa","bbbbbbb","cccccccc","ddddddd"),
     modifier: Modifier = Modifier
 ) {
@@ -149,10 +135,9 @@ fun TextFieldContent(
             .fillMaxWidth()
     ) {
         Row(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
         ) {
             OutlinedTextField(
                 modifier = Modifier
@@ -177,7 +162,10 @@ fun TextFieldContent(
 
             Button(
                 modifier = Modifier.weight(3f),
-                onClick = {}
+                onClick = {
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
+                }
             ) {
                 Text("추첨하기")
             }
@@ -185,7 +173,8 @@ fun TextFieldContent(
 
         AnimatedVisibility(expand) {
             Column(
-                modifier = modifier.fillMaxWidth(),
+                modifier = modifier
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // TODO 검색 개수가 5개 미만일 경우 대응 필요
@@ -206,6 +195,120 @@ fun TextFieldContent(
 
 @Preview
 @Composable
-private fun TextFieldBoxPreview() {
-    TextFieldContent()
+private fun KeywordBoxPreview() {
+    KeywordContent()
 }
+
+@Composable
+fun RandomResultContent(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .border(2.dp, Color.LightGray, RoundedCornerShape(10.dp))
+            .padding(10.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            repeat(5) {
+                RandomListItem(
+                    index = it
+                )
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = {}
+                ) {
+                    Text("복사하기")
+                }
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = {}
+                ) {
+                    Text("공유하기")
+                }
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = {}
+                ) {
+                    Text("웹으로 가기")
+                }
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = {}
+                ) {
+                    Text("저장하기")
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun RandomResultPreview() {
+    RandomResultContent()
+}
+
+@Composable
+fun RandomListItem(
+    index: Int = 0,
+    targetList: List<List<Int>> = emptyList(),
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        modifier = modifier
+            .padding(6.dp),
+    ) {
+        Box(
+            modifier = Modifier
+                .weight(1f),
+        ) {
+            Checkbox(
+                true, null
+            )
+        }
+        Box(
+            modifier = Modifier
+                .weight(1f)
+        ) {
+            Text(
+                text = index.toAlphabet(),
+                style = CommonStyle.text12
+            )
+        }
+        Box(
+            modifier = Modifier
+                .weight(8f)
+        ) {
+            CommonLottoAutoScrollRow(
+                targetList = (1..45).shuffled().take(7).sorted() // TODO 테스트용
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun RandomListItemPreview() {
+    RandomListItem(
+        targetList = listOf(
+            listOf(1, 5, 10, 11, 20, 30, 36),
+            listOf(2, 6, 12, 17, 21, 35, 41),
+            listOf(3, 7, 13, 18, 22, 33, 44),
+            listOf(4, 8, 14, 19, 23, 29, 39),
+            listOf(9, 15, 24, 28, 31, 34, 45)
+        )
+    )
+}
+
+
+
+
+

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -115,7 +116,7 @@ fun HomeScreen(
 
             ButtonLayout(
                 navigateToRandom = navigateToRandom,
-                navigateToRecode = navigateToRecode
+                navigateToRecode = navigateToRecode,
             )
         }
         Box(
@@ -253,7 +254,8 @@ fun LottoCardItem(modifier: Modifier = Modifier) {
         Box(
             modifier = Modifier
                 .background(gradient)
-                .padding(20.dp),
+                .padding(20.dp)
+                .padding(top = 10.dp),
         ){
             Column(
                 verticalArrangement = Arrangement.Top,
@@ -382,7 +384,9 @@ fun ButtonLayout(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier.padding(horizontal = 30.dp)
+        modifier = modifier
+            .padding(horizontal = 30.dp)
+            .height(300.dp)
     ) {
         Row {
             HomeIconButton(
@@ -400,7 +404,6 @@ fun ButtonLayout(
                 outlineColor = Color.DarkGray,
                 icon = Icons.Default.Create,
                 titleText = "추첨 기록",
-                descriptionText = "",
                 modifier = Modifier.weight(1f),
                 onClick = navigateToRecode,
             )
@@ -422,7 +425,6 @@ fun ButtonLayout(
                 outlineColor = Color.DarkGray,
                 icon = Icons.Default.Star,
                 titleText = "복권 명당",
-                descriptionText = "",
                 modifier = Modifier.weight(1f),
                 onClick = {},
             )
@@ -441,8 +443,8 @@ private fun HomeIconButton(
     containerColor: Color = Color.Gray,
     outlineColor: Color = Color.DarkGray,
     icon: ImageVector = Icons.Default.Settings,
-    titleText: String?,
-    descriptionText: String?,
+    titleText: String? = null,
+    descriptionText: String? = null,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
@@ -452,12 +454,12 @@ private fun HomeIconButton(
         colors = ButtonDefaults.buttonColors(containerColor = containerColor),
         elevation = ButtonDefaults.buttonElevation(3.dp),
 //        border = BorderStroke(0.6.dp, outlineColor),
-        modifier = modifier
+        modifier = modifier.aspectRatio(1.5f)
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(vertical = 24.dp)
+            modifier = Modifier.padding(vertical = 12.dp)
         ) {
             Icon(
                 imageVector = icon,

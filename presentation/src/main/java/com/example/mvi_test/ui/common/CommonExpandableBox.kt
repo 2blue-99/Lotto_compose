@@ -30,7 +30,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CommonExpendableBox(
+
+fun CommonExpandableBox(
     shrinkColor: List<Color> = listOf(Color(0xFF227DBD), Color(0xFF528B35)),
     expandColor: List<Color> = listOf(Color(0xFFFF8A00), Color(0xFFFFD500)),
     shrinkContent: @Composable () -> Unit,
@@ -95,7 +96,7 @@ fun CommonExpendableBox(
 @Preview
 @Composable
 private fun ExpendableBoxPreview() {
-    CommonExpendableBox(
+    CommonExpandableBox(
         modifier = Modifier,
         shrinkContent = {
             Text("shrinkContent")
