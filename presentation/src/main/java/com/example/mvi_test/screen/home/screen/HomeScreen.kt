@@ -18,12 +18,14 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
@@ -44,6 +46,7 @@ import com.example.mvi_test.screen.home.HomeViewModel
 import com.example.mvi_test.screen.home.state.HomeActionState
 import com.example.mvi_test.screen.home.state.HomeUIState
 import com.example.mvi_test.ui.common.CommonAdBanner
+import com.example.mvi_test.ui.common.CommonTopBar
 import com.example.mvi_test.ui.theme.CommonStyle
 import timber.log.Timber
 import kotlin.math.absoluteValue
@@ -88,14 +91,10 @@ fun HomeScreen(
             modifier = modifier
                 .fillMaxSize()
                 .background(Color.White),
-            verticalArrangement = Arrangement.Top,
+            verticalArrangement = Arrangement.spacedBy(30.dp, Alignment.Top),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            IconButton(
-                onClick = navigateToSetting
-            ) {
-                Icon(imageVector = Icons.Default.Settings, null)
-            }
+            MainTopBar()
 
             LottoPager()
 
@@ -122,6 +121,66 @@ fun  HomeScreenPreview(){
         uiState = HomeUIState.Loading,
         intentHandler = {}
     )
+}
+
+@Composable
+private fun MainTopBar(
+    onSettingClick: () -> Unit = {},
+    onQRClick: () -> Unit = {},
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(66.dp)
+            .background(Color.White)
+    ) {
+        Surface(
+            modifier = Modifier.padding(horizontal = 20.dp)
+        ) {
+            Box(
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Text(
+                    text = "행운 로또",
+                    style = CommonStyle.text18
+                )
+            }
+            Box(
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                Row {
+                    IconButton(
+                        onClick = onQRClick
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AccountBox,
+                            contentDescription = "QR"
+                        )
+                    }
+                    IconButton(
+                        onClick = onSettingClick
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Setting"
+                        )
+                    }
+                }
+            }
+        }
+        Box(
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            HorizontalDivider()
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun MainTopBarPreview() {
+    MainTopBar()
 }
 
 @Composable
