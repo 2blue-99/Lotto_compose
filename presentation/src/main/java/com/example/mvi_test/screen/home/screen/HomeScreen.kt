@@ -20,7 +20,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -48,6 +51,8 @@ import com.example.mvi_test.screen.home.state.HomeUIState
 import com.example.mvi_test.ui.common.CommonAdBanner
 import com.example.mvi_test.ui.common.CommonTopBar
 import com.example.mvi_test.ui.theme.CommonStyle
+import com.example.mvi_test.ui.theme.PrimaryColor
+import com.example.mvi_test.ui.theme.SubColor
 import timber.log.Timber
 import kotlin.math.absoluteValue
 
@@ -98,13 +103,7 @@ fun HomeScreen(
 
             LottoPager()
 
-            ButtonLayout(modifier = Modifier.padding(horizontal = 10.dp))
-
-            Button(
-                onClick = navigateToRandom
-            ) {
-                Text("번호 추첨하기")
-            }
+            ButtonLayout(modifier = Modifier.padding(horizontal = 30.dp))
         }
         Box(
             contentAlignment = Alignment.BottomCenter
@@ -228,29 +227,64 @@ private fun LottoPagerPreview() {
 }
 
 @Composable
+fun LottoCardItem(modifier: Modifier = Modifier) {
+    
+}
+
+@Preview
+@Composable
+private fun LottoCardItemPreview() {
+    LottoCardItem()
+}
+
+@Composable
 fun ButtonLayout(modifier: Modifier = Modifier) {
-    Row(
+    Column(
         modifier = modifier,
     ) {
-        HomeIconButton(
-            containerColor = Color.LightGray,
-            outlineColor = Color.DarkGray,
-            icon = Icons.Default.Settings,
-            title = "",
-            description = "",
-            modifier = Modifier.weight(1f),
-            onClick = {},
-        )
-        Spacer(modifier = Modifier.width(10.dp))
-        HomeIconButton(
-            containerColor = Color.LightGray,
-            outlineColor = Color.DarkGray,
-            icon = Icons.Default.Settings,
-            title = "",
-            description = "",
-            modifier = Modifier.weight(1f),
-            onClick = {},
-        )
+        Row {
+            HomeIconButton(
+                containerColor = SubColor,
+                outlineColor = Color.DarkGray,
+                icon = Icons.Default.Settings,
+                title = "랜덤 로또 추첨",
+                description = "행운",
+                modifier = Modifier.weight(1f),
+                onClick = {},
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            HomeIconButton(
+                containerColor = Color.LightGray,
+                outlineColor = Color.DarkGray,
+                icon = Icons.Default.Create,
+                title = "추첨 기록",
+                description = "",
+                modifier = Modifier.weight(1f),
+                onClick = {},
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Row {
+            HomeIconButton(
+                containerColor = PrimaryColor,
+                outlineColor = Color.DarkGray,
+                icon = Icons.Default.Menu,
+                title = "통계 로또 추첨",
+                description = "데이터 기반",
+                modifier = Modifier.weight(1f),
+                onClick = {},
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            HomeIconButton(
+                containerColor = Color.LightGray,
+                outlineColor = Color.DarkGray,
+                icon = Icons.Default.Star,
+                title = "복권 명당",
+                description = "",
+                modifier = Modifier.weight(1f),
+                onClick = {},
+            )
+        }
     }
 }
 
@@ -274,26 +308,28 @@ private fun HomeIconButton(
         onClick = onClick,
         shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.buttonColors(containerColor = containerColor),
-        border = BorderStroke(1.dp, outlineColor),
+        border = BorderStroke(0.6.dp, outlineColor),
         modifier = modifier
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(vertical = 20.dp)
+            modifier = Modifier.padding(vertical = 30.dp)
         ) {
             Icon(
-                imageVector = Icons.Default.AccountBox,
+                imageVector = icon,
                 contentDescription = "추첨 기록"
             )
             title?.let {
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "랜덤 로또 추첨",
-                    style = CommonStyle.text20Bold,
+                    style = CommonStyle.text18Bold,
                     color = Color.White
                 )
             }
             description?.let {
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "행운",
                     style = CommonStyle.text14,
