@@ -6,7 +6,7 @@ import com.example.domain.util.ResourceState
 import kotlinx.coroutines.flow.Flow
 
 interface LottoRepository {
-    fun getLotto(): Flow<List<LottoRecode>>
+    fun getLottoDao(): Flow<List<LottoRecode>>
 
     suspend fun updateLotto(data: LottoRecode)
 

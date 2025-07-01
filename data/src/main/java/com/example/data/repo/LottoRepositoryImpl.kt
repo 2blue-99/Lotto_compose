@@ -2,7 +2,6 @@ package com.example.data.repo
 
 import com.example.data.local.dao.LottoDao
 import com.example.data.remote.datasource.LottoDataSourceImpl
-import com.example.domain.util.APIResponseState
 import com.example.data.util.Mapper.toEntity
 import com.example.data.util.toDomain
 import com.example.domain.model.Lotto
@@ -17,8 +16,8 @@ class LottoRepositoryImpl @Inject constructor(
     private val lottoDao: LottoDao,
     private val lottoDataSource: LottoDataSourceImpl
 ): LottoRepository {
-    override fun getLotto(): Flow<List<LottoRecode>> {
-        return lottoDao.getLottoList().map { it.map { it.toDomain() } }
+    override fun getLottoDao(): Flow<List<LottoRecode>> {
+        return lottoDao.getLottoDao().map { it.map { it.toDomain() } }
     }
 
     override suspend fun updateLotto(data: LottoRecode) {

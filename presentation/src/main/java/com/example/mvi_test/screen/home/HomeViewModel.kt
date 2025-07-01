@@ -9,6 +9,7 @@ import com.example.mvi_test.screen.home.state.HomeUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,6 +25,11 @@ class HomeViewModel @Inject constructor(
             when(response){
                 is ResourceState.Success -> lottoState.value = HomeUIState.Success(response.body)
                 else -> {}
+            }
+        }
+        ioScope.launch {
+            lottoRepo.getLottoDao().collect {
+                Timber.d("it : $it")
             }
         }
     }

@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface LottoDao {
     @Query("Select * From lotto")
-    fun getLottoList(): Flow<List<LottoEntity>>
+    fun getLottoDao(): Flow<List<LottoEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertLotto(lotto: LottoEntity)

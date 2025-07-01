@@ -16,5 +16,7 @@ object RoomModule {
     @Singleton
     @Provides
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
-        Room.databaseBuilder(context, AppDatabase::class.java, "database-lotto").build()
+        Room.databaseBuilder(context, AppDatabase::class.java, "database-lotto")
+            .createFromAsset("lotto.db")
+            .build()
 }
