@@ -50,13 +50,13 @@ fun CommonLottoContent(
                         .weight(1f)
                         .aspectRatio(1f)
                         .clip(CircleShape)
-                        .then (
-                            if(index == 7){
-                                Modifier.border(1.dp, Color.White, CircleShape) // 보너스 로또 구분
-                            }else{
-                                Modifier
-                            }
-                        )
+//                        .then (
+//                            if(index == 7){
+//                                Modifier.border(0.dp, Color.White, CircleShape) // 보너스 로또 구분
+//                            }else{
+//                                Modifier
+//                            }
+//                        )
                         .background(if(index == 7) PrimaryColor else Color.White), // 보너스 로또 구분
                     contentAlignment = Alignment.Center
                 ){

@@ -15,6 +15,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -24,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 
 @Composable
-fun CommonAdBanner(modifier: Modifier = Modifier) {
+fun CommonAdBanner(modifier:  Modifier = Modifier) {
     val context = LocalContext.current
 
     val offsetY = remember { Animatable(0f) }
@@ -40,13 +41,14 @@ fun CommonAdBanner(modifier: Modifier = Modifier) {
     }
 
     Box(
-        modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 20.dp)
+        modifier = modifier.padding(start = 10.dp, end = 10.dp, bottom = 20.dp),
+        contentAlignment = Alignment.BottomCenter
     ) {
         Surface(
             elevation = 2.dp,
             color = Color.LightGray,
             shape = RoundedCornerShape(16),
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp)
                 .offset { IntOffset(x = 0, y = offsetY.value.roundToInt()) }

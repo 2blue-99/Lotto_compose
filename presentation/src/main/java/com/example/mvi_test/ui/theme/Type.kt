@@ -65,6 +65,8 @@ object CommonStyle {
     val text24Bold = TextStyle(fontFamily = pretendardBold, fontSize = 24.sp)
     val text30 = TextStyle(fontFamily = pretendard, fontSize = 30.sp)
     val text30Bold = TextStyle(fontFamily = pretendardBold, fontSize = 30.sp)
+    val text36 = TextStyle(fontFamily = pretendard, fontSize = 36.sp)
+    val text36Bold = TextStyle(fontFamily = pretendardBold, fontSize = 36.sp)
     val text40 = TextStyle(fontFamily = pretendard, fontSize = 40.sp)
     val text40Bold = TextStyle(fontFamily = pretendardBold, fontSize = 40.sp)
     val text50 = TextStyle(fontFamily = pretendard, fontSize = 50.sp)
