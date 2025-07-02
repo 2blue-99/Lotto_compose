@@ -50,6 +50,7 @@ import androidx.compose.ui.util.lerp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.domain.model.Lotto
 import com.example.mvi_test.screen.home.HomeViewModel
 import com.example.mvi_test.screen.home.state.HomeActionState
 import com.example.mvi_test.screen.home.state.HomeUIState
@@ -59,7 +60,6 @@ import com.example.mvi_test.ui.common.HorizontalSpacer
 import com.example.mvi_test.ui.common.VerticalSpacer
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.DarkGray
-import com.example.mvi_test.ui.theme.LightGray
 import com.example.mvi_test.ui.theme.PrimaryColor
 import com.example.mvi_test.ui.theme.Red
 import com.example.mvi_test.ui.theme.SubColor
@@ -74,7 +74,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
 ){
-    val uiState by viewModel.lottoState.collectAsStateWithLifecycle()
+    val uiState by viewModel.homeUIState.collectAsStateWithLifecycle()
 
     HomeScreen(
         navigateToRandom = navigateToRandom,
@@ -95,16 +95,10 @@ fun HomeScreen(
     intentHandler: (HomeActionState) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    when(uiState){
-        is HomeUIState.Loading -> Timber.d("Loading")
-        is HomeUIState.Success -> Timber.d("Success : ${uiState.lotto}")
-        else -> {}
-    }
     Surface(
         modifier = modifier
             .fillMaxSize(),
     ) {
-
         Column(
             modifier = modifier
                 .fillMaxSize(),
@@ -115,7 +109,10 @@ fun HomeScreen(
 
             VerticalSpacer(10.dp)
 
-            LottoPager(modifier = Modifier.zIndex(1f))
+            LottoPager(
+                lottoList = if(uiState is HomeUIState.Success) uiState.lotto else emptyList(),
+                modifier = Modifier.zIndex(1f)
+            )
 
             LottoInfo(modifier = Modifier.offset(y = (-20).dp))
 
@@ -203,12 +200,14 @@ private fun MainTopBarPreview() {
 }
 
 @Composable
-fun LottoPager(modifier: Modifier = Modifier) {
+fun LottoPager(
+    lottoList: List<Lotto> = emptyList(),
+    modifier: Modifier = Modifier
+) {
+    val pagerState = rememberPagerState(pageCount = { lottoList.size })
 
-    val pagerState = rememberPagerState(pageCount = {1172})
-
-    LaunchedEffect(Unit) {
-        pagerState.scrollToPage(1170)
+    LaunchedEffect(lottoList) {
+        pagerState.scrollToPage(lottoList.size-1)
     }
 
     Column(
@@ -220,6 +219,7 @@ fun LottoPager(modifier: Modifier = Modifier) {
             contentPadding = PaddingValues(horizontal = 36.dp)
         ) { page ->
             LottoCardItem(
+                lottoItem = lottoList.getOrNull(page) ?: Lotto(),
                 modifier = Modifier.graphicsLayer {
                     val pageOffset = (
                             (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
@@ -238,7 +238,6 @@ fun LottoPager(modifier: Modifier = Modifier) {
             )
         }
     }
-
 }
 
 @Preview
@@ -249,6 +248,7 @@ private fun LottoPagerPreview() {
 
 @Composable
 fun LottoCardItem(
+    lottoItem: Lotto = Lotto(),
     modifier: Modifier = Modifier
 ) {
     val gradient = Brush.linearGradient(colors = listOf(PrimaryColor, SubColor))
@@ -270,19 +270,29 @@ fun LottoCardItem(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = "2025.06.27",
+                    text = lottoItem.drawDate,
                     style = CommonStyle.text12,
                     color = Color.White
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "1170회",
+                    text = lottoItem.drawNumber.toString(),
                     style = CommonStyle.text36Bold,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                CommonLottoContent()
+                CommonLottoContent(
+                    listOf(
+                        lottoItem.drwtNo1.toString(),
+                        lottoItem.drwtNo2.toString(),
+                        lottoItem.drwtNo3.toString(),
+                        lottoItem.drwtNo4.toString(),
+                        lottoItem.drwtNo5.toString(),
+                        lottoItem.drwtNo6.toString(),
+                        lottoItem.bnusNo.toString()
+                    )
+                )
             }
 //            Box(
 //                modifier = Modifier.align(Alignment.TopEnd), // 우상단에 정렬
