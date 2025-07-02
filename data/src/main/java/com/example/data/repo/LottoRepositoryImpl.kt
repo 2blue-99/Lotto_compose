@@ -16,7 +16,7 @@ class LottoRepositoryImpl @Inject constructor(
     private val lottoDao: LottoDao,
     private val lottoDataSource: LottoDataSourceImpl
 ): LottoRepository {
-    override fun getLottoDao(): Flow<List<LottoRecode>> {
+    override fun getLottoDao(): Flow<List<Lotto>> {
         return lottoDao.getLottoDao().map { it.map { it.toDomain() } }
     }
 

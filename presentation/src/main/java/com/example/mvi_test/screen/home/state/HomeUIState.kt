@@ -9,7 +9,7 @@ sealed interface HomeUIState {
     data object Fail : HomeUIState
 
     data class Success(
-        val lotto: Lotto
+        val lotto: List<Lotto>
     ) : HomeUIState
 }
 
