@@ -1,5 +1,7 @@
 package com.example.data.remote.model
 
+import com.example.data.util.CommonUtils.formatComma
+import com.example.data.util.CommonUtils.formatDate
 import com.example.domain.model.Lotto
 import com.google.gson.annotations.SerializedName
 
@@ -35,19 +37,19 @@ data class LottoResponse(
 ) {
     fun toDomain(): Lotto {
         return Lotto(
-            drawNumber,
-            drawDate,
-            totalSellAmount,
-            firstWinTotalAmount,
-            firstWinCount,
-            firstWinPerAmount,
-            drwtNo1,
-            drwtNo2,
-            drwtNo3,
-            drwtNo4,
-            drwtNo5,
-            drwtNo6,
-            bnusNo
+            drawNumber.toString(),
+            drawDate.formatDate(),
+            totalSellAmount.formatComma(),
+            firstWinTotalAmount.formatComma(),
+            firstWinCount.toString(),
+            firstWinPerAmount.formatComma(),
+            drwtNo1.toString(),
+            drwtNo2.toString(),
+            drwtNo3.toString(),
+            drwtNo4.toString(),
+            drwtNo5.toString(),
+            drwtNo6.toString(),
+            bnusNo.toString()
         )
     }
 }

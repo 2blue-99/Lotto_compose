@@ -1,5 +1,7 @@
 package com.example.mvi_test.screen.home.screen
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -105,16 +107,16 @@ fun HomeScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            MainTopBar()
+            MainTopBar(
+                onSettingClick = navigateToSetting,
+                onQRClick = {}
+            )
 
             VerticalSpacer(10.dp)
 
             LottoPager(
-                lottoList = if(uiState is HomeUIState.Success) uiState.lotto else emptyList(),
-                modifier = Modifier.zIndex(1f)
+                lottoList = if(uiState is HomeUIState.Success) uiState.lotto else listOf(Lotto()),
             )
-
-            LottoInfo(modifier = Modifier.offset(y = (-20).dp))
 
             ButtonLayout(
                 navigateToRandom = navigateToRandom,
@@ -207,14 +209,20 @@ fun LottoPager(
     val pagerState = rememberPagerState(pageCount = { lottoList.size })
 
     LaunchedEffect(lottoList) {
-        pagerState.scrollToPage(lottoList.size-1)
+        pagerState.animateScrollToPage(
+            page = lottoList.lastIndex,
+            animationSpec = tween(
+                durationMillis = 500,
+                easing = FastOutSlowInEasing
+            )
+        )
     }
 
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
         HorizontalPager(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().zIndex(2f),
             state = pagerState,
             contentPadding = PaddingValues(horizontal = 36.dp)
         ) { page ->
@@ -237,13 +245,17 @@ fun LottoPager(
                 }
             )
         }
+        LottoInfo(
+            lottoItem = lottoList[pagerState.currentPage],
+            modifier = Modifier.offset(y = (-20).dp)
+        )
     }
 }
 
 @Preview
 @Composable
 private fun LottoPagerPreview() {
-    LottoPager()
+    LottoPager(emptyList())
 }
 
 @Composable
@@ -270,27 +282,31 @@ fun LottoCardItem(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = lottoItem.drawDate,
+                    text = lottoItem.drawDate ,
                     style = CommonStyle.text12,
                     color = Color.White
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = lottoItem.drawNumber.toString(),
-                    style = CommonStyle.text36Bold,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
+                Row(
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    Text(
+                        text = lottoItem.drawNumber + "회",
+                        style = CommonStyle.text40Bold,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
                 Spacer(modifier = Modifier.height(20.dp))
                 CommonLottoContent(
                     listOf(
-                        lottoItem.drwtNo1.toString(),
-                        lottoItem.drwtNo2.toString(),
-                        lottoItem.drwtNo3.toString(),
-                        lottoItem.drwtNo4.toString(),
-                        lottoItem.drwtNo5.toString(),
-                        lottoItem.drwtNo6.toString(),
-                        lottoItem.bnusNo.toString()
+                        lottoItem.drwtNo1,
+                        lottoItem.drwtNo2,
+                        lottoItem.drwtNo3,
+                        lottoItem.drwtNo4,
+                        lottoItem.drwtNo5,
+                        lottoItem.drwtNo6,
+                        lottoItem.bnusNo
                     )
                 )
             }
@@ -316,7 +332,10 @@ private fun LottoCardItemPreview() {
 }
 
 @Composable
-fun LottoInfo(modifier: Modifier = Modifier) {
+fun LottoInfo(
+    lottoItem: Lotto = Lotto(),
+    modifier: Modifier = Modifier
+) {
     val gradient = Brush.verticalGradient(colors = listOf(PrimaryColor, Color.White))
 
     Surface (
@@ -337,26 +356,26 @@ fun LottoInfo(modifier: Modifier = Modifier) {
         ) {
             LottoInfoItem(
                 titleText = "총 판매금액",
-                valueText = "1,117",
-                subText = "억원"
+                valueText = lottoItem.totalSellAmount,
+                subText = "원"
             )
             HorizontalDivider(color = Color.LightGray)
             LottoInfoItem(
                 titleText = "1등 총 당첨금",
-                valueText = "1,117",
-                subText = "억원"
+                valueText = lottoItem.firstWinTotalAmount,
+                subText = "원"
             )
             HorizontalDivider(color = Color.LightGray)
             LottoInfoItem(
                 titleText = "1등 당첨자 수",
-                valueText = "16",
+                valueText = lottoItem.firstWinCount,
                 subText = "명"
             )
             HorizontalDivider(color = Color.LightGray)
             LottoInfoItem(
                 titleText = "1등 1명당 당첨금",
-                valueText = "1,117",
-                subText = "만원"
+                valueText = lottoItem.firstWinPerAmount,
+                subText = "원"
             )
         }
     }
@@ -381,13 +400,13 @@ fun LottoInfoItem(
         Text(
             text = titleText,
             color = DarkGray,
-            style = CommonStyle.text12,
+            style = CommonStyle.text14,
             modifier = Modifier.weight(1f),
         )
         Text(
             text = valueText,
             color = Red,
-            style = CommonStyle.text12,
+            style = CommonStyle.text14,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.End
         )
@@ -395,7 +414,7 @@ fun LottoInfoItem(
         Text(
             text = subText,
             color = DarkGray,
-            style = CommonStyle.text12,
+            style = CommonStyle.text14,
             textAlign = TextAlign.End,
         )
     }

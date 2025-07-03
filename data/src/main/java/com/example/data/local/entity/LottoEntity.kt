@@ -2,8 +2,9 @@ package com.example.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.data.util.CommonUtils.formatComma
+import com.example.data.util.CommonUtils.formatDate
 import com.example.domain.model.Lotto
-import com.example.domain.model.LottoRecode
 
 
 @Entity(tableName = "lotto")
@@ -25,18 +26,18 @@ data class LottoEntity(
     val bnusNo: Int,
 ) {
     fun toDomain(): Lotto = Lotto(
-        drawNumber,
-        drawDate,
-        totalSellAmount,
-        firstWinTotalAmount,
-        firstWinCount,
-        firstWinPerAmount,
-        drwtNo1,
-        drwtNo2,
-        drwtNo3,
-        drwtNo4,
-        drwtNo5,
-        drwtNo6,
-        bnusNo
+        drawNumber.toString(),
+        drawDate.formatDate(),
+        totalSellAmount.formatComma(),
+        firstWinTotalAmount.formatComma(),
+        firstWinCount.toString(),
+        firstWinPerAmount.formatComma(),
+        drwtNo1.toString(),
+        drwtNo2.toString(),
+        drwtNo3.toString(),
+        drwtNo4.toString(),
+        drwtNo5.toString(),
+        drwtNo6.toString(),
+        bnusNo.toString()
     )
 }
