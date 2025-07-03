@@ -23,8 +23,13 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -58,6 +63,7 @@ import com.example.mvi_test.designsystem.common.VerticalSpacer
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.LightGray
 import com.example.mvi_test.ui.theme.ScreenBackground
+import com.example.mvi_test.ui.theme.SubColor
 import com.example.mvi_test.util.CommonUtil.toAlphabet
 import kotlinx.coroutines.delay
 
@@ -150,16 +156,26 @@ fun KeywordContent(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            OutlinedTextField(
+            TextField(
                 modifier = Modifier
                     .weight(7f)
                     .onFocusEvent {
                         expand = it.isFocused == true
                     },
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    unfocusedPlaceholderColor = Color.LightGray,
+                    focusedPlaceholderColor  = Color.LightGray,
+                    focusedTextColor = SubColor,
+                    unfocusedTextColor = SubColor,
+                    focusedIndicatorColor = Color.LightGray,
+                    unfocusedIndicatorColor = Color.LightGray
+                ),
+                textStyle = CommonStyle.text20.copy(textAlign = TextAlign.Start),
                 value = text,
                 onValueChange = { text = it },
-                label = { Text("test test") },
-                placeholder = { Text("hint") },
+                placeholder = { Text("행운의 키워드를 입력해주세요.") },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Done
                 ),
@@ -168,7 +184,7 @@ fun KeywordContent(
                         focusManager.clearFocus()
                         keyboardController?.hide()
                     }
-                )
+                ),
             )
 
             Button(
@@ -226,7 +242,7 @@ fun RandomResultContent(
             )
         }else{
             repeat(5) { index ->
-                delay(200) // 300ms 간격으로 하나씩 추가
+                delay(300) // 300ms 간격으로 하나씩 추가
                 itemList.add(index)
             }
         }
@@ -253,6 +269,9 @@ fun RandomResultContent(
                     targetList = targetList[it],
                     index = it
                 )
+                if(it < itemList.lastIndex){
+                    HorizontalDivider(color = Color.LightGray)
+                }
             }
         }
 
@@ -327,6 +346,7 @@ fun RandomListItem(
         horizontalArrangement = Arrangement.Center,
         modifier = modifier
             .alpha(alpha.value)
+            .background(Color.White)
             .padding(6.dp),
     ) {
         Box(
