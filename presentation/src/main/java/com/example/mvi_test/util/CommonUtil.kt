@@ -22,7 +22,7 @@ object CommonUtil {
 
     fun Int.toLottoColor(): Color{
         return when(this){
-            in 1..10 -> Color(0xFFFFE100)   // 노랑
+            in 1..10 -> Color(0xFFFCDB00)   // 노랑
             in 11..20 -> Color(0xFF0072C6)  // 파랑
             in 21..30 -> Color(0xFFFF3D3D)  // 빨강
             in 31..40 -> Color(0xFF999999)  // 회색

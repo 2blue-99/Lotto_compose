@@ -1,6 +1,9 @@
 package com.example.mvi_test.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -55,6 +58,11 @@ object CommonStyle {
     val text14Bold = TextStyle(fontFamily = pretendardBold, fontSize = 14.sp)
     val text16 = TextStyle(fontFamily = pretendard, fontSize = 16.sp)
     val text16Bold = TextStyle(fontFamily = pretendardBold, fontSize = 16.sp)
+    val text16BoldOutLine = TextStyle(
+        fontFamily = pretendardBold,
+        fontSize = 16.sp,
+        shadow = Shadow(color = Color.DarkGray, offset = Offset(2f, 2f), blurRadius = 4f)
+    )
     val text18 = TextStyle(fontFamily = pretendard, fontSize = 18.sp)
     val text18Bold = TextStyle(fontFamily = pretendardBold, fontSize = 18.sp)
     val text20 = TextStyle(fontFamily = pretendard, fontSize = 20.sp)

@@ -295,7 +295,7 @@ fun LottoCardItem(
                 ) {
                     Text(
                         text = lottoItem.drawNumber + "회",
-                        style = CommonStyle.text40Bold,
+                        style = CommonStyle.text36Bold,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )

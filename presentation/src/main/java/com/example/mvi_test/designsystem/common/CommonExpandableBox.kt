@@ -69,7 +69,7 @@ fun CommonExpandableBox(
             modifier = Modifier
                 .clip(RoundedCornerShape(10.dp))
                 .alpha(alpha = alpha)
-                .background(expandGradient)
+                .background(shrinkGradient)
                 .matchParentSize()
         )
         Column(

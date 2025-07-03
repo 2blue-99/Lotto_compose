@@ -112,7 +112,7 @@ fun NavHostContainer(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavigationItem.Home.route
+        startDestination = NavigationItem.Random.route
     ){
         homeScreen(
             navigateToRandom = navController::navigateToRandom,
