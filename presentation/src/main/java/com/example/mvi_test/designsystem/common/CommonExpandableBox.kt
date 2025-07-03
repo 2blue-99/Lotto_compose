@@ -49,7 +49,7 @@ fun CommonExpandableBox(
 
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(10.dp))
+            .clip(RoundedCornerShape(16.dp))
             .fillMaxWidth()
             .animateContentSize()
             .clickable(

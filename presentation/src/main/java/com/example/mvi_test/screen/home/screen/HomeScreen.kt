@@ -409,7 +409,7 @@ fun LottoInfoItem(
         Text(
             text = valueText,
             color = Red,
-            style = CommonStyle.text14,
+            style = CommonStyle.text14Bold,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.End
         )
@@ -451,7 +451,7 @@ fun ButtonLayout(
                 modifier = Modifier.weight(1f),
                 onClick = navigateToRandom,
             )
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(24.dp))
             HomeIconButton(
                 containerColor = Color.LightGray,
                 outlineColor = Color.DarkGray,
@@ -461,7 +461,7 @@ fun ButtonLayout(
                 onClick = navigateToRecode,
             )
         }
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(26.dp))
         Row {
             HomeIconButton(
                 containerColor = PrimaryColor,
@@ -472,7 +472,7 @@ fun ButtonLayout(
                 modifier = Modifier.weight(1f),
                 onClick = {},
             )
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(26.dp))
             HomeIconButton(
                 containerColor = Color.LightGray,
                 outlineColor = Color.DarkGray,

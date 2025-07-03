@@ -116,7 +116,6 @@ fun RandomScreen(
         }
         item {
             RandomResultContent(
-                targetList = emptyList()
             )
         }
     }

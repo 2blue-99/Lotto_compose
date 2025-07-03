@@ -63,7 +63,7 @@ fun CommonLottoContent(
                     Text(
                         text = number,
                         color = if(index == 7) Color.White else PrimaryColor, // 보너스 로또 구분
-                        style = CommonStyle.text14
+                        style = CommonStyle.text14Bold
                     )
                 }
             }
