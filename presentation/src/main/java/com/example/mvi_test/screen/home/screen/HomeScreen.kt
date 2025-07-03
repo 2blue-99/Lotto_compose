@@ -21,7 +21,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
@@ -44,6 +43,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,19 +54,19 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.model.Lotto
+import com.example.mvi_test.R
 import com.example.mvi_test.screen.home.HomeViewModel
 import com.example.mvi_test.screen.home.state.HomeActionState
 import com.example.mvi_test.screen.home.state.HomeUIState
-import com.example.mvi_test.ui.common.CommonAdBanner
-import com.example.mvi_test.ui.common.CommonLottoContent
-import com.example.mvi_test.ui.common.HorizontalSpacer
-import com.example.mvi_test.ui.common.VerticalSpacer
+import com.example.mvi_test.designsystem.common.CommonAdBanner
+import com.example.mvi_test.designsystem.common.CommonLottoContent
+import com.example.mvi_test.designsystem.common.HorizontalSpacer
+import com.example.mvi_test.designsystem.common.VerticalSpacer
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.DarkGray
 import com.example.mvi_test.ui.theme.PrimaryColor
 import com.example.mvi_test.ui.theme.Red
 import com.example.mvi_test.ui.theme.SubColor
-import timber.log.Timber
 import kotlin.math.absoluteValue
 
 @Composable
@@ -172,8 +173,9 @@ private fun MainTopBar(
                         onClick = onQRClick
                     ) {
                         Icon(
-                            imageVector = Icons.Default.AccountBox,
-                            contentDescription = "QR"
+                            painter = painterResource(R.drawable.qr_icon),
+                            contentDescription = "QR",
+                            tint = DarkGray
                         )
                     }
                     IconButton(
@@ -181,7 +183,8 @@ private fun MainTopBar(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Settings,
-                            contentDescription = "Setting"
+                            contentDescription = "Setting",
+                            tint = DarkGray
                         )
                     }
                 }
@@ -442,7 +445,7 @@ fun ButtonLayout(
             HomeIconButton(
                 containerColor = SubColor,
                 outlineColor = Color.DarkGray,
-                icon = Icons.Default.Settings,
+                icon = ImageVector.vectorResource(R.drawable.clover_icon),
                 titleText = "랜덤 로또 추첨",
                 descriptionText = "행운",
                 modifier = Modifier.weight(1f),
@@ -452,7 +455,7 @@ fun ButtonLayout(
             HomeIconButton(
                 containerColor = Color.LightGray,
                 outlineColor = Color.DarkGray,
-                icon = Icons.Default.Create,
+//                icon = Icons.Default.Create,
                 titleText = "추첨 기록",
                 modifier = Modifier.weight(1f),
                 onClick = navigateToRecode,
@@ -463,7 +466,7 @@ fun ButtonLayout(
             HomeIconButton(
                 containerColor = PrimaryColor,
                 outlineColor = Color.DarkGray,
-                icon = Icons.Default.Menu,
+                icon = ImageVector.vectorResource(R.drawable.statistic_icon),
                 titleText = "통계 로또 추첨",
                 descriptionText = "데이터 기반",
                 modifier = Modifier.weight(1f),
@@ -473,7 +476,7 @@ fun ButtonLayout(
             HomeIconButton(
                 containerColor = Color.LightGray,
                 outlineColor = Color.DarkGray,
-                icon = Icons.Default.Star,
+//                icon = Icons.Default.Star,
                 titleText = "복권 명당",
                 modifier = Modifier.weight(1f),
                 onClick = {},
@@ -492,7 +495,7 @@ private fun ButtonRowPreview() {
 private fun HomeIconButton(
     containerColor: Color = Color.Gray,
     outlineColor: Color = Color.DarkGray,
-    icon: ImageVector = Icons.Default.Settings,
+    icon: ImageVector? = null,
     titleText: String? = null,
     descriptionText: String? = null,
     modifier: Modifier = Modifier,
@@ -511,10 +514,13 @@ private fun HomeIconButton(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(vertical = 10.dp)
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = "추첨 기록"
-            )
+            icon?.let {
+                Icon(
+                    imageVector = icon,
+                    tint = Color.Unspecified,
+                    contentDescription = ""
+                )
+            }
             titleText?.let {
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(

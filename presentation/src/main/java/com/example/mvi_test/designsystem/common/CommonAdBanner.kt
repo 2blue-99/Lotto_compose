@@ -1,4 +1,4 @@
-package com.example.mvi_test.ui.common
+package com.example.mvi_test.designsystem.common
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing

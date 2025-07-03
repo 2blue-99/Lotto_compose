@@ -42,9 +42,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mvi_test.screen.random.RandomViewModel
 import com.example.mvi_test.screen.random.state.RandomActionState
 import com.example.mvi_test.screen.random.state.RandomUIState
-import com.example.mvi_test.ui.common.CommonExpandableBox
-import com.example.mvi_test.ui.common.CommonListItem
-import com.example.mvi_test.ui.common.CommonLottoAutoScrollRow
+import com.example.mvi_test.designsystem.common.CommonExpandableBox
+import com.example.mvi_test.designsystem.common.CommonListItem
+import com.example.mvi_test.designsystem.common.CommonLottoAutoScrollRow
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.util.CommonUtil.toAlphabet
 

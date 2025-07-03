@@ -1,4 +1,4 @@
-package com.example.mvi_test.ui.common
+package com.example.mvi_test.designsystem.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
