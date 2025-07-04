@@ -1,5 +1,6 @@
 package com.example.data.local.di
 
+import com.example.data.local.dao.KeywordDao
 import com.example.data.local.dao.LottoDao
 import com.example.data.local.db.AppDatabase
 import dagger.Module
@@ -15,4 +16,9 @@ object DaoModule {
     @Provides
     fun provideLottoDao(database: AppDatabase): LottoDao =
         database.lottoDao()
+
+    @Singleton
+    @Provides
+    fun provideKeywordDao(database: AppDatabase): KeywordDao =
+        database.keywordDao()
 }

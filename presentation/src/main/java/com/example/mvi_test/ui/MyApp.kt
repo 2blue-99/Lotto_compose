@@ -10,8 +10,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,6 +35,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.domain.util.CommonMessage
 import com.example.mvi_test.R
 import com.example.mvi_test.navigation.NavigationItem
 import com.example.mvi_test.screen.home.navigation.homeScreen
@@ -43,10 +49,17 @@ import com.example.mvi_test.screen.setting.navigation.settingScreen
 @Composable
 fun MyApp() {
     val navController = rememberNavController()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     BackOnPressed(navController)
 
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+//                modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing)
+            )
+        }
 //        bottomBar = {
 //            BottomNavigationBar(navController)
 //        }
@@ -55,6 +68,14 @@ fun MyApp() {
             modifier = Modifier.padding(padding)
         ) {
             NavHostContainer(
+                onShowSnackbar = {
+                    // 스넥바 중복 요청 방지
+                    if(snackbarHostState.currentSnackbarData == null) {
+                        snackbarHostState.showSnackbar(
+                            message = it.message,
+                        )
+                    }
+                },
                 navController = navController,
             )
         }
@@ -70,7 +91,9 @@ fun BottomNavigationBar(
     val destination: List<NavigationItem> = NavigationItem.toList()
 
     BottomNavigation (
-        modifier = Modifier.fillMaxWidth().padding(WindowInsets.navigationBars.asPaddingValues()),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(WindowInsets.navigationBars.asPaddingValues()),
         backgroundColor = Color.White,
         contentColor = Color(0xFF3F414E)
     ) {
@@ -108,6 +131,7 @@ fun BottomNavigationBar(
 
 @Composable
 fun NavHostContainer(
+    onShowSnackbar: suspend (CommonMessage) -> Unit,
     navController: NavHostController
 ) {
     NavHost(
@@ -120,7 +144,10 @@ fun NavHostContainer(
             navigateToSetting = navController::navigateToSetting,
         )
 
-        randomScreen(navController::popBackStack)
+        randomScreen(
+            onShowSnackbar = onShowSnackbar,
+            popBackStack = navController::popBackStack,
+        )
 
         recodeScreen(navController::popBackStack)
 

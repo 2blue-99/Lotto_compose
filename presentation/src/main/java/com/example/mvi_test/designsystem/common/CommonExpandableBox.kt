@@ -13,8 +13,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,14 +31,18 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.mvi_test.ui.theme.CommonStyle
+import com.example.mvi_test.ui.theme.SubColor
 
 @Composable
 
 fun CommonExpandableBox(
     shrinkColor: List<Color> = listOf(Color(0xFF227DBD), Color(0xFF528B35)),
     expandColor: List<Color> = listOf(Color(0xFFFF8A00), Color(0xFFFFD500)),
+    showQuestion: Boolean = true,
     shrinkContent: @Composable () -> Unit,
     expandContent: @Composable () -> Unit,
     modifier: Modifier = Modifier,
@@ -79,7 +88,29 @@ fun CommonExpandableBox(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            shrinkContent()
+            Box(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                shrinkContent()
+
+                if(showQuestion){
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .size(22.dp)
+                            .clip(CircleShape)
+                            .background(Color.White)
+                            .clickable { expanded = !expanded },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "?",
+                            style = CommonStyle.text14Bold,
+                            color = SubColor
+                        )
+                    }
+                }
+            }
             AnimatedVisibility(visible = expanded) {
                 Box(
                     modifier = Modifier

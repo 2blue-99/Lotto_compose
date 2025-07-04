@@ -77,6 +77,10 @@ dependencies {
     // Ad
 //    implementation("com.google.android.gms:play-services-ads:24.4.0")
 
+    // Flow Row
+    implementation(libs.accompanist.flowlayout) // 최신 버전 확인 필요
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

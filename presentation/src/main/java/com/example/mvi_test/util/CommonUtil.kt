@@ -1,6 +1,7 @@
 package com.example.mvi_test.util
 
 import androidx.compose.ui.graphics.Color
+import com.example.domain.model.Keyword
 import kotlin.random.Random
 
 object CommonUtil {
@@ -35,4 +36,6 @@ object CommonUtil {
         val alphabetList = listOf("A","B","C","D","E")
         return alphabetList.getOrNull(this) ?: "A"
     }
+
+    fun String.toKeyword() = Keyword(id = 0, title = this)
 }

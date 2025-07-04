@@ -1,6 +1,8 @@
 package com.example.data.util
 
+import com.example.data.local.entity.KeywordEntity
 import com.example.data.local.entity.LottoEntity
+import com.example.domain.model.Keyword
 import com.example.domain.model.LottoRecode
 
 object Mapper {
@@ -20,4 +22,6 @@ object Mapper {
         drwtNo6,
         bnusNo
     )
+
+    fun Keyword.toEntity(): KeywordEntity = KeywordEntity(id, title)
 }

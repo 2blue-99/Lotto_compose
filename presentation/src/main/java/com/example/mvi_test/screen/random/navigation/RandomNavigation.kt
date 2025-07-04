@@ -1,9 +1,11 @@
 package com.example.mvi_test.screen.random.navigation
 
+import androidx.compose.material.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.example.domain.util.CommonMessage
 import com.example.mvi_test.screen.random.screen.RandomScreen
 import timber.log.Timber
 
@@ -13,6 +15,7 @@ fun NavController.navigateToRandom(navOptions: NavOptions? = null){
 }
 
 fun NavGraphBuilder.randomScreen(
+    onShowSnackbar: suspend (CommonMessage) -> Unit,
     popBackStack: () -> Unit
 ){
     composable(
@@ -20,6 +23,9 @@ fun NavGraphBuilder.randomScreen(
 //        exitTransition = { slideToLeftExit() },
 //        popEnterTransition = { slideToRightEnter() }
     ) {
-        RandomScreen(popBackStack)
+        RandomScreen(
+            onShowSnackbar,
+            popBackStack
+        )
     }
 }

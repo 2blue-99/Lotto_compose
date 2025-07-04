@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="keyword_list">
+        <item>행운 777</item>
+        <item>2025 대박</item>
+        <item>내 생일 970707</item>
+        <item>행복한 2025</item>
+        <item>내 이름 김철수</item>
+    </string-array>
+</resources>

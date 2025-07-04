@@ -97,7 +97,7 @@ fun CommonLottoCircle(
     ){
         Text(
             text = targetNumber,
-            style = CommonStyle.text16BoldOutLine,
+            style = CommonStyle.text16BoldShadow,
             color = Color.White, // 보너스 로또 구분,
         )
     }

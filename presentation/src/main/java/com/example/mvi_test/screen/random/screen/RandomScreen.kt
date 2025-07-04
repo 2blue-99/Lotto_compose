@@ -3,15 +3,12 @@ package com.example.mvi_test.screen.random.screen
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.Animation
-import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,13 +19,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,12 +31,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -49,36 +46,48 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.min
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.domain.model.Keyword
+import com.example.domain.util.CommonMessage
 import com.example.mvi_test.R
+import com.example.mvi_test.designsystem.common.CommonExpandableBox
+import com.example.mvi_test.designsystem.common.CommonFlowRow
+import com.example.mvi_test.designsystem.common.CommonLazyRow
+import com.example.mvi_test.designsystem.common.CommonLottoAutoRow
+import com.example.mvi_test.designsystem.common.HorizontalSpacer
+import com.example.mvi_test.designsystem.common.VerticalSpacer
 import com.example.mvi_test.screen.random.RandomViewModel
+import com.example.mvi_test.screen.random.state.KeywordUIState
+import com.example.mvi_test.screen.random.state.RandomEffectState
 import com.example.mvi_test.screen.random.state.RandomActionState
 import com.example.mvi_test.screen.random.state.RandomUIState
-import com.example.mvi_test.designsystem.common.CommonExpandableBox
-import com.example.mvi_test.designsystem.common.CommonListItem
-import com.example.mvi_test.designsystem.common.CommonLottoAutoRow
-import com.example.mvi_test.designsystem.common.VerticalSpacer
 import com.example.mvi_test.ui.theme.CommonStyle
-import com.example.mvi_test.ui.theme.LightGray
 import com.example.mvi_test.ui.theme.ScreenBackground
 import com.example.mvi_test.ui.theme.SubColor
 import com.example.mvi_test.util.CommonUtil.toAlphabet
+import com.example.mvi_test.util.CommonUtil.toKeyword
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun RandomScreen(
-    popBackStack: () -> Unit = {},
+    onShowSnackbar: suspend (CommonMessage) -> Unit = {},
+    popBackStack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RandomViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.randomUIState.collectAsStateWithLifecycle()
+    val sidEffectState by viewModel.sideEffectState.collectAsStateWithLifecycle()
+
+    val keywordUIState by viewModel.keywordUIState.collectAsStateWithLifecycle()
+    val randomUIState by viewModel.randomUIState.collectAsStateWithLifecycle()
 
     RandomScreen(
         popBackStack = popBackStack,
-        uiState = uiState,
-        intentHandler = viewModel::intentHandler,
+        keywordUIState = keywordUIState,
+        randomUIState = randomUIState,
+        actionHandler = viewModel::actionHandler,
+        effectHandler = viewModel::effectHandler,
         modifier = modifier
     )
 }
@@ -86,8 +95,10 @@ fun RandomScreen(
 @Composable
 fun RandomScreen(
     popBackStack: () -> Unit = {},
-    uiState: RandomUIState = RandomUIState.Loading,
-    intentHandler: (RandomActionState) -> Unit = {},
+    keywordUIState: KeywordUIState = KeywordUIState.Loading,
+    randomUIState: RandomUIState = RandomUIState.Loading,
+    actionHandler: (RandomActionState) -> Unit = {},
+    effectHandler: (RandomEffectState) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -100,12 +111,23 @@ fun RandomScreen(
     ) {
         item {
             CommonExpandableBox(
+                showQuestion = true,
                 shrinkContent = {
-                    Text(
-                        text = "행운 로또 추첨",
-                        style = CommonStyle.text24Bold,
-                        color = Color.White
-                    )
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.CenterEnd
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = "행운 로또 추첨",
+                                style = CommonStyle.text24Bold,
+                                color = Color.White
+                            )
+                        }
+                    }
                 },
                 expandContent = {
                     Text(
@@ -118,10 +140,15 @@ fun RandomScreen(
             )
         }
         item {
-            KeywordContent()
+            KeywordContent(
+                actionHandler = actionHandler,
+                effectHandler = effectHandler,
+                keywordList = if(keywordUIState is KeywordUIState.Success) keywordUIState.keywordList else emptyList(),
+            )
         }
         item {
             RandomResultContent(
+
             )
         }
     }
@@ -131,19 +158,24 @@ fun RandomScreen(
 @Composable
 private fun RandomScreenPreview() {
     RandomScreen(
-        uiState = RandomUIState.Loading
+        randomUIState = RandomUIState.Loading,
+        keywordUIState = KeywordUIState.Loading
     )
 }
 
 @Composable
 fun KeywordContent(
-    searchList: List<String> = listOf("aaaaaaa","bbbbbbb","cccccccc","ddddddd"),
+    actionHandler: (RandomActionState) -> Unit = {},
+    effectHandler: (RandomEffectState) -> Unit = {},
+    keywordList: List<Keyword> = listOf(Keyword(), Keyword(), Keyword(), Keyword(), Keyword()),
     modifier: Modifier = Modifier
 ) {
     var text by remember { mutableStateOf("") }
-    var expand by remember { mutableStateOf(false) }
+    var expand by remember { mutableStateOf(true) }
+    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val rememberCoroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = modifier
@@ -160,7 +192,7 @@ fun KeywordContent(
                 modifier = Modifier
                     .weight(7f)
                     .onFocusEvent {
-                        expand = it.isFocused == true
+                        if(it.isFocused){ expand = true }
                     },
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
@@ -175,7 +207,10 @@ fun KeywordContent(
                 textStyle = CommonStyle.text20.copy(textAlign = TextAlign.Start),
                 value = text,
                 onValueChange = { text = it },
-                placeholder = { Text("행운의 키워드를 입력해주세요.") },
+                placeholder = { Text(
+                    text = "행운의 키워드를 입력해주세요.",
+                    style = CommonStyle.text16
+                ) },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Done
                 ),
@@ -187,14 +222,30 @@ fun KeywordContent(
                 ),
             )
 
+            HorizontalSpacer(12.dp)
+
             Button(
                 modifier = Modifier.weight(3f),
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = SubColor),
+                contentPadding = PaddingValues(4.dp),
                 onClick = {
-                    focusManager.clearFocus()
-                    keyboardController?.hide()
-                }
+                    if(text.isNotBlank()){
+                        focusManager.clearFocus()
+                        keyboardController?.hide()
+                        expand = false
+                        actionHandler.invoke(RandomActionState.AddKeyword(text))
+                    }else{
+                        rememberCoroutineScope.launch {
+                            onShowSnackbar(CommonMessage.RANDOM_EMPTY_KEYWORD)
+                        }
+                    }
+                },
             ) {
-                Text("추첨하기")
+                Text(
+                    text = "추첨하기",
+                    style = CommonStyle.text16
+                )
             }
         }
 
@@ -202,19 +253,44 @@ fun KeywordContent(
             Column(
                 modifier = modifier
                     .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.Start
             ) {
-                // TODO 검색 개수가 5개 미만일 경우 대응 필요
-                searchList.forEach { title ->
-                    CommonListItem(
-                        title = title,
-                        onClick = {
+                VerticalSpacer(16.dp)
+
+                if(keywordList.isNotEmpty()){
+                    Text(text = "최근", style = CommonStyle.text14Bold)
+
+                    VerticalSpacer(4.dp)
+
+                    CommonLazyRow(
+                        keywordList = keywordList,
+                        removable = false,
+                        onClickChip = {
                             text = it
                             expand = false
                             focusManager.clearFocus()
+                        },
+                        onClickDelete = {
+                            actionHandler.invoke(RandomActionState.DeleteKeyword(it))
                         }
                     )
+
+                    VerticalSpacer(16.dp)
                 }
+
+                Text(text = "추천", style = CommonStyle.text14Bold)
+
+                VerticalSpacer(4.dp)
+
+                CommonFlowRow(
+                    keywordList = context.resources.getStringArray(R.array.keyword_list).map { it.toKeyword() },
+                    removable = false,
+                    onClickChip = {
+                        text = it
+                        expand = false
+                        focusManager.clearFocus()
+                    }
+                )
             }
         }
     }
