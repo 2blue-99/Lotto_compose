@@ -5,22 +5,6 @@ import com.example.domain.model.Keyword
 import kotlin.random.Random
 
 object CommonUtil {
-    fun makeLotto(): List<List<Int>>{
-        val allList = mutableListOf<List<Int>>()
-        repeat(5){
-            val list = mutableListOf<Int>()
-            repeat(7){
-                val number = Random.nextInt(1, 46)
-                list.add(number)
-            }
-            list.sort()
-            allList.add(list)
-        }
-        return allList
-    }
-
-    fun String.stringToLong() = this.map { it.code }.sum().toLong()
-
     fun Int.toLottoColor(): Color{
         return when(this){
             in 1..10 -> Color(0xFFFCDB00)   // 노랑
@@ -38,4 +22,21 @@ object CommonUtil {
     }
 
     fun String.toKeyword() = Keyword(id = 0, title = this)
+
+    fun List<Keyword>.containsKeyword(test: String): Boolean = this.map { it.title }.contains(test)
+
+    fun makeLotto(input: String): List<List<Int>> {
+        val word = input.map { it.code }.sum().toLong()
+        val random = Random(UniqueSeed.makeUniqueSeed(word))
+
+        val resultList = mutableListOf<List<Int>>()
+        repeat(5){
+            val rowList = mutableListOf<Int>()
+            repeat(7){
+                rowList.add(random.nextInt(1,46))
+            }
+            resultList.add(rowList.sorted())
+        }
+        return resultList
+    }
 }

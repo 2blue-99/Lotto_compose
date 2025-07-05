@@ -67,16 +67,3 @@ fun CommonAdBanner(modifier:  Modifier = Modifier) {
 private fun CommonAdBannerPreview() {
     CommonAdBanner()
 }
-
-//fun main() = runBlocking {
-//    val word = "Lucky".stringToLong()
-//    val random = Random(UniqueSeed.makeUniqueSeed(word))
-//    var count = 0
-//    var array = Array(46){0}
-//    while (count < 1000000000){
-//        val number = random.nextInt(1,46)
-//        array[number]+=1
-//        count++
-//    }
-//    println(array.contentToString())
-//}

@@ -1,5 +1,6 @@
 package com.example.mvi_test.screen.random.screen
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
@@ -61,14 +62,17 @@ import com.example.mvi_test.screen.random.RandomViewModel
 import com.example.mvi_test.screen.random.state.KeywordUIState
 import com.example.mvi_test.screen.random.state.RandomEffectState
 import com.example.mvi_test.screen.random.state.RandomActionState
-import com.example.mvi_test.screen.random.state.RandomUIState
+import com.example.mvi_test.screen.random.state.LottoUIState
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.ScreenBackground
 import com.example.mvi_test.ui.theme.SubColor
+import com.example.mvi_test.util.CommonUtil.containsKeyword
 import com.example.mvi_test.util.CommonUtil.toAlphabet
 import com.example.mvi_test.util.CommonUtil.toKeyword
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Composable
 fun RandomScreen(
@@ -77,15 +81,24 @@ fun RandomScreen(
     modifier: Modifier = Modifier,
     viewModel: RandomViewModel = hiltViewModel()
 ) {
-    val sidEffectState by viewModel.sideEffectState.collectAsStateWithLifecycle()
-
+    val context = LocalContext.current
     val keywordUIState by viewModel.keywordUIState.collectAsStateWithLifecycle()
-    val randomUIState by viewModel.randomUIState.collectAsStateWithLifecycle()
+    val lottoUIState by viewModel.lottoUIState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.sideEffectState.collectLatest { effect ->
+            when(effect){
+                is RandomEffectState.ShowToast -> { Toast.makeText(context, effect.message.message, Toast.LENGTH_SHORT).show() }
+                is RandomEffectState.ShowSnackbar -> { onShowSnackbar(effect.message) }
+                else -> {}
+            }
+        }
+    }
 
     RandomScreen(
         popBackStack = popBackStack,
         keywordUIState = keywordUIState,
-        randomUIState = randomUIState,
+        lottoUIState = lottoUIState,
         actionHandler = viewModel::actionHandler,
         effectHandler = viewModel::effectHandler,
         modifier = modifier
@@ -96,7 +109,7 @@ fun RandomScreen(
 fun RandomScreen(
     popBackStack: () -> Unit = {},
     keywordUIState: KeywordUIState = KeywordUIState.Loading,
-    randomUIState: RandomUIState = RandomUIState.Loading,
+    lottoUIState: LottoUIState = LottoUIState.Loading,
     actionHandler: (RandomActionState) -> Unit = {},
     effectHandler: (RandomEffectState) -> Unit = {},
     modifier: Modifier = Modifier
@@ -148,7 +161,7 @@ fun RandomScreen(
         }
         item {
             RandomResultContent(
-
+                lottoList = if(lottoUIState is LottoUIState.Success) lottoUIState.lottoList else emptyList()
             )
         }
     }
@@ -158,7 +171,7 @@ fun RandomScreen(
 @Composable
 private fun RandomScreenPreview() {
     RandomScreen(
-        randomUIState = RandomUIState.Loading,
+        lottoUIState = LottoUIState.Loading,
         keywordUIState = KeywordUIState.Loading
     )
 }
@@ -171,11 +184,16 @@ fun KeywordContent(
     modifier: Modifier = Modifier
 ) {
     var text by remember { mutableStateOf("") }
-    var expand by remember { mutableStateOf(true) }
+    var expand by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val rememberCoroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        delay(200)
+        expand = true
+    }
 
     Column(
         modifier = modifier
@@ -192,7 +210,9 @@ fun KeywordContent(
                 modifier = Modifier
                     .weight(7f)
                     .onFocusEvent {
-                        if(it.isFocused){ expand = true }
+                        if (it.isFocused) {
+                            expand = true
+                        }
                     },
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
@@ -230,14 +250,21 @@ fun KeywordContent(
                 colors = ButtonDefaults.buttonColors(containerColor = SubColor),
                 contentPadding = PaddingValues(4.dp),
                 onClick = {
+                    // Empty 체크
                     if(text.isNotBlank()){
                         focusManager.clearFocus()
                         keyboardController?.hide()
                         expand = false
-                        actionHandler.invoke(RandomActionState.AddKeyword(text))
+                        rememberCoroutineScope.launch {
+                            delay(100) // TODO 해당 딜레이가 없으면 부모 컴포넌트가 숨겨지기 전에 업데이트된게 보여서 추가한 임시방편
+                            if(!keywordList.containsKeyword(text)){
+                                actionHandler.invoke(RandomActionState.AddKeyword(text))
+                            }
+                            actionHandler.invoke(RandomActionState.OnClickDraw(text))
+                        }
                     }else{
                         rememberCoroutineScope.launch {
-                            onShowSnackbar(CommonMessage.RANDOM_EMPTY_KEYWORD)
+                            effectHandler.invoke(RandomEffectState.ShowSnackbar(CommonMessage.RANDOM_EMPTY_KEYWORD))
                         }
                     }
                 },
@@ -264,7 +291,7 @@ fun KeywordContent(
 
                     CommonLazyRow(
                         keywordList = keywordList,
-                        removable = false,
+                        removable = true,
                         onClickChip = {
                             text = it
                             expand = false
@@ -304,19 +331,28 @@ private fun KeywordBoxPreview() {
 
 @Composable
 fun RandomResultContent(
-    targetList: List<List<Int>> = testInput(),
+    lottoList: List<List<Int>> = testInput(),
     modifier: Modifier = Modifier
 ) {
     val itemList = remember { mutableStateListOf<Int>() }
     val alpha = remember { Animatable(0f) }
 
-    LaunchedEffect(targetList) {
-        if(targetList.isEmpty()){
+    LaunchedEffect(lottoList) {
+        if(lottoList.isEmpty()){
             alpha.animateTo(
                 targetValue = 1f,
                 animationSpec = tween(durationMillis = 800)
             )
         }else{
+            launch {
+                // Empty 문구 Hide
+                alpha.animateTo(
+                    targetValue = 0f,
+                    animationSpec = tween(durationMillis = 800)
+                )
+            }
+
+            itemList.clear()
             repeat(5) { index ->
                 delay(300) // 300ms 간격으로 하나씩 추가
                 itemList.add(index)
@@ -342,7 +378,7 @@ fun RandomResultContent(
 
             itemList.forEach {
                 RandomListItem(
-                    targetList = targetList[it],
+                    targetList = lottoList[it],
                     index = it
                 )
                 if(it < itemList.lastIndex){

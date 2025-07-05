@@ -45,6 +45,7 @@ import com.example.mvi_test.screen.recode.navigation.navigateToRecode
 import com.example.mvi_test.screen.recode.navigation.recodeScreen
 import com.example.mvi_test.screen.setting.navigation.navigateToSetting
 import com.example.mvi_test.screen.setting.navigation.settingScreen
+import timber.log.Timber
 
 @Composable
 fun MyApp() {
@@ -69,12 +70,9 @@ fun MyApp() {
         ) {
             NavHostContainer(
                 onShowSnackbar = {
-                    // 스넥바 중복 요청 방지
-                    if(snackbarHostState.currentSnackbarData == null) {
-                        snackbarHostState.showSnackbar(
-                            message = it.message,
-                        )
-                    }
+                    snackbarHostState.showSnackbar(
+                        message = it.message,
+                    )
                 },
                 navController = navController,
             )

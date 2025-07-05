@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -41,7 +42,7 @@ fun CommonLazyRow(
                 keyword = data,
                 removable = removable,
                 onClickChip = onClickChip,
-                onClickDelete = {}
+                onClickDelete = onClickDelete
             )
         }
     }
@@ -101,9 +102,9 @@ fun CommonChip(
             if(removable) {
                 Icon(
                     modifier = Modifier
-                        .clickable { onClickDelete(0) }
-                        .size(16.dp)
-                    ,
+                        .padding(start = 6.dp)
+                        .clickable { onClickDelete(keyword.id) }
+                        .size(16.dp),
                     imageVector = Icons.Default.Clear,
                     contentDescription = "remove",
                     tint = DarkGray
