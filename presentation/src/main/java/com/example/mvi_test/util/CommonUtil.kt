@@ -1,5 +1,6 @@
 package com.example.mvi_test.util
 
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
 import com.example.domain.model.Keyword
 import kotlin.random.Random
@@ -38,5 +39,17 @@ object CommonUtil {
             resultList.add(rowList.sorted())
         }
         return resultList
+    }
+
+    fun SnapshotStateList<Boolean>.setAllTrue() {
+        this.indices.forEach {
+            this[it] = true
+        }
+    }
+
+    fun SnapshotStateList<Boolean>.setAllFalse() {
+        this.indices.forEach {
+            this[it] = false
+        }
     }
 }

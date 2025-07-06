@@ -9,19 +9,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -52,6 +51,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.model.Keyword
 import com.example.domain.util.CommonMessage
 import com.example.mvi_test.R
+import com.example.mvi_test.designsystem.common.CommonButton
 import com.example.mvi_test.designsystem.common.CommonExpandableBox
 import com.example.mvi_test.designsystem.common.CommonFlowRow
 import com.example.mvi_test.designsystem.common.CommonLazyRow
@@ -60,19 +60,23 @@ import com.example.mvi_test.designsystem.common.HorizontalSpacer
 import com.example.mvi_test.designsystem.common.VerticalSpacer
 import com.example.mvi_test.screen.random.RandomViewModel
 import com.example.mvi_test.screen.random.state.KeywordUIState
-import com.example.mvi_test.screen.random.state.RandomEffectState
-import com.example.mvi_test.screen.random.state.RandomActionState
 import com.example.mvi_test.screen.random.state.LottoUIState
+import com.example.mvi_test.screen.random.state.RandomActionState
+import com.example.mvi_test.screen.random.state.RandomEffectState
 import com.example.mvi_test.ui.theme.CommonStyle
+import com.example.mvi_test.ui.theme.DarkGray
+import com.example.mvi_test.ui.theme.LightGray
 import com.example.mvi_test.ui.theme.ScreenBackground
 import com.example.mvi_test.ui.theme.SubColor
 import com.example.mvi_test.util.CommonUtil.containsKeyword
+import com.example.mvi_test.util.CommonUtil.setAllTrue
 import com.example.mvi_test.util.CommonUtil.toAlphabet
 import com.example.mvi_test.util.CommonUtil.toKeyword
+import com.example.mvi_test.util.DRAW_COMPLETE_TIME
+import com.example.mvi_test.util.DRAW_ITEM_SHOW_TIME
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @Composable
 fun RandomScreen(
@@ -185,15 +189,33 @@ fun KeywordContent(
 ) {
     var text by remember { mutableStateOf("") }
     var expand by remember { mutableStateOf(false) }
+    var drawState by remember { mutableStateOf(true) }
+
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val rememberCoroutineScope = rememberCoroutineScope()
+//    val drawButtonColor by animateColorAsState(
+//        targetValue = if(drawState) SubColor else LightGray,
+//        animationSpec = tween(durationMillis = 500),
+//        label = "buttonColor"
+//    )
 
+    // 사용성을 높이기 위해 화면 진입 후(0.2초) 검색창 보여주기
     LaunchedEffect(Unit) {
         delay(200)
         expand = true
     }
+
+    LaunchedEffect(drawState) {
+        if(!drawState){
+            // 로또 추첨 결과가 완료되는 시간 : 얼추 1.8초
+            delay(DRAW_COMPLETE_TIME)
+            drawState = true
+        }
+    }
+
+
 
     Column(
         modifier = modifier
@@ -244,17 +266,20 @@ fun KeywordContent(
 
             HorizontalSpacer(12.dp)
 
-            Button(
-                modifier = Modifier.weight(3f),
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = SubColor),
-                contentPadding = PaddingValues(4.dp),
+            CommonButton(
+                modifier = Modifier
+                    .weight(3f)
+                    .height(50.dp),
+                containerColor = SubColor,
+                disableColor = LightGray,
+                enabled = drawState,
                 onClick = {
                     // Empty 체크
                     if(text.isNotBlank()){
                         focusManager.clearFocus()
                         keyboardController?.hide()
                         expand = false
+                        drawState = false
                         rememberCoroutineScope.launch {
                             delay(100) // TODO 해당 딜레이가 없으면 부모 컴포넌트가 숨겨지기 전에 업데이트된게 보여서 추가한 임시방편
                             if(!keywordList.containsKeyword(text)){
@@ -268,12 +293,8 @@ fun KeywordContent(
                         }
                     }
                 },
-            ) {
-                Text(
-                    text = "추첨하기",
-                    style = CommonStyle.text16
-                )
-            }
+                text = "추첨하기"
+            )
         }
 
         AnimatedVisibility(expand) {
@@ -335,27 +356,27 @@ fun RandomResultContent(
     modifier: Modifier = Modifier
 ) {
     val itemList = remember { mutableStateListOf<Int>() }
-    val alpha = remember { Animatable(0f) }
+    val checkBoxStates = remember { mutableStateListOf(true,true,true,true,true) }
+    var isDrawCompleted by remember { mutableStateOf(false) }
 
     LaunchedEffect(lottoList) {
-        if(lottoList.isEmpty()){
-            alpha.animateTo(
-                targetValue = 1f,
-                animationSpec = tween(durationMillis = 800)
-            )
-        }else{
+        if(lottoList.isNotEmpty()) {
             launch {
-                // Empty 문구 Hide
-                alpha.animateTo(
-                    targetValue = 0f,
-                    animationSpec = tween(durationMillis = 800)
-                )
+                // 기존의 추첨 결과 초기화
+                itemList.clear()
+                // 기존의 체크박스 상태 초기화
+                checkBoxStates.setAllTrue()
+                repeat(5) { index ->
+                    delay(DRAW_ITEM_SHOW_TIME)
+                    itemList.add(index)
+                }
             }
 
-            itemList.clear()
-            repeat(5) { index ->
-                delay(300) // 300ms 간격으로 하나씩 추가
-                itemList.add(index)
+            // 전체 로또 노출 완료 여부
+            launch {
+                isDrawCompleted = false
+                delay(DRAW_COMPLETE_TIME)
+                isDrawCompleted = true
             }
         }
     }
@@ -376,60 +397,82 @@ fun RandomResultContent(
 
             VerticalSpacer(10.dp)
 
-            itemList.forEach {
+            itemList.forEach { index ->
                 RandomListItem(
-                    targetList = lottoList[it],
-                    index = it
+                    targetList = lottoList[index],
+                    checkBox = checkBoxStates[index],
+                    onCheckChange = {
+                        checkBoxStates[index] = it
+                    },
+                    index = index
                 )
-                if(it < itemList.lastIndex){
+                if(index < itemList.lastIndex){
                     HorizontalDivider(color = Color.LightGray)
                 }
             }
         }
 
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .alpha(alpha.value),
-            contentAlignment = Alignment.Center
-        ){
-            Text(
-                text = "추첨하기 버튼을 눌러주세요.",
-                style = CommonStyle.text20Bold,
-                color = Color.LightGray
-            )
+        // 로또가 비어있을 때
+        AnimatedVisibility(
+            visible = lottoList.isEmpty(),
+            modifier = Modifier.matchParentSize()
+        ) {
+            Box(
+                modifier = Modifier,
+                contentAlignment = Alignment.Center
+            ){
+                Text(
+                    text = "추첨하기 버튼을 눌러주세요.",
+                    style = CommonStyle.text20Bold,
+                    color = Color.LightGray
+                )
+            }
         }
     }
 
-//    Row(
-//        modifier = Modifier.fillMaxWidth(),
-//        horizontalArrangement = Arrangement.spacedBy(10.dp)
-//    ) {
-//        Button(
-//            modifier = Modifier.weight(1f),
-//            onClick = {}
-//        ) {
-//            Text("복사하기")
-//        }
-//        Button(
-//            modifier = Modifier.weight(1f),
-//            onClick = {}
-//        ) {
-//            Text("공유하기")
-//        }
-//        Button(
-//            modifier = Modifier.weight(1f),
-//            onClick = {}
-//        ) {
-//            Text("웹으로 가기")
-//        }
-//        Button(
-//            modifier = Modifier.weight(1f),
-//            onClick = {}
-//        ) {
-//            Text("저장하기")
-//        }
-//    }
+    VerticalSpacer(10.dp)
+
+    val saveCount = checkBoxStates.toList().count { it }
+    val saveEnabled = if(isDrawCompleted && saveCount != 0) true else false
+    val saveText = if(!isDrawCompleted) "저장하기" else "${saveCount}개 저장하기"
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        CommonButton(
+            modifier = Modifier
+                .weight(2f)
+                .height(50.dp),
+            containerColor = SubColor,
+            disableColor = LightGray,
+            enabled = saveEnabled,
+            onClick = {
+
+            },
+            text = saveText
+        )
+        CommonButton(
+            modifier = Modifier
+                .weight(1f)
+                .height(50.dp),
+            containerColor = DarkGray,
+            disableColor = LightGray,
+            enabled = isDrawCompleted,
+            onClick = {},
+            text = "복사하기"
+        )
+        CommonButton(
+            modifier = Modifier
+                .weight(1f)
+                .height(50.dp),
+            containerColor = DarkGray,
+            disableColor = LightGray,
+            enabled = isDrawCompleted,
+            onClick = {},
+            text = "공유하기"
+        )
+    }
 }
 
 @Preview
@@ -441,10 +484,15 @@ private fun RandomResultPreview() {
 @Composable
 fun RandomListItem(
     index: Int = 0,
+    checkBox: Boolean = false,
+    onCheckChange: (Boolean) -> Unit = {},
     targetList: List<Int> = (1..45).shuffled().take(7).sorted(),
     modifier: Modifier = Modifier
 ) {
+    // 아이템 생성 시 페이드 아웃 -> 인
     val alpha = remember { Animatable(0f) }
+    // targetList 를 CommonLottoAutoRow 에 바로 넣을 경우, 결과가 살짝 보이는 이슈 존재 -> 상태로 관리
+    val lottoList by remember { mutableStateOf(targetList) }
 
     LaunchedEffect(Unit) {
         alpha.animateTo(
@@ -466,16 +514,23 @@ fun RandomListItem(
                 .weight(1f),
         ) {
             Checkbox(
-                true, null
+                checked = checkBox,
+                onCheckedChange = onCheckChange,
+                colors = CheckboxDefaults.colors(
+                    checkedColor = DarkGray,
+                    uncheckedColor = DarkGray,
+                )
             )
         }
         Box(
             modifier = Modifier
-                .weight(1f)
+                .weight(1f),
+            contentAlignment = Alignment.Center
         ) {
             Text(
                 text = index.toAlphabet(),
-                style = CommonStyle.text12
+                style = CommonStyle.text16,
+                color = DarkGray
             )
         }
         Box(
@@ -483,7 +538,7 @@ fun RandomListItem(
                 .weight(8f)
         ) {
             CommonLottoAutoRow(
-                targetList = targetList
+                targetList = lottoList
             )
         }
     }
