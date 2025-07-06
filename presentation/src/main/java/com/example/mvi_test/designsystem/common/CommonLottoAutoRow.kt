@@ -22,20 +22,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.domain.model.LottoItem
 import com.example.mvi_test.ui.theme.CommonStyle
+import com.example.mvi_test.util.CommonUtil.testLottoItem
 import com.example.mvi_test.util.CommonUtil.toLottoColor
 import kotlinx.coroutines.launch
 
 @Composable
 fun CommonLottoAutoRow(
-    targetList: List<Int> = listOf(1,5,10,20,30,40,45)
+    lottoItem: LottoItem = testLottoItem()
 ) {
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {
-        targetList.forEachIndexed { index, number ->
+        lottoItem.drawList.forEach {
             CommonLottoCircle(
-                targetNumber = number.toString(),
+                targetNumber = it,
                 modifier = Modifier
                     .padding(horizontal = 2.dp)
                     .weight(1f)

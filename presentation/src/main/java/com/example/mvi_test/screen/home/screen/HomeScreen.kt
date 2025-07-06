@@ -21,10 +21,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -53,7 +50,7 @@ import androidx.compose.ui.util.lerp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.domain.model.Lotto
+import com.example.domain.model.LottoRound
 import com.example.mvi_test.R
 import com.example.mvi_test.screen.home.HomeViewModel
 import com.example.mvi_test.screen.home.state.HomeActionState
@@ -116,7 +113,7 @@ fun HomeScreen(
             VerticalSpacer(10.dp)
 
             LottoPager(
-                lottoList = if(uiState is HomeUIState.Success) uiState.lotto else listOf(Lotto()),
+                lottoRoundList = if(uiState is HomeUIState.Success) uiState.lottoRounds else listOf(LottoRound()),
             )
 
             ButtonLayout(
@@ -206,14 +203,14 @@ private fun MainTopBarPreview() {
 
 @Composable
 fun LottoPager(
-    lottoList: List<Lotto> = emptyList(),
+    lottoRoundList: List<LottoRound> = emptyList(),
     modifier: Modifier = Modifier
 ) {
-    val pagerState = rememberPagerState(pageCount = { lottoList.size })
+    val pagerState = rememberPagerState(pageCount = { lottoRoundList.size })
 
-    LaunchedEffect(lottoList) {
+    LaunchedEffect(lottoRoundList) {
         pagerState.animateScrollToPage(
-            page = lottoList.lastIndex,
+            page = lottoRoundList.lastIndex,
             animationSpec = tween(
                 durationMillis = 500,
                 easing = FastOutSlowInEasing
@@ -230,7 +227,7 @@ fun LottoPager(
             contentPadding = PaddingValues(horizontal = 36.dp)
         ) { page ->
             LottoCardItem(
-                lottoItem = lottoList.getOrNull(page) ?: Lotto(),
+                lottoRoundItem = lottoRoundList.getOrNull(page) ?: LottoRound(),
                 modifier = Modifier.graphicsLayer {
                     val pageOffset = (
                             (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
@@ -249,7 +246,7 @@ fun LottoPager(
             )
         }
         LottoInfo(
-            lottoItem = lottoList[pagerState.currentPage],
+            lottoRoundItem = lottoRoundList[pagerState.currentPage],
             modifier = Modifier.offset(y = (-20).dp)
         )
     }
@@ -263,7 +260,7 @@ private fun LottoPagerPreview() {
 
 @Composable
 fun LottoCardItem(
-    lottoItem: Lotto = Lotto(),
+    lottoRoundItem: LottoRound = LottoRound(),
     modifier: Modifier = Modifier
 ) {
     val gradient = Brush.linearGradient(colors = listOf(PrimaryColor, SubColor))
@@ -285,7 +282,7 @@ fun LottoCardItem(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = lottoItem.drawDate ,
+                    text = lottoRoundItem.drawDate ,
                     style = CommonStyle.text12,
                     color = Color.White
                 )
@@ -294,7 +291,7 @@ fun LottoCardItem(
                     verticalAlignment = Alignment.Bottom
                 ) {
                     Text(
-                        text = lottoItem.drawNumber + "회",
+                        text = lottoRoundItem.drawNumber + "회",
                         style = CommonStyle.text36Bold,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -303,13 +300,13 @@ fun LottoCardItem(
                 Spacer(modifier = Modifier.height(20.dp))
                 CommonLottoContent(
                     listOf(
-                        lottoItem.drwtNo1,
-                        lottoItem.drwtNo2,
-                        lottoItem.drwtNo3,
-                        lottoItem.drwtNo4,
-                        lottoItem.drwtNo5,
-                        lottoItem.drwtNo6,
-                        lottoItem.bnusNo
+                        lottoRoundItem.drwtNo1,
+                        lottoRoundItem.drwtNo2,
+                        lottoRoundItem.drwtNo3,
+                        lottoRoundItem.drwtNo4,
+                        lottoRoundItem.drwtNo5,
+                        lottoRoundItem.drwtNo6,
+                        lottoRoundItem.bnusNo
                     )
                 )
             }
@@ -336,7 +333,7 @@ private fun LottoCardItemPreview() {
 
 @Composable
 fun LottoInfo(
-    lottoItem: Lotto = Lotto(),
+    lottoRoundItem: LottoRound = LottoRound(),
     modifier: Modifier = Modifier
 ) {
     val gradient = Brush.verticalGradient(colors = listOf(PrimaryColor, Color.White))
@@ -359,25 +356,25 @@ fun LottoInfo(
         ) {
             LottoInfoItem(
                 titleText = "총 판매금액",
-                valueText = lottoItem.totalSellAmount,
+                valueText = lottoRoundItem.totalSellAmount,
                 subText = "원"
             )
             HorizontalDivider(color = Color.LightGray)
             LottoInfoItem(
                 titleText = "1등 총 당첨금",
-                valueText = lottoItem.firstWinTotalAmount,
+                valueText = lottoRoundItem.firstWinTotalAmount,
                 subText = "원"
             )
             HorizontalDivider(color = Color.LightGray)
             LottoInfoItem(
                 titleText = "1등 당첨자 수",
-                valueText = lottoItem.firstWinCount,
+                valueText = lottoRoundItem.firstWinCount,
                 subText = "명"
             )
             HorizontalDivider(color = Color.LightGray)
             LottoInfoItem(
                 titleText = "1등 1명당 당첨금",
-                valueText = lottoItem.firstWinPerAmount,
+                valueText = lottoRoundItem.firstWinPerAmount,
                 subText = "원"
             )
         }

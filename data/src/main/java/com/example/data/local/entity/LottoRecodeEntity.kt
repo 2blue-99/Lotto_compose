@@ -9,6 +9,7 @@ data class LottoRecodeEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val saveDate: String, // 저장일
+    val sequence: String, // A~B 순서
     val drwtNo1: Int,
     val drwtNo2: Int,
     val drwtNo3: Int,

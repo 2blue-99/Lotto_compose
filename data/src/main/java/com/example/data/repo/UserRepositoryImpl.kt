@@ -1,17 +1,9 @@
 package com.example.data.repo
 
 import com.example.data.local.dao.KeywordDao
-import com.example.data.local.dao.LottoDao
 import com.example.data.local.entity.KeywordEntity
-import com.example.data.remote.datasource.LottoDataSourceImpl
-import com.example.data.util.Mapper.toEntity
-import com.example.data.util.toDomain
 import com.example.domain.model.Keyword
-import com.example.domain.model.Lotto
-import com.example.domain.model.LottoRecode
-import com.example.domain.repository.LottoRepository
 import com.example.domain.repository.UserRepository
-import com.example.domain.util.ResourceState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

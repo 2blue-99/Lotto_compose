@@ -49,6 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.model.Keyword
+import com.example.domain.model.LottoItem
+import com.example.domain.model.LottoRecode
 import com.example.domain.util.CommonMessage
 import com.example.mvi_test.R
 import com.example.mvi_test.designsystem.common.CommonButton
@@ -70,6 +72,8 @@ import com.example.mvi_test.ui.theme.ScreenBackground
 import com.example.mvi_test.ui.theme.SubColor
 import com.example.mvi_test.util.CommonUtil.containsKeyword
 import com.example.mvi_test.util.CommonUtil.setAllTrue
+import com.example.mvi_test.util.CommonUtil.testLottoItem
+import com.example.mvi_test.util.CommonUtil.testLottoList
 import com.example.mvi_test.util.CommonUtil.toAlphabet
 import com.example.mvi_test.util.CommonUtil.toKeyword
 import com.example.mvi_test.util.DRAW_COMPLETE_TIME
@@ -77,6 +81,7 @@ import com.example.mvi_test.util.DRAW_ITEM_SHOW_TIME
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Composable
 fun RandomScreen(
@@ -165,6 +170,7 @@ fun RandomScreen(
         }
         item {
             RandomResultContent(
+                actionHandler = actionHandler,
                 lottoList = if(lottoUIState is LottoUIState.Success) lottoUIState.lottoList else emptyList()
             )
         }
@@ -352,7 +358,8 @@ private fun KeywordBoxPreview() {
 
 @Composable
 fun RandomResultContent(
-    lottoList: List<List<Int>> = testInput(),
+    actionHandler: (RandomActionState) -> Unit = {},
+    lottoList: List<LottoItem> = testLottoList(),
     modifier: Modifier = Modifier
 ) {
     val itemList = remember { mutableStateListOf<Int>() }
@@ -448,7 +455,29 @@ fun RandomResultContent(
             disableColor = LightGray,
             enabled = saveEnabled,
             onClick = {
+                // false 인 인덱스 찾아서 lottoList remove?
 
+                // 선택 리스트 중 true 인것의 인덱스 찾기
+                val checkedIndex = checkBoxStates.toList().indices.filter { checkBoxStates.toList()[it] }
+
+                // 로또 리스트에서 인덱스로 찾아서 새 리스트 만들기
+                val list = lottoList.filterIndexed { index, _ -> checkedIndex.contains(index) }
+
+                val list2 = lottoList.mapIndexedNotNull() { index, list ->
+                    if(checkedIndex.contains(index)) LottoRecode(
+                        saveDate = ,
+                        sequence = ,
+                        drwtNo1 = list[0],
+                        drwtNo2 = ,
+                        drwtNo3 = ,
+                        drwtNo4 = ,
+                        drwtNo5 = ,
+                        drwtNo6 = ,
+                        bnusNo = ,
+                    )  else null
+                }
+                Timber.d("list : $list")
+//                actionHandler(RandomActionState.OnClickDraw())
             },
             text = saveText
         )
@@ -486,7 +515,7 @@ fun RandomListItem(
     index: Int = 0,
     checkBox: Boolean = false,
     onCheckChange: (Boolean) -> Unit = {},
-    targetList: List<Int> = (1..45).shuffled().take(7).sorted(),
+    targetList: LottoItem = testLottoItem(),
     modifier: Modifier = Modifier
 ) {
     // 아이템 생성 시 페이드 아웃 -> 인
@@ -557,17 +586,6 @@ private fun RandomListItemPreview() {
 //        )
     )
 }
-
-fun testInput(): List<List<Int>> {
-    return listOf(
-            listOf(1, 5, 10, 11, 20, 30, 36),
-            listOf(2, 6, 12, 17, 21, 35, 41),
-            listOf(3, 7, 13, 18, 22, 33, 44),
-            listOf(4, 8, 14, 19, 23, 29, 39),
-            listOf(9, 15, 24, 28, 31, 34, 45)
-        )
-}
-
 
 
 

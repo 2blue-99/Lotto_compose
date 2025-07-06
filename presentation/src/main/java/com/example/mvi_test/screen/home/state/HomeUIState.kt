@@ -1,6 +1,6 @@
 package com.example.mvi_test.screen.home.state
 
-import com.example.domain.model.Lotto
+import com.example.domain.model.LottoRound
 
 sealed interface HomeUIState {
 
@@ -9,7 +9,7 @@ sealed interface HomeUIState {
     data object Fail : HomeUIState
 
     data class Success(
-        val lotto: List<Lotto>
+        val lottoRounds: List<LottoRound>
     ) : HomeUIState
 }
 

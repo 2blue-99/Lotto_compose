@@ -3,6 +3,7 @@ package com.example.mvi_test.util
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
 import com.example.domain.model.Keyword
+import com.example.domain.model.LottoItem
 import kotlin.random.Random
 
 object CommonUtil {
@@ -26,20 +27,80 @@ object CommonUtil {
 
     fun List<Keyword>.containsKeyword(test: String): Boolean = this.map { it.title }.contains(test)
 
-    fun makeLotto(input: String): List<List<Int>> {
+
+    /**
+     * 5개의 LottoItem 제작
+     */
+    fun makeLotto(input: String): List<LottoItem> {
         val word = input.map { it.code }.sum().toLong()
         val random = Random(UniqueSeed.makeUniqueSeed(word))
 
-        val resultList = mutableListOf<List<Int>>()
-        repeat(5){
-            val rowList = mutableListOf<Int>()
-            repeat(7){
-                rowList.add(random.nextInt(1,46))
+        val resultList = mutableListOf<LottoItem>()
+        repeat(5){ index ->
+            val lottoList = mutableListOf<Int>()
+            // 보너스 번호를 제외한 6개 추첨
+            repeat(6){
+                lottoList.add(random.nextInt(1,46))
             }
-            resultList.add(rowList.sorted())
+            // 리스트 정렬
+            val sortedList = lottoList.sorted()
+            val item = LottoItem(
+                sequence = index.toAlphabet(),
+                sum = sortedList.sum().toString(),
+                oddEndEvent = sortedList.toOddEventValue(),
+                highEndLow = sortedList.toHighLowValue(),
+                drawList = (sortedList + random.nextInt(1,46)).map { it.toString() }, // 보너스 번호 추가
+            )
+            resultList.add(item)
         }
         return resultList
     }
+
+    /**
+     * 로또 리스트 -> 홀짝 비율 값 (ex. 3:3)
+     */
+    fun List<Int>.toOddEventValue(): String {
+        var odd = 0 // 홀수
+        var event = 0 // 짝수
+        this.forEach {
+            if(it%3==0) odd++
+            else event++
+        }
+        return "${odd}:${event}"
+    }
+
+    /**
+     * 로또 리스트 -> 고, 저 비율 값 (ex. 3:3)
+     * Low : 1~22
+     * High : 23:45
+     */
+    fun List<Int>.toHighLowValue(): String {
+        var high = 0 // 고
+        var low = 0 // 저
+        this.forEach {
+            if(it in 1..22) low++
+            else high++
+        }
+        return "${high}:${low}"
+    }
+
+    fun testLottoList(): List<LottoItem> {
+        return listOf(
+            testLottoItem(),
+            testLottoItem(),
+            testLottoItem(),
+            testLottoItem(),
+            testLottoItem(),
+        )
+    }
+
+    fun testLottoItem(): LottoItem {
+        return LottoItem("A", "100", "3:3", "2:4", listOf("7", "7", "7","7","7","7","7"))
+    }
+
+
+
+
 
     fun SnapshotStateList<Boolean>.setAllTrue() {
         this.indices.forEach {

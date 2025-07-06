@@ -2,7 +2,7 @@ package com.example.data.remote.model
 
 import com.example.data.util.CommonUtils.formatComma
 import com.example.data.util.CommonUtils.formatDate
-import com.example.domain.model.Lotto
+import com.example.domain.model.LottoRound
 import com.google.gson.annotations.SerializedName
 
 data class LottoResponse(
@@ -35,8 +35,8 @@ data class LottoResponse(
     val drwtNo6: Int,
     val bnusNo: Int,
 ) {
-    fun toDomain(): Lotto {
-        return Lotto(
+    fun toDomain(): LottoRound {
+        return LottoRound(
             drawNumber.toString(),
             drawDate.formatDate(),
             totalSellAmount.formatComma(),

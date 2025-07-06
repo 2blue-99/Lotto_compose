@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.data.util.CommonUtils.formatComma
 import com.example.data.util.CommonUtils.formatDate
-import com.example.domain.model.Lotto
+import com.example.domain.model.LottoRound
 
 
 @Entity(tableName = "lotto")
@@ -25,7 +25,7 @@ data class LottoEntity(
     val drwtNo6: Int,
     val bnusNo: Int,
 ) {
-    fun toDomain(): Lotto = Lotto(
+    fun toDomain(): LottoRound = LottoRound(
         drawNumber.toString(),
         drawDate.formatDate(),
         totalSellAmount.formatComma(),

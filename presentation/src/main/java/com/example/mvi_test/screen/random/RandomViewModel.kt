@@ -76,7 +76,8 @@ class RandomViewModel @Inject constructor(
 
     private fun drawLotto(keyword: String){
         ioScope.launch {
-            lottoUIState.value = LottoUIState.Success(makeLotto(keyword))
+            val lottoItemList = makeLotto(keyword)
+            lottoUIState.value = LottoUIState.Success(lottoItemList)
         }
     }
 }
