@@ -24,8 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.domain.model.LottoItem
 import com.example.mvi_test.ui.theme.CommonStyle
-import com.example.mvi_test.util.CommonUtil.testLottoItem
-import com.example.mvi_test.util.CommonUtil.toLottoColor
+import com.example.mvi_test.util.Utils.testLottoItem
+import com.example.mvi_test.util.Utils.toLottoColor
 import kotlinx.coroutines.launch
 
 @Composable

@@ -4,9 +4,12 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
 import com.example.domain.model.Keyword
 import com.example.domain.model.LottoItem
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlin.random.Random
 
-object CommonUtil {
+object Utils {
     fun Int.toLottoColor(): Color{
         return when(this){
             in 1..10 -> Color(0xFFFCDB00)   // 노랑
@@ -97,6 +100,17 @@ object CommonUtil {
     fun testLottoItem(): LottoItem {
         return LottoItem("A", "100", "3:3", "2:4", listOf("7", "7", "7","7","7","7","7"))
     }
+
+    /**
+     * 현재 시간 포멧
+     *
+     * @return yyyy-MM-dd HH:mm:ss
+     */
+    fun currentTimeFormat(): String {
+        val currentTime = System.currentTimeMillis()
+        return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(currentTime))
+    }
+
 
 
 

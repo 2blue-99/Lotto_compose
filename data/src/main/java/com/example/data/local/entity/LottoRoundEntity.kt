@@ -8,7 +8,7 @@ import com.example.domain.model.LottoRound
 
 
 @Entity(tableName = "lotto")
-data class LottoEntity(
+data class LottoRoundEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val drawNumber: Int, // 회차 번호

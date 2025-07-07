@@ -11,7 +11,7 @@ sealed interface LottoUIState {
     data class Success(
         /**
          * 5개의 로또 리스트
-         * @see com.example.mvi_test.util.CommonUtil.makeLotto
+         * @see com.example.mvi_test.util.Utils.makeLotto
          */
         val lottoList: List<LottoItem>
     ) : LottoUIState

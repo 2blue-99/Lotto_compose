@@ -8,15 +8,17 @@ import androidx.room.PrimaryKey
 data class LottoRecodeEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
-    val saveDate: String, // 저장일
+    val saveDate: String, // 저장일 + 그룹 아이디 역할
     val sequence: String, // A~B 순서
-    val drwtNo1: Int,
-    val drwtNo2: Int,
-    val drwtNo3: Int,
-    val drwtNo4: Int,
-    val drwtNo5: Int,
-    val drwtNo6: Int,
-    val bnusNo: Int,
+    val sum: String = "", // 총합
+    val oddEndEvent: String = "", // 홀짝 3:3
+    val highEndLow: String = "", // 고저 2:4
+    val drwtNo1: String,
+    val drwtNo2: String,
+    val drwtNo3: String,
+    val drwtNo4: String,
+    val drwtNo5: String,
+    val drwtNo6: String,
 ) {
     fun toDomain(){
 

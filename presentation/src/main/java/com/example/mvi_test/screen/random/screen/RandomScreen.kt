@@ -50,7 +50,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.model.Keyword
 import com.example.domain.model.LottoItem
-import com.example.domain.model.LottoRecode
 import com.example.domain.util.CommonMessage
 import com.example.mvi_test.R
 import com.example.mvi_test.designsystem.common.CommonButton
@@ -70,18 +69,18 @@ import com.example.mvi_test.ui.theme.DarkGray
 import com.example.mvi_test.ui.theme.LightGray
 import com.example.mvi_test.ui.theme.ScreenBackground
 import com.example.mvi_test.ui.theme.SubColor
-import com.example.mvi_test.util.CommonUtil.containsKeyword
-import com.example.mvi_test.util.CommonUtil.setAllTrue
-import com.example.mvi_test.util.CommonUtil.testLottoItem
-import com.example.mvi_test.util.CommonUtil.testLottoList
-import com.example.mvi_test.util.CommonUtil.toAlphabet
-import com.example.mvi_test.util.CommonUtil.toKeyword
+import com.example.mvi_test.util.Utils.containsKeyword
+import com.example.mvi_test.util.Utils.setAllFalse
+import com.example.mvi_test.util.Utils.setAllTrue
+import com.example.mvi_test.util.Utils.testLottoItem
+import com.example.mvi_test.util.Utils.testLottoList
+import com.example.mvi_test.util.Utils.toAlphabet
+import com.example.mvi_test.util.Utils.toKeyword
 import com.example.mvi_test.util.DRAW_COMPLETE_TIME
 import com.example.mvi_test.util.DRAW_ITEM_SHOW_TIME
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @Composable
 fun RandomScreen(
@@ -363,23 +362,30 @@ fun RandomResultContent(
     modifier: Modifier = Modifier
 ) {
     val itemList = remember { mutableStateListOf<Int>() }
-    val checkBoxStates = remember { mutableStateListOf(true,true,true,true,true) }
+    val checkBoxStates = remember { mutableStateListOf(false,false,false,false,false) }
+    // 하단 버튼(저장, 복사, 공유) 활성화/비활성화 여부
     var isDrawCompleted by remember { mutableStateOf(false) }
 
     LaunchedEffect(lottoList) {
         if(lottoList.isNotEmpty()) {
+            // 추첨 결과 아이템 순차 노출
             launch {
                 // 기존의 추첨 결과 초기화
                 itemList.clear()
                 // 기존의 체크박스 상태 초기화
-                checkBoxStates.setAllTrue()
                 repeat(5) { index ->
                     delay(DRAW_ITEM_SHOW_TIME)
                     itemList.add(index)
                 }
             }
+            // 전체 로또 노출 완료 여부 - 로또 아이템 체크박스 활성화
+            launch {
+                checkBoxStates.setAllFalse()
+                delay(DRAW_COMPLETE_TIME)
+                checkBoxStates.setAllTrue()
+            }
 
-            // 전체 로또 노출 완료 여부
+            // 전체 로또 노출 완료 여부 - 하단 버튼 활성화
             launch {
                 isDrawCompleted = false
                 delay(DRAW_COMPLETE_TIME)
@@ -455,9 +461,12 @@ fun RandomResultContent(
             disableColor = LightGray,
             enabled = saveEnabled,
             onClick = {
-//                actionHandler(RandomActionState.OnClickDraw())
+                val checkedItemList = checkBoxStates.toList().indices.mapIndexedNotNull { index, _ ->
+                    if(checkBoxStates[index]) lottoList[index] else null
+                }
+                actionHandler(RandomActionState.OnClickSave(checkedItemList))
             },
-            text = saveText
+            text = saveText // 저장하기
         )
         CommonButton(
             modifier = Modifier

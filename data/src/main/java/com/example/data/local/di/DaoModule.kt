@@ -1,7 +1,7 @@
 package com.example.data.local.di
 
 import com.example.data.local.dao.KeywordDao
-import com.example.data.local.dao.LottoDao
+import com.example.data.local.dao.LottoRoundDao
 import com.example.data.local.db.AppDatabase
 import dagger.Module
 import dagger.Provides
@@ -14,8 +14,8 @@ import javax.inject.Singleton
 object DaoModule {
     @Singleton
     @Provides
-    fun provideLottoDao(database: AppDatabase): LottoDao =
-        database.lottoDao()
+    fun provideLottoDao(database: AppDatabase): LottoRoundDao =
+        database.lottoRoundDao()
 
     @Singleton
     @Provides
