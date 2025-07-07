@@ -6,10 +6,11 @@ import com.example.data.local.dao.KeywordDao
 import com.example.data.local.dao.LottoRecodeDao
 import com.example.data.local.dao.LottoRoundDao
 import com.example.data.local.entity.KeywordEntity
+import com.example.data.local.entity.LottoRecodeEntity
 import com.example.data.local.entity.LottoRoundEntity
 
 @Database(
-    entities = [LottoRoundEntity::class, KeywordEntity::class],
+    entities = [LottoRoundEntity::class, KeywordEntity::class, LottoRecodeEntity::class],
     version = 1
 )
 abstract class AppDatabase: RoomDatabase() {

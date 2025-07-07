@@ -7,7 +7,7 @@ import com.example.data.util.CommonUtils.formatDate
 import com.example.domain.model.LottoRound
 
 
-@Entity(tableName = "lotto")
+@Entity(tableName = "lotto_round")
 data class LottoRoundEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int,

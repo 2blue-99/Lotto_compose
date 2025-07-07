@@ -19,7 +19,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         ioScope.launch {
-            lottoRepo.getLottoDao().collect {
+            lottoRepo.getLottoRoundDao().collect {
                 homeUIState.value = HomeUIState.Success(it)
             }
         }

@@ -17,6 +17,6 @@ object RoomModule {
     @Provides
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
         Room.databaseBuilder(context, AppDatabase::class.java, "database-lotto")
-            .createFromAsset("lotto.db")
+            .createFromAsset("lotto_round.db")
             .build()
 }

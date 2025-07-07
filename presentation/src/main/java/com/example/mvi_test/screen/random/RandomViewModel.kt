@@ -90,7 +90,7 @@ class RandomViewModel @Inject constructor(
 
     private fun saveLottoItemList(list: List<LottoItem>){
         ioScope.launch {
-            lottoRepository.getLottoDao()
+            lottoRepository.insertLottoRecodeDao(list)
         }
     }
 }

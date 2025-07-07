@@ -6,6 +6,7 @@ import com.example.data.remote.datasource.LottoDataSourceImpl
 import com.example.data.util.Mapper.toLottoRecodeReEntity
 import com.example.data.util.toDomain
 import com.example.domain.model.LottoItem
+import com.example.domain.model.LottoRecode
 import com.example.domain.model.LottoRound
 import com.example.domain.repository.LottoRepository
 import com.example.domain.util.CommonUtils.currentTimeString
@@ -19,11 +20,17 @@ class LottoRepositoryImpl @Inject constructor(
     private val lottoRecodeDao: LottoRecodeDao,
     private val lottoDataSource: LottoDataSourceImpl
 ): LottoRepository {
-    override fun getLottoDao(): Flow<List<LottoRound>> {
-        return lottoRoundDao.getLottoDao().map { it.map { it.toDomain() } }
+    override fun getLottoRoundDao(): Flow<List<LottoRound>> {
+        return lottoRoundDao.getLottoRoundDao().map { it.map { it.toDomain() } }
     }
 
-    override suspend fun insertLottoDao(list:List<LottoItem>) {
+    override fun getLottoRecodeDao(): Flow<List<LottoRecode>> {
+        return lottoRecodeDao.getLottoRecodeDao().map { it.map { it.toDomain() } }
+    }
+
+
+
+    override suspend fun insertLottoRecodeDao(list:List<LottoItem>) {
         val currentTime = currentTimeString()
         return lottoRecodeDao.upsertRecodeList(list.map { it.toLottoRecodeReEntity(currentTime) })
     }
