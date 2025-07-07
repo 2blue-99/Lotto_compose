@@ -2,6 +2,7 @@ package com.example.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.domain.model.LottoItem
 import com.example.domain.model.LottoRecode
 
 // 로또 추첨 화면 > 선택 저장 로또 DB
@@ -25,10 +26,12 @@ data class LottoRecodeEntity(
         LottoRecode(
             id = id,
             saveDate = saveDate,
-            sequence = sequence,
-            sum = sum,
-            oddEndEvent = oddEndEvent,
-            highEndLow = highEndLow,
-            drawList = listOf(drwtNo1, drwtNo2, drwtNo3, drwtNo4, drwtNo5, drwtNo6)
+            lottoItem = LottoItem(
+                sequence = sequence,
+                sum = sum,
+                oddEndEvent = oddEndEvent,
+                highEndLow = highEndLow,
+                drawList = listOf(drwtNo1, drwtNo2, drwtNo3, drwtNo4, drwtNo5, drwtNo6)
+            ),
         )
 }

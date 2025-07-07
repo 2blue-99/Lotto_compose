@@ -18,6 +18,7 @@ class RecodeViewModel @Inject constructor(
     init {
         ioScope.launch {
             lottoRepository.getLottoRecodeDao().collect {
+                // TODO 기록 뭉치를 만들어서 넣어야 함
                 recodeUIState.value = RecodeUIState.Success(it)
             }
         }

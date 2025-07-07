@@ -9,6 +9,6 @@ sealed interface RecodeUIState {
     data object Fail : RecodeUIState
 
     data class Success(
-        val lottoRecodeList: List<LottoRecode>
+        val lottoRecodeList: List<List<LottoRecode>>
     ) : RecodeUIState
 }

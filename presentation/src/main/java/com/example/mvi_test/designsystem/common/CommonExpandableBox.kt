@@ -44,7 +44,7 @@ fun CommonExpandableBox(
     expandColor: List<Color> = listOf(Color(0xFFFF8A00), Color(0xFFFFD500)),
     showQuestion: Boolean = true,
     shrinkContent: @Composable () -> Unit,
-    expandContent: @Composable () -> Unit,
+    expandContent: @Composable (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -111,13 +111,15 @@ fun CommonExpandableBox(
                     }
                 }
             }
-            AnimatedVisibility(visible = expanded) {
-                Box(
-                    modifier = Modifier
-                        .alpha(alpha)
-                        .padding(top = 20.dp)
-                ) {
-                    expandContent()
+            if(expandContent != null) {
+                AnimatedVisibility(visible = expanded) {
+                    Box(
+                        modifier = Modifier
+                            .alpha(alpha)
+                            .padding(top = 20.dp)
+                    ) {
+                        expandContent()
+                    }
                 }
             }
         }
