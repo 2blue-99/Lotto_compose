@@ -455,28 +455,6 @@ fun RandomResultContent(
             disableColor = LightGray,
             enabled = saveEnabled,
             onClick = {
-                // false 인 인덱스 찾아서 lottoList remove?
-
-                // 선택 리스트 중 true 인것의 인덱스 찾기
-                val checkedIndex = checkBoxStates.toList().indices.filter { checkBoxStates.toList()[it] }
-
-                // 로또 리스트에서 인덱스로 찾아서 새 리스트 만들기
-                val list = lottoList.filterIndexed { index, _ -> checkedIndex.contains(index) }
-
-                val list2 = lottoList.mapIndexedNotNull() { index, list ->
-                    if(checkedIndex.contains(index)) LottoRecode(
-                        saveDate = ,
-                        sequence = ,
-                        drwtNo1 = list[0],
-                        drwtNo2 = ,
-                        drwtNo3 = ,
-                        drwtNo4 = ,
-                        drwtNo5 = ,
-                        drwtNo6 = ,
-                        bnusNo = ,
-                    )  else null
-                }
-                Timber.d("list : $list")
 //                actionHandler(RandomActionState.OnClickDraw())
             },
             text = saveText
@@ -567,7 +545,7 @@ fun RandomListItem(
                 .weight(8f)
         ) {
             CommonLottoAutoRow(
-                targetList = lottoList
+                lottoItem = lottoList
             )
         }
     }

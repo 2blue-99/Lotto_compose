@@ -33,27 +33,26 @@ fun CommonLottoAutoRow(
     lottoItem: LottoItem = testLottoItem()
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        lottoItem.drawList.forEach {
+        lottoItem.drawList.forEachIndexed { index, item ->
             CommonLottoCircle(
-                targetNumber = it,
+                targetNumber = item,
                 modifier = Modifier
                     .padding(horizontal = 2.dp)
                     .weight(1f)
                     .aspectRatio(1f)
             )
+            // 플러스 아이콘 TODO 보너스 번호는 제외시키자
+//            if(index == 5){
+//                Icon(
+//                    imageVector = Icons.Default.Add,
+//                    tint = Color.LightGray,
+//                    contentDescription = "plus"
+//                )
+//            }
         }
-//        targetList.forEachIndexed { index, number ->
-//            AutoScrollItem(
-//                targetNumber = number,
-//                waitTime = waitList.getOrNull(index) ?: 200L, // 대기시간이 없을 경우, 사양 낮은 기기에서 렉 발생
-//                modifier = Modifier
-//                    .weight(1f)
-//                    .aspectRatio(1f)
-//            )
-//            HorizontalSpacer(6.dp)
-//        }
     }
 }
 

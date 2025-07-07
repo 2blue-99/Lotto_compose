@@ -49,7 +49,7 @@ object CommonUtil {
                 sum = sortedList.sum().toString(),
                 oddEndEvent = sortedList.toOddEventValue(),
                 highEndLow = sortedList.toHighLowValue(),
-                drawList = (sortedList + random.nextInt(1,46)).map { it.toString() }, // 보너스 번호 추가
+                drawList = sortedList.map { it.toString() }
             )
             resultList.add(item)
         }
