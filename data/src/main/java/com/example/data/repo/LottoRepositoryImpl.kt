@@ -4,6 +4,7 @@ import com.example.data.local.dao.LottoRecodeDao
 import com.example.data.local.dao.LottoRoundDao
 import com.example.data.remote.datasource.LottoDataSourceImpl
 import com.example.data.util.Mapper.toLottoRecodeReEntity
+import com.example.data.util.Utils.makeRecodeGroup
 import com.example.data.util.toDomain
 import com.example.domain.model.LottoItem
 import com.example.domain.model.LottoRecode
@@ -25,7 +26,7 @@ class LottoRepositoryImpl @Inject constructor(
     }
 
     override fun getLottoRecodeDao(): Flow<List<LottoRecode>> {
-        return lottoRecodeDao.getLottoRecodeDao().map { it.map { it.toDomain() } }
+        return lottoRecodeDao.getLottoRecodeDao().map { it.makeRecodeGroup() }
     }
 
 

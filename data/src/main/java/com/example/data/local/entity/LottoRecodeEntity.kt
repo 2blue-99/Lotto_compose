@@ -22,16 +22,25 @@ data class LottoRecodeEntity(
     val drwtNo5: String,
     val drwtNo6: String,
 ) {
-    fun toDomain(): LottoRecode =
-        LottoRecode(
+    fun toDomain(): LottoItem =
+        LottoItem(
             id = id,
-            saveDate = saveDate,
-            lottoItem = LottoItem(
-                sequence = sequence,
-                sum = sum,
-                oddEndEvent = oddEndEvent,
-                highEndLow = highEndLow,
-                drawList = listOf(drwtNo1, drwtNo2, drwtNo3, drwtNo4, drwtNo5, drwtNo6)
-            ),
+            sequence = sequence,
+            sum = sum,
+            oddEndEvent = oddEndEvent,
+            highEndLow = highEndLow,
+            drawList = listOf(drwtNo1, drwtNo2, drwtNo3, drwtNo4, drwtNo5, drwtNo6)
         )
+//    fun toDomain(): LottoRecode =
+//        LottoRecode(
+//            id = id,
+//            saveDate = saveDate,
+//            lottoItem = LottoItem(
+//                sequence = sequence,
+//                sum = sum,
+//                oddEndEvent = oddEndEvent,
+//                highEndLow = highEndLow,
+//                drawList = listOf(drwtNo1, drwtNo2, drwtNo3, drwtNo4, drwtNo5, drwtNo6)
+//            ),
+//        )
 }

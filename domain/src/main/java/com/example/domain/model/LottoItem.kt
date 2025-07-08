@@ -4,6 +4,7 @@ package com.example.domain.model
  * 랜덤 추첨 - 로또 아이템
  */
 data class LottoItem(
+    val id: Int = 0,
     val sequence: String = "A", // A~B 순서
     val sum: String = "100", // 총합
     val oddEndEvent: String = "3:3", // 홀짝 3:3

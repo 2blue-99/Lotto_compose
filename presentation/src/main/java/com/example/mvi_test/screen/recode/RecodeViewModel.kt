@@ -1,6 +1,5 @@
 package com.example.mvi_test.screen.recode
 
-import androidx.lifecycle.ViewModel
 import com.example.domain.repository.LottoRepository
 import com.example.mvi_test.base.BaseViewModel
 import com.example.mvi_test.screen.recode.state.RecodeUIState
@@ -18,7 +17,7 @@ class RecodeViewModel @Inject constructor(
     init {
         ioScope.launch {
             lottoRepository.getLottoRecodeDao().collect {
-                // TODO 기록 뭉치를 만들어서 넣어야 함
+//                val list: List<LottoRecode> =
                 recodeUIState.value = RecodeUIState.Success(it)
             }
         }

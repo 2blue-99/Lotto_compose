@@ -506,7 +506,7 @@ fun RandomListItem(
     modifier: Modifier = Modifier
 ) {
     // 아이템 생성 시 페이드 아웃 -> 인
-    val alpha = remember { Animatable(1f) }
+    val alpha = remember { Animatable(0f) }
     // targetList 를 CommonLottoAutoRow 에 바로 넣을 경우, 결과가 살짝 보이는 이슈 존재 -> 상태로 관리
     val lottoList by remember { mutableStateOf(targetList) }
 

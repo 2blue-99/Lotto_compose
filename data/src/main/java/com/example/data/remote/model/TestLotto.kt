@@ -1,7 +1,7 @@
 package com.example.data.remote.model
 
-import com.example.data.util.CommonUtils.formatComma
-import com.example.data.util.CommonUtils.formatDate
+import com.example.data.util.Utils.formatComma
+import com.example.data.util.Utils.formatDate
 import com.example.domain.model.LottoRound
 import com.google.gson.annotations.SerializedName
 

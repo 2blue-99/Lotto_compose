@@ -2,8 +2,8 @@ package com.example.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.data.util.CommonUtils.formatComma
-import com.example.data.util.CommonUtils.formatDate
+import com.example.data.util.Utils.formatComma
+import com.example.data.util.Utils.formatDate
 import com.example.domain.model.LottoRound
 
 

@@ -98,7 +98,7 @@ object Utils {
     }
 
     fun testLottoItem(): LottoItem {
-        return LottoItem("A", "100", "3:3", "2:4", listOf("7", "7", "7","7","7","7","7"))
+        return LottoItem(0,"A", "100", "3:3", "2:4", listOf("7", "7", "7","7","7","7","7"))
     }
 
     /**

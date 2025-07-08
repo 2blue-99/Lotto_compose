@@ -84,7 +84,9 @@ fun RecodeScreen(
 
         VerticalSpacer(10.dp)
 
-        RecodeContent()
+        RecodeContent(
+            recodeList = if(recodeUIState is RecodeUIState.Success) recodeUIState.lottoRecodeList else emptyList()
+        )
     }
 }
 
@@ -124,8 +126,10 @@ fun RecodeContent(
             verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(listOf(1,2,3,4,5)){
-                RecodeItem()
+            items(recodeList){ lottoRecode ->
+                RecodeItem(
+                    lottoRecode = lottoRecode
+                )
             }
         }
     }
@@ -138,7 +142,7 @@ fun RecodeContent(
 
 @Composable
 fun RecodeItem(
-    recodeItem: LottoRecode = LottoRecode(),
+    lottoRecode: LottoRecode = LottoRecode(),
     modifier: Modifier = Modifier
 ) {
     // 아이템 생성 시 페이드 아웃 -> 인
@@ -147,11 +151,11 @@ fun RecodeItem(
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = recodeItem.saveDate,
+            text = lottoRecode.saveDate,
             style = CommonStyle.text12,
             color = Color.DarkGray
         )
-        recodeItem.lottoItem.drawList.forEach {
+        lottoRecode.lottoItem.forEach { item ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
@@ -165,7 +169,7 @@ fun RecodeItem(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = recodeItem.sequence,
+                        text = item.sequence,
                         style = CommonStyle.text16,
                         color = DarkGray
                     )
@@ -175,7 +179,7 @@ fun RecodeItem(
                         .weight(8f)
                 ) {
                     CommonLottoAutoRow(
-                        lottoItem = recodeItem.drawList
+                        lottoItem = item
                     )
                 }
             }
