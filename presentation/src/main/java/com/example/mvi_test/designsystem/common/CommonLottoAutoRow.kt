@@ -30,7 +30,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CommonLottoAutoRow(
-    lottoItem: LottoItem = testLottoItem()
+    lottoItem: LottoItem = testLottoItem(),
+    isAnimation: Boolean = true // 위로 올라오는 애니메이션 노출 여부
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -39,6 +40,7 @@ fun CommonLottoAutoRow(
         lottoItem.drawList.forEachIndexed { index, item ->
             CommonLottoCircle(
                 targetNumber = item,
+                isAnimation = isAnimation,
                 modifier = Modifier
                     .padding(horizontal = 2.dp)
                     .weight(1f)
@@ -68,8 +70,8 @@ fun CommonLottoCircle(
     isAnimation: Boolean = true,
     modifier: Modifier = Modifier
 ) {
-    val offsetY = remember { Animatable(100f) }
-    val alpha = remember { Animatable(0f) }
+    val offsetY = remember { Animatable( if(isAnimation) 100f else 0f ) }
+    val alpha = remember { Animatable(if(isAnimation) 0f else 1f) }
 
     LaunchedEffect(Unit) {
         if (isAnimation) {

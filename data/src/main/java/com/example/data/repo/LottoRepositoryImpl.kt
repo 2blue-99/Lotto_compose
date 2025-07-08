@@ -36,6 +36,10 @@ class LottoRepositoryImpl @Inject constructor(
         return lottoRecodeDao.upsertRecodeList(list.map { it.toLottoRecodeReEntity(currentTime) })
     }
 
+    override suspend fun deleteLottoRecodeDao(date: String) {
+        lottoRecodeDao.deleteRecodeList(date)
+    }
+
 //    override suspend fun updateLotto(data: LottoRecode) {
 //        lottoDao.upsertLotto(data.toEntity())
 //    }

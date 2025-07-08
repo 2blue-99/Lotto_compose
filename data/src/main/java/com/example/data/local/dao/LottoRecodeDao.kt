@@ -14,4 +14,7 @@ interface LottoRecodeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertRecodeList(lottoList: List<LottoRecodeEntity>)
+
+    @Query("Delete From lotto_recode Where saveDate = :date")
+    suspend fun deleteRecodeList(date: String)
 }

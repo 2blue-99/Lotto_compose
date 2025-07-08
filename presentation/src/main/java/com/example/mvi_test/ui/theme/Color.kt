@@ -10,7 +10,3 @@ val LightGray = Color(0xFFCFD0D2)
 val DarkGray = Color(0xFF5B5B5B)
 val Red = Color(0xFFE14648)
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
-

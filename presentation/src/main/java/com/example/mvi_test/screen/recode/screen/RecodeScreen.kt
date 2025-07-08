@@ -1,20 +1,32 @@
 package com.example.mvi_test.screen.recode.screen
 
+import android.hardware.lights.Light
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,9 +41,11 @@ import com.example.mvi_test.designsystem.common.CommonExpandableBox
 import com.example.mvi_test.designsystem.common.CommonLottoAutoRow
 import com.example.mvi_test.designsystem.common.VerticalSpacer
 import com.example.mvi_test.screen.recode.RecodeViewModel
+import com.example.mvi_test.screen.recode.state.RecodeActionState
 import com.example.mvi_test.screen.recode.state.RecodeUIState
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.DarkGray
+import com.example.mvi_test.ui.theme.LightGray
 import com.example.mvi_test.ui.theme.Red
 import com.example.mvi_test.ui.theme.ScreenBackground
 
@@ -43,13 +57,15 @@ fun RecodeScreen(
     val recodeUIState by viewModel.recodeUIState.collectAsStateWithLifecycle()
 
     RecodeScreen(
-        recodeUIState = recodeUIState
+        recodeUIState = recodeUIState,
+        actionHandler = viewModel::actionHandler
     )
 }
 
 @Composable
 fun RecodeScreen(
     recodeUIState: RecodeUIState = RecodeUIState.Loading,
+    actionHandler: (RecodeActionState) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -85,23 +101,24 @@ fun RecodeScreen(
         VerticalSpacer(10.dp)
 
         RecodeContent(
+            actionHandler = actionHandler,
             recodeList = if(recodeUIState is RecodeUIState.Success) recodeUIState.lottoRecodeList else emptyList()
         )
     }
 }
 
-@Preview
-@Composable
-private fun RecodeScreen() {
-    RecodeScreen(
-        recodeUIState = RecodeUIState.Loading
-    )
-}
+//@Preview
+//@Composable
+//private fun RecodeScreen() {
+//    RecodeScreen(
+//        recodeUIState = RecodeUIState.Loading
+//    )
+//}
 
 @Composable
 fun RecodeContent(
-    onClickDelete: (Int) -> Unit = {},
-    recodeList: List<LottoRecode> = emptyList(),
+    recodeList: List<LottoRecode> = listOf(LottoRecode(),LottoRecode(),LottoRecode()),
+    actionHandler: (RecodeActionState) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -109,68 +126,90 @@ fun RecodeContent(
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(Color.White)
-            .padding(10.dp),
+            .padding(16.dp),
     ) {
         // 컨트롤 버튼
         Text(
             text = "추첨 기록",
-            style = CommonStyle.text16Bold
+            style = CommonStyle.text16Bold,
+            modifier = Modifier.padding(start = 8.dp)
         )
 
         VerticalSpacer(10.dp)
 
         LazyColumn(
             modifier = modifier
-                .fillMaxSize()
-                .padding(10.dp),
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(recodeList){ lottoRecode ->
+            itemsIndexed(recodeList){ index, lottoRecode ->
                 RecodeItem(
+                    actionHandler = actionHandler,
                     lottoRecode = lottoRecode
                 )
+                VerticalSpacer(16.dp)
+                if(index != recodeList.lastIndex){
+                    HorizontalDivider(modifier = Modifier.background(LightGray))
+                }
             }
         }
     }
+}
 
-
-    // 추첨 기록 텍스트
-
-    // 추첨 리스트
+@Preview
+@Composable
+private fun RecodeContentPreview() {
+    RecodeContent()
 }
 
 @Composable
 fun RecodeItem(
     lottoRecode: LottoRecode = LottoRecode(),
+    actionHandler: (RecodeActionState) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     // 아이템 생성 시 페이드 아웃 -> 인
+    var expanded by remember { mutableStateOf(false) }
+
+    val backgroundColor by animateColorAsState(
+        targetValue = if(expanded) ScreenBackground else Color.White,
+        animationSpec = tween(300),
+        label = "expanded_item"
+    )
 
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(10.dp))
+            .clickable { expanded = !expanded }
+            .background(backgroundColor)
+            .padding(10.dp)
     ) {
         Text(
             text = lottoRecode.saveDate,
-            style = CommonStyle.text12,
+            style = CommonStyle.text14,
             color = Color.DarkGray
         )
+
+        VerticalSpacer(4.dp)
+
         lottoRecode.lottoItem.forEach { item ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
                 modifier = modifier
-                    .background(Color.White)
-                    .padding(6.dp),
+                    .padding(8.dp)
+                    .height(26.dp),
             ){
                 Box(
                     modifier = Modifier
-                        .weight(1f),
+                        .weight(2f),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = item.sequence,
-                        style = CommonStyle.text16,
+                        style = CommonStyle.text18,
                         color = DarkGray
                     )
                 }
@@ -179,12 +218,26 @@ fun RecodeItem(
                         .weight(8f)
                 ) {
                     CommonLottoAutoRow(
-                        lottoItem = item
+                        lottoItem = item,
+                        isAnimation = false
                     )
                 }
             }
         }
+
+        AnimatedVisibility(expanded) {
+            SelectControllerButton(
+                actionHandler = actionHandler,
+                saveDate = lottoRecode.saveDate
+            )
+        }
     }
+}
+
+@Preview
+@Composable
+private fun RecodeItemPreview() {
+    RecodeItem()
 }
 
 //@Preview
@@ -194,16 +247,23 @@ fun RecodeItem(
 //}
 
 @Composable
-fun SelectControllerButton(modifier: Modifier = Modifier) {
+fun SelectControllerButton(
+    actionHandler: (RecodeActionState) -> Unit = {},
+    saveDate: String = "",
+    modifier: Modifier = Modifier,
+) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp)
+        ,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         CommonButton(
             modifier = Modifier.weight(1f),
             enableColor = Red,
             enabled = true,
-            onClick = {},
+            onClick = { actionHandler(RecodeActionState.OnClickDelete(saveDate)) },
             text = "삭제하기"
         )
 
