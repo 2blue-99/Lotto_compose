@@ -68,18 +68,20 @@ import kotlin.math.absoluteValue
 
 @Composable
 fun HomeScreen(
+    navigateToSetting: () -> Unit = {},
     navigateToRandom: () -> Unit = {},
     navigateToRecode: () -> Unit = {},
-    navigateToSetting: () -> Unit = {},
+    navigateToStatistic: () -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
 ){
     val uiState by viewModel.homeUIState.collectAsStateWithLifecycle()
 
     HomeScreen(
+        navigateToSetting = navigateToSetting,
         navigateToRandom = navigateToRandom,
         navigateToRecode = navigateToRecode,
-        navigateToSetting = navigateToSetting,
+        navigateToStatistic = navigateToStatistic,
         uiState = uiState,
         intentHandler = viewModel::intentHandler,
         modifier = modifier
@@ -88,9 +90,10 @@ fun HomeScreen(
 
 @Composable
 fun HomeScreen(
+    navigateToSetting: () -> Unit = {},
     navigateToRandom: () -> Unit = {},
     navigateToRecode: () -> Unit = {},
-    navigateToSetting: () -> Unit = {},
+    navigateToStatistic: () -> Unit = {},
     uiState: HomeUIState = HomeUIState.Loading,
     intentHandler: (HomeActionState) -> Unit = {},
     modifier: Modifier = Modifier
@@ -119,6 +122,7 @@ fun HomeScreen(
             ButtonLayout(
                 navigateToRandom = navigateToRandom,
                 navigateToRecode = navigateToRecode,
+                navigateToStatistic = navigateToStatistic,
             )
 
             VerticalSpacer(10.dp)
@@ -432,6 +436,7 @@ private fun LottoInfoItemPreview() {
 fun ButtonLayout(
     navigateToRandom: () -> Unit = {},
     navigateToRecode: () -> Unit = {},
+    navigateToStatistic: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -464,7 +469,7 @@ fun ButtonLayout(
                 titleText = "통계 로또 추첨",
                 descriptionText = "데이터 기반",
                 modifier = Modifier.weight(1f),
-                onClick = {},
+                onClick = navigateToStatistic,
             )
             Spacer(modifier = Modifier.width(26.dp))
             HomeIconButton(

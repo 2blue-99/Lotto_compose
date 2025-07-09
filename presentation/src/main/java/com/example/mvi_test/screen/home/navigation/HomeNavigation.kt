@@ -12,9 +12,10 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null){
 }
 
 fun NavGraphBuilder.homeScreen(
+    navigateToSetting: () -> Unit,
     navigateToRandom: () -> Unit,
     navigateToRecode: () -> Unit,
-    navigateToSetting: () -> Unit
+    navigateToStatistic: () -> Unit
 ){
     composable(
         route = homeRoute,
@@ -22,9 +23,10 @@ fun NavGraphBuilder.homeScreen(
 //        popEnterTransition = { slideToRightEnter() }
     ) {
         HomeScreen(
+            navigateToSetting,
             navigateToRandom,
             navigateToRecode,
-            navigateToSetting
+            navigateToStatistic
         )
     }
 }

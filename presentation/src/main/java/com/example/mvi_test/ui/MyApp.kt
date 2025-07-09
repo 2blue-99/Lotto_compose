@@ -45,6 +45,8 @@ import com.example.mvi_test.screen.recode.navigation.navigateToRecode
 import com.example.mvi_test.screen.recode.navigation.recodeScreen
 import com.example.mvi_test.screen.setting.navigation.navigateToSetting
 import com.example.mvi_test.screen.setting.navigation.settingScreen
+import com.example.mvi_test.screen.statistic.navigation.navigateToStatistic
+import com.example.mvi_test.screen.statistic.navigation.statisticScreen
 import timber.log.Timber
 
 @Composable
@@ -140,11 +142,16 @@ fun NavHostContainer(
             navigateToRandom = navController::navigateToRandom,
             navigateToRecode = navController::navigateToRecode,
             navigateToSetting = navController::navigateToSetting,
+            navigateToStatistic = navController::navigateToStatistic
         )
 
         randomScreen(
             onShowSnackbar = onShowSnackbar,
             popBackStack = navController::popBackStack,
+        )
+
+        statisticScreen(
+            popBackStack = {}
         )
 
         recodeScreen(navController::popBackStack)
