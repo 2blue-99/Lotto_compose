@@ -12,6 +12,6 @@ object CommonUtils {
      */
     fun currentTimeString(): String {
         val currentTime = System.currentTimeMillis()
-        return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(currentTime))
+        return SimpleDateFormat("yyyy. MM. dd HH시 mm분 ss초", Locale.getDefault()).format(Date(currentTime))
     }
 }

@@ -441,7 +441,6 @@ fun ButtonLayout(
         Row {
             HomeIconButton(
                 containerColor = SubColor,
-                outlineColor = Color.DarkGray,
                 icon = ImageVector.vectorResource(R.drawable.clover_icon),
                 titleText = "랜덤 로또 추첨",
                 descriptionText = "행운",
@@ -450,10 +449,9 @@ fun ButtonLayout(
             )
             Spacer(modifier = Modifier.width(24.dp))
             HomeIconButton(
-                containerColor = Color.LightGray,
-                outlineColor = Color.DarkGray,
-//                icon = Icons.Default.Create,
-                titleText = "추첨 기록",
+                containerColor = DarkGray,
+                icon = ImageVector.vectorResource(R.drawable.recode_icon),
+                titleText = "저장 기록",
                 modifier = Modifier.weight(1f),
                 onClick = navigateToRecode,
             )
@@ -462,7 +460,6 @@ fun ButtonLayout(
         Row {
             HomeIconButton(
                 containerColor = PrimaryColor,
-                outlineColor = Color.DarkGray,
                 icon = ImageVector.vectorResource(R.drawable.statistic_icon),
                 titleText = "통계 로또 추첨",
                 descriptionText = "데이터 기반",
@@ -472,7 +469,6 @@ fun ButtonLayout(
             Spacer(modifier = Modifier.width(26.dp))
             HomeIconButton(
                 containerColor = Color.LightGray,
-                outlineColor = Color.DarkGray,
 //                icon = Icons.Default.Star,
                 titleText = "복권 명당",
                 modifier = Modifier.weight(1f),
@@ -491,7 +487,6 @@ private fun ButtonRowPreview() {
 @Composable
 private fun HomeIconButton(
     containerColor: Color = Color.Gray,
-    outlineColor: Color = Color.DarkGray,
     icon: ImageVector? = null,
     titleText: String? = null,
     descriptionText: String? = null,
@@ -517,6 +512,7 @@ private fun HomeIconButton(
                     tint = Color.Unspecified,
                     contentDescription = ""
                 )
+                VerticalSpacer(4.dp)
             }
             titleText?.let {
                 Spacer(modifier = Modifier.height(4.dp))

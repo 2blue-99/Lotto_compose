@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun CommonLottoAutoRow(
     lottoItem: LottoItem = testLottoItem(),
-    isAnimation: Boolean = true // 위로 올라오는 애니메이션 노출 여부
+    isAnimation: Boolean = true, // 위로 올라오는 애니메이션 노출 여부
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),

@@ -170,6 +170,7 @@ fun RandomScreen(
         item {
             RandomResultContent(
                 actionHandler = actionHandler,
+                effectHandler = effectHandler,
                 lottoList = if(lottoUIState is LottoUIState.Success) lottoUIState.lottoList else emptyList()
             )
         }
@@ -358,6 +359,7 @@ private fun KeywordBoxPreview() {
 @Composable
 fun RandomResultContent(
     actionHandler: (RandomActionState) -> Unit = {},
+    effectHandler: (RandomEffectState) -> Unit = {},
     lottoList: List<LottoItem> = testLottoList(),
     modifier: Modifier = Modifier
 ) {
@@ -365,6 +367,8 @@ fun RandomResultContent(
     val checkBoxStates = remember { mutableStateListOf(false,false,false,false,false) }
     // 하단 버튼(저장, 복사, 공유) 활성화/비활성화 여부
     var isDrawCompleted by remember { mutableStateOf(false) }
+    // 저장하기 1번이상 클릭 여부
+    var isSaved by remember { mutableStateOf(false) }
 
     LaunchedEffect(lottoList) {
         if(lottoList.isNotEmpty()) {
@@ -446,8 +450,8 @@ fun RandomResultContent(
     VerticalSpacer(10.dp)
 
     val saveCount = checkBoxStates.toList().count { it }
-    val saveEnabled = if(isDrawCompleted && saveCount != 0) true else false
-    val saveText = if(!isDrawCompleted) "저장하기" else "${saveCount}개 저장하기"
+    val saveEnabled = if(isDrawCompleted && saveCount != 0 && !isSaved) true else false
+    val saveText = if(!isDrawCompleted || isSaved) "저장하기" else "${saveCount}개 저장하기"
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -465,6 +469,8 @@ fun RandomResultContent(
                     if(checkBoxStates[index]) lottoList[index] else null
                 }
                 actionHandler(RandomActionState.OnClickSave(checkedItemList))
+                effectHandler(RandomEffectState.ShowToast(CommonMessage.RANDOM_SAVED_SUCCESS))
+                isSaved = true
             },
             text = saveText // 저장하기
         )

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -120,7 +121,7 @@ fun RecodeContent(
 ) {
     Column(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(Color.White)
             .padding(16.dp),
@@ -134,10 +135,9 @@ fun RecodeContent(
 
         VerticalSpacer(10.dp)
 
-
-        if(recodeList.isNotEmpty()) {
+        AnimatedVisibility(recodeList.isNotEmpty()) {
             LazyColumn(
-                modifier = Modifier,
+                modifier = Modifier.heightIn(min = 200.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -157,9 +157,13 @@ fun RecodeContent(
                     }
                 }
             }
-        }else{
+        }
+
+        AnimatedVisibility(recodeList.isEmpty()) {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -203,19 +207,18 @@ fun RecodeItem(
     ) {
         Text(
             text = lottoRecode.saveDate,
-            style = CommonStyle.text14,
-            color = Color.DarkGray
+            style = CommonStyle.text16,
+            color = DarkGray
         )
 
-        VerticalSpacer(4.dp)
+        VerticalSpacer(8.dp)
 
         lottoRecode.lottoItem.forEach { item ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
-                    .padding(8.dp)
-                    .height(26.dp),
+                    .padding(2.dp),
             ){
                 Box(
                     modifier = Modifier
@@ -224,7 +227,7 @@ fun RecodeItem(
                 ) {
                     Text(
                         text = item.sequence,
-                        style = CommonStyle.text18,
+                        style = CommonStyle.text16,
                         color = DarkGray
                     )
                 }
