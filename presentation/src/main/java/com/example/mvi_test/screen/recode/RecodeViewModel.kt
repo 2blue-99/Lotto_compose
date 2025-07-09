@@ -18,7 +18,6 @@ class RecodeViewModel @Inject constructor(
     init {
         ioScope.launch {
             lottoRepository.getLottoRecodeDao().collect {
-//                val list: List<LottoRecode> =
                 recodeUIState.value = RecodeUIState.Success(it)
             }
         }

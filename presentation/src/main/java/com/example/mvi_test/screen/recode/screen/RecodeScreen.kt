@@ -1,9 +1,7 @@
 package com.example.mvi_test.screen.recode.screen
 
-import android.hardware.lights.Light
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,13 +9,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
@@ -79,6 +75,7 @@ fun RecodeScreen(
         // 탑 바
         CommonExpandableBox(
             modifier = Modifier.height(80.dp),
+            showQuestion = false,
             shrinkContent = {
                 Box(
                     modifier = Modifier.fillMaxWidth(),
@@ -123,7 +120,7 @@ fun RecodeContent(
 ) {
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .clip(RoundedCornerShape(16.dp))
             .background(Color.White)
             .padding(16.dp),
@@ -137,21 +134,39 @@ fun RecodeContent(
 
         VerticalSpacer(10.dp)
 
-        LazyColumn(
-            modifier = modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            itemsIndexed(recodeList){ index, lottoRecode ->
-                RecodeItem(
-                    actionHandler = actionHandler,
-                    lottoRecode = lottoRecode
-                )
-                VerticalSpacer(16.dp)
-                if(index != recodeList.lastIndex){
-                    HorizontalDivider(modifier = Modifier.background(LightGray))
+
+        if(recodeList.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier,
+                verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                itemsIndexed(recodeList, key = { _, item -> item.saveDate }) { index, lottoRecode ->
+                    Column(
+                        modifier = Modifier.animateItem()
+                    ) {
+                        RecodeItem(
+                            lottoRecode = lottoRecode,
+                            actionHandler = actionHandler
+                        )
+                        if (index != recodeList.lastIndex) {
+                            VerticalSpacer(16.dp)
+
+                            HorizontalDivider(modifier = Modifier.background(LightGray))
+                        }
+                    }
                 }
+            }
+        }else{
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "추첨 기록이 비어있어요.",
+                    style = CommonStyle.text24Bold,
+                    color = Color.LightGray
+                )
             }
         }
     }
@@ -179,7 +194,7 @@ fun RecodeItem(
     )
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(10.dp))
             .clickable { expanded = !expanded }
@@ -198,7 +213,7 @@ fun RecodeItem(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
-                modifier = modifier
+                modifier = Modifier
                     .padding(8.dp)
                     .height(26.dp),
             ){
@@ -227,8 +242,9 @@ fun RecodeItem(
 
         AnimatedVisibility(expanded) {
             SelectControllerButton(
-                actionHandler = actionHandler,
-                saveDate = lottoRecode.saveDate
+                onClickDelete = {
+                    actionHandler(RecodeActionState.OnClickDelete(saveDate = lottoRecode.saveDate))
+                }
             )
         }
     }
@@ -248,8 +264,7 @@ private fun RecodeItemPreview() {
 
 @Composable
 fun SelectControllerButton(
-    actionHandler: (RecodeActionState) -> Unit = {},
-    saveDate: String = "",
+    onClickDelete: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -263,7 +278,7 @@ fun SelectControllerButton(
             modifier = Modifier.weight(1f),
             enableColor = Red,
             enabled = true,
-            onClick = { actionHandler(RecodeActionState.OnClickDelete(saveDate)) },
+            onClick = onClickDelete,
             text = "삭제하기"
         )
 
