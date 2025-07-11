@@ -10,6 +10,7 @@ import com.example.mvi_test.R
 import com.example.mvi_test.screen.home.navigation.homeRoute
 import com.example.mvi_test.screen.random.navigation.randomRoute
 import com.example.mvi_test.screen.recode.navigation.recodeRoute
+import com.example.mvi_test.screen.statistic.navigation.statisticRoute
 
 
 sealed class NavigationItem(
@@ -19,9 +20,10 @@ sealed class NavigationItem(
     val route: String
 ) {
     data object Home: NavigationItem(R.string.home, Icons.Outlined.Home, Icons.Filled.Home, homeRoute)
+    data object Random: NavigationItem(R.string.random, Icons.Outlined.Home, Icons.Filled.Home, randomRoute)
+    data object Statistic: NavigationItem(R.string.statistic, Icons.Outlined.Create, Icons.Filled.Create, statisticRoute)
     data object Recode: NavigationItem(R.string.recode, Icons.Outlined.Create, Icons.Filled.Create, recodeRoute)
 //    data object Setting: NavigationItem(R.string.setting, Icons.Outlined.Settings, Icons.Filled.Settings, settingRoute)
-    data object Random: NavigationItem(R.string.random, Icons.Outlined.Home, Icons.Filled.Home, randomRoute)
 
 
 

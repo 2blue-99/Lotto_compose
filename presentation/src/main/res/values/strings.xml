@@ -3,7 +3,8 @@
     <string name="app_back_notice">한번 더 누르면 앱이 종료됩니다.</string>
 
     <string name="home">홈</string>
-    <string name="random">결과</string>
+    <string name="random">행운 뽑기</string>
+    <string name="statistic">통계 뽑기</string>
     <string name="recode">기록</string>
     <string name="setting">설정</string>
 
