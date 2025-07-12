@@ -66,7 +66,7 @@ private fun CommonLottoAutoPreview() {
 
 @Composable
 fun CommonLottoCircle(
-    targetNumber: String = "77",
+    targetNumber: String = "7",
     isAnimation: Boolean = true,
     modifier: Modifier = Modifier
 ) {

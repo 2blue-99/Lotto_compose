@@ -1,30 +1,37 @@
 package com.example.mvi_test.screen.statistic.screen
 
-import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -34,12 +41,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mvi_test.R
 import com.example.mvi_test.designsystem.common.CommonExpandableBox
+import com.example.mvi_test.designsystem.common.CommonLottoCircle
+import com.example.mvi_test.designsystem.common.DynamicHorizontalSelector
+import com.example.mvi_test.designsystem.common.VerticalSpacer
 import com.example.mvi_test.screen.statistic.StatisticViewModel
 import com.example.mvi_test.screen.statistic.state.StatisticActionState
 import com.example.mvi_test.screen.statistic.state.StatisticEffectState
 import com.example.mvi_test.screen.statistic.state.StatisticUIState
 import com.example.mvi_test.ui.theme.CommonStyle
-import com.example.mvi_test.ui.theme.LightGray
+import com.example.mvi_test.ui.theme.DarkGray
 import com.example.mvi_test.ui.theme.ScreenBackground
 
 @Composable
@@ -63,6 +73,8 @@ fun StatisticScreen(
     effectHandler: (StatisticEffectState) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var rangePosition by remember { mutableIntStateOf(0) } // 10년 3년 1년 ~
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -103,8 +115,15 @@ fun StatisticScreen(
         }
 
         item {
+            DynamicHorizontalSelector(
+                currentPosition = rangePosition,
+                onClickTab = { rangePosition = it }
+            )
+        }
+        item {
             StatisticContent()
         }
+
     }
 }
 
@@ -119,97 +138,123 @@ private fun StatisticScreenPreview() {
 @Composable
 fun StatisticContent(modifier: Modifier = Modifier) {
 
-    val tabs = listOf("Test A","Test B","Test C","Test D","Test E")
-    val spacing = 4.dp
+    var expand by remember { mutableStateOf(false) }
 
-    var position by remember { mutableIntStateOf(1) }
+    Column(
+        modifier = Modifier
+            .animateContentSize()
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .background(Color.White)
+            .padding(16.dp)
+    ) {
+//        Row(
+//            verticalAlignment = Alignment.CenterVertically,
+//            modifier = Modifier.clickable(
+//                indication = null,
+//                interactionSource = remember { MutableInteractionSource() }
+//            ){
+//                expand = !expand
+//            }
+//        ) {
+//            Text(
+//                text = "최근 1개월 추첨 통계",
+//                style = CommonStyle.text16Bold,
+//                modifier = modifier.weight(1f)
+//            )
+//
+//            Icon(
+//                imageVector = Icons.Default.Add,
+//                tint = PrimaryColor,
+//                contentDescription = "expandable",
+//            )
+//        }
 
-    Column {
-        BoxWithConstraints(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(10.dp))
-                .background(LightGray)
-                .padding(6.dp)
-                .height(34.dp),
-        ) {
-            val segmentWidth = maxWidth / tabs.size
-            // Adjusted width for each tab, accounting for spacing
-            val boxWidth = segmentWidth - spacing * 2
-            val positions = tabs.indices.map { index ->
-                segmentWidth * index + (segmentWidth - boxWidth) / 2
-            }
-            val animatedOffsetX by animateDpAsState(targetValue = positions[position], label = "")
+        Text(
+            text = "최근 1개월 추첨 통계",
+            style = CommonStyle.text16Bold,
+        )
 
-            val containerHeight = maxHeight
-            // Center the tab selector vertically within the container
-            val verticalOffset = (containerHeight - 34.dp) / 2
+        VerticalSpacer(10.dp)
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                tabs.forEach {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .padding(6.dp)
-                            .weight(1f),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = it
-                        )
-                    }
-                }
-            }
-
-            Box(
-                modifier = Modifier
-                    .offset(x = animatedOffsetX, y = verticalOffset)
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(Color.White)
-                    .fillMaxHeight()
-                    .padding(6.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    textAlign = TextAlign.Center,
-                    text = "Hear"
-                )
-            }
+        repeat(3){
+            StatisticItem()
         }
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement =  Arrangement.Center
+        AnimatedVisibility(
+            visible = expand,
+            enter = fadeIn(animationSpec = tween(durationMillis = 1000)) + expandVertically(),
+            exit = fadeOut(animationSpec = tween(durationMillis = 300)) + shrinkVertically()
         ) {
-            Button(
-                onClick = {
-                    if(position > 1) {
-                        position -= 1
-                    }
+            Column {
+                repeat(3){
+                    StatisticItem()
                 }
-            ) {
-                Text("left")
-            }
-            Button(
-                onClick = {
-                    if(position < 5) {
-                        position += 1
-                    }
-                }
-            ) {
-                Text("right")
             }
         }
     }
-
 }
 
 @Preview
 @Composable
 private fun StatisticContentPreview() {
     StatisticContent()
+}
+
+@Composable
+fun StatisticItem(
+    modifier: Modifier = Modifier,
+    onclickItem: (Boolean) -> Unit = {}
+) {
+    val gradientList = listOf(Color.White, Color(0xFFFFD500))
+    val shrinkGradient = Brush.linearGradient(colors = gradientList)
+
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box { // CheckBox 는 Box 로 싸매야 Preview 에 범위가 나옴
+            Checkbox(
+                checked = false,
+                onCheckedChange = onclickItem,
+                colors = CheckboxDefaults.colors(
+                    checkedColor = DarkGray,
+                    uncheckedColor = DarkGray,
+                ),
+            )
+        }
+
+        CommonLottoCircle(
+            targetNumber = "7",
+            isAnimation = false,
+            modifier = Modifier.size(30.dp)
+        )
+
+
+        Box(
+            modifier = Modifier
+                .weight(1f)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(1f) // TODO 여기다가 비율 넣으면 됨
+                    .height(30.dp)
+                    .clip(RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp))
+                    .background(shrinkGradient)
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .padding(start = 20.dp)
+        ) {
+            Text("3번")
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun StatisticItemPreview() {
+
 }
