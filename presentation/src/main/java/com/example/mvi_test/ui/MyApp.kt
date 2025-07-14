@@ -122,7 +122,7 @@ fun BottomNavigationBar(
                 },
 //                colors = NavigationBarItemDefaults.colors(
 //                    indicatorColor = Color.Transparent
-//                ),
+//                )
                 alwaysShowLabel = false
             )
         }
