@@ -1,6 +1,8 @@
 package com.example.mvi_test.screen.statistic
 
+import com.example.domain.model.StatisticItem
 import com.example.domain.repository.LottoRepository
+import com.example.domain.type.RangeType
 import com.example.mvi_test.base.BaseViewModel
 import com.example.mvi_test.screen.statistic.state.StatisticActionState
 import com.example.mvi_test.screen.statistic.state.StatisticEffectState
@@ -31,5 +33,17 @@ class StatisticViewModel @Inject constructor(
 ////                is com.example.mvi_test.screen.random.state.RandomEffectState.StatisticEffectState.ShowSnackbar -> {}
 //            }
 //        }
+    }
+
+    // 선택 범위에 해당하는 등장 정보 리스트 가져오기
+    // 1달, 6개월,  1년, 3년 10년,
+    fun getRangeLottoStatistic(range: RangeType){
+        listOf(
+            StatisticItem(),
+            StatisticItem(),
+            StatisticItem(),
+            StatisticItem(),
+            StatisticItem(),
+        )
     }
 }

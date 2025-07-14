@@ -1,8 +1,10 @@
 package com.example.data.util
 
 import com.example.data.local.entity.LottoRecodeEntity
+import com.example.data.local.entity.LottoRoundEntity
 import com.example.domain.model.LottoItem
 import com.example.domain.model.LottoRecode
+import com.example.domain.model.StatisticItem
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -53,4 +55,28 @@ object Utils {
         return recodeList
     }
 
+    /**
+     * 범위에 해당하는 로또 회차 정보에서,
+     * 가장 많이 나온 횟수 6개를 Statistic Item 으로 가공하여 노출
+     */
+    fun List<LottoRoundEntity>.makeStatisticItem(): List<StatisticItem> {
+        // Array 만들기
+        val countArray = Array(45){0} // 0~44 까지 배열 생성
+
+        // Array 에 카운트하기
+        this.forEach {
+            countArray[it.drwtNo1]+=1
+            countArray[it.drwtNo2]+=1
+            countArray[it.drwtNo3]+=1
+            countArray[it.drwtNo4]+=1
+            countArray[it.drwtNo5]+=1
+            countArray[it.drwtNo6]+=1
+        }
+
+        // 가장 높은거 6개 or 8개
+        return countArray
+            .mapIndexed { index, count -> index to count }
+            .sortedByDescending { it.second }
+            .map { StatisticItem(number = it.first.toString(), count = it.second.toString()) }
+    }
 }

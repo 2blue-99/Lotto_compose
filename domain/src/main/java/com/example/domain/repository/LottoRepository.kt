@@ -3,6 +3,8 @@ package com.example.domain.repository
 import com.example.domain.model.LottoItem
 import com.example.domain.model.LottoRecode
 import com.example.domain.model.LottoRound
+import com.example.domain.model.StatisticItem
+import com.example.domain.type.RangeType
 import com.example.domain.util.ResourceState
 import kotlinx.coroutines.flow.Flow
 
@@ -31,8 +33,16 @@ interface LottoRepository {
     suspend fun deleteLottoRecodeDao(date: String)
 
 
+
     /**
      * 로또 API 조회
      */
     suspend fun requestLottoData(round: Int): ResourceState<LottoRound>
+
+
+
+    /**
+     * 로또 통계 조회
+     */
+    suspend fun getRangeStatistic(range: RangeType): List<StatisticItem>
 }

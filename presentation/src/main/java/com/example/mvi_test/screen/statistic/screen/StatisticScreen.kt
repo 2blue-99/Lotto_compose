@@ -2,12 +2,9 @@ package com.example.mvi_test.screen.statistic.screen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,8 +16,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -50,6 +50,7 @@ import com.example.mvi_test.screen.statistic.state.StatisticEffectState
 import com.example.mvi_test.screen.statistic.state.StatisticUIState
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.DarkGray
+import com.example.mvi_test.ui.theme.PrimaryColor
 import com.example.mvi_test.ui.theme.ScreenBackground
 
 @Composable
@@ -73,7 +74,7 @@ fun StatisticScreen(
     effectHandler: (StatisticEffectState) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var rangePosition by remember { mutableIntStateOf(0) } // 10년 3년 1년 ~
+    var rangePosition by remember { mutableIntStateOf(0) } // 통계 조회 범위
 
     LazyColumn(
         modifier = modifier
@@ -136,44 +137,40 @@ private fun StatisticScreenPreview() {
 }
 
 @Composable
-fun StatisticContent(modifier: Modifier = Modifier) {
+fun StatisticContent(
+    modifier: Modifier = Modifier
+) {
 
     var expand by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
-            .animateContentSize()
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
+            .background(Color.White, RoundedCornerShape(16.dp))
+            .animateContentSize()
             .padding(16.dp)
     ) {
-//        Row(
-//            verticalAlignment = Alignment.CenterVertically,
-//            modifier = Modifier.clickable(
-//                indication = null,
-//                interactionSource = remember { MutableInteractionSource() }
-//            ){
-//                expand = !expand
-//            }
-//        ) {
-//            Text(
-//                text = "최근 1개월 추첨 통계",
-//                style = CommonStyle.text16Bold,
-//                modifier = modifier.weight(1f)
-//            )
-//
-//            Icon(
-//                imageVector = Icons.Default.Add,
-//                tint = PrimaryColor,
-//                contentDescription = "expandable",
-//            )
-//        }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ){
+                expand = !expand
+            }
+        ) {
+            Text(
+                text = "최근 1개월 추첨 통계",
+                style = CommonStyle.text16Bold,
+                modifier = modifier.weight(1f)
+            )
 
-        Text(
-            text = "최근 1개월 추첨 통계",
-            style = CommonStyle.text16Bold,
-        )
+            Icon(
+                imageVector = Icons.Default.Add,
+                tint = PrimaryColor,
+                contentDescription = "expandable",
+            )
+        }
 
         VerticalSpacer(10.dp)
 
@@ -183,8 +180,8 @@ fun StatisticContent(modifier: Modifier = Modifier) {
 
         AnimatedVisibility(
             visible = expand,
-            enter = fadeIn(animationSpec = tween(durationMillis = 1000)) + expandVertically(),
-            exit = fadeOut(animationSpec = tween(durationMillis = 300)) + shrinkVertically()
+//            enter = fadeIn(animationSpec = tween(durationMillis = 1000)) + expandVertically(),
+//            exit = fadeOut(animationSpec = tween(durationMillis = 300)) + shrinkVertically()
         ) {
             Column {
                 repeat(3){

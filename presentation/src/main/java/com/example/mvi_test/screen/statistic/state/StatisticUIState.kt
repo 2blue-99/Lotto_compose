@@ -1,6 +1,6 @@
 package com.example.mvi_test.screen.statistic.state
 
-import com.example.domain.model.LottoRecode
+import com.example.domain.model.StatisticItem
 
 sealed interface StatisticUIState {
 
@@ -9,6 +9,6 @@ sealed interface StatisticUIState {
     data object Fail : StatisticUIState
 
     data class Success(
-        val lottoRecodeList: List<LottoRecode>
+        val statisticItem: List<StatisticItem>
     ) : StatisticUIState
 }
