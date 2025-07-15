@@ -1,11 +1,24 @@
 package com.example.domain.type
 
 enum class RangeType(
-    val month: Int,
+    val monthText: String,
+    val monthValue: Int,
 ) {
-    ONE_MONTH(1),
-    SIX_MONTH(6),
-    ONE_YEAR(12),
-    THREE_YEAR(36),
-    TEN_YEAR(120),
+    // 현재 순서 중요
+
+    TEN_YEAR("10년", 120),
+    THREE_YEAR("3년", 36),
+    ONE_YEAR("1년", 12),
+    SIX_MONTH("6개월", 6),
+    THREE_MONTH("3개월", 3);
+
+    fun findIndex(): Int {
+        return entries.indexOf(this)
+    }
+
+    companion object {
+        fun toList(): List<RangeType>  {
+            return entries.toList()
+        }
+    }
 }

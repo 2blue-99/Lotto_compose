@@ -30,28 +30,30 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.domain.type.RangeType
+import com.example.mvi_test.screen.statistic.state.StatisticActionState
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.LightGray
 import kotlinx.coroutines.launch
 
 @Composable
 fun DynamicHorizontalSelector(
-    tabs: List<String> = listOf("10년","3년","1년","6개월","1개월"/*,"직접 설정"*/),
+    actionHandler: (StatisticActionState) -> Unit = {},
     selectorHeight: Dp = 50.dp,
-    currentPosition: Int = 0,
-    onClickTab: (Int) -> Unit = {},
+    currentRange: RangeType = RangeType.ONE_YEAR,
+    onClickRange: (RangeType) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val alpha = remember { Animatable(1f) }
+    val tabs = RangeType.toList()
     val spacing = 4.dp // 탭 간격
 
-    LaunchedEffect(currentPosition) {
+    LaunchedEffect(currentRange) {
         launch {
             alpha.animateTo(
                 targetValue = 0f,
@@ -79,7 +81,7 @@ fun DynamicHorizontalSelector(
             segmentWidth * index + (segmentWidth - boxWidth) / 2
         }
         val animatedOffsetX by animateDpAsState(
-            targetValue = positions[currentPosition],
+            targetValue = positions[currentRange.findIndex()],
             animationSpec = spring(
                 dampingRatio = Spring.DampingRatioLowBouncy,
                 stiffness = Spring.StiffnessMediumLow
@@ -92,19 +94,19 @@ fun DynamicHorizontalSelector(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(spacing, Alignment.CenterHorizontally)
         ) {
-            tabs.forEachIndexed { index, text ->
+            tabs.forEachIndexed { index, range ->
                 Box(
                     modifier = Modifier
                         .clickable(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() }
-                        ) { onClickTab(index) }
+                        ) { onClickRange(range) }
                         .fillMaxHeight()
                         .weight(1f),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = text,
+                        text = range.monthText,
                         color = Color.DarkGray,
                         style = CommonStyle.text14
                     )
@@ -122,13 +124,14 @@ fun DynamicHorizontalSelector(
             contentAlignment = Alignment.Center
         ) {
             AnimatedContent(
-                targetState = tabs[currentPosition],
+                targetState = tabs[currentRange.findIndex()],
                 transitionSpec = {
                     fadeIn(tween(200)) togetherWith fadeOut(tween(200))
-                }
-            ) { animateText ->
+                },
+                label = "rangeIndicator"
+            ) { rangeType ->
                 Text(
-                    text = animateText,
+                    text = rangeType.monthText,
                     color = Color.DarkGray,
                     style = CommonStyle.text14,
                 )

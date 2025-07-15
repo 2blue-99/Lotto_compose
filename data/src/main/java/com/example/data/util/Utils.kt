@@ -61,7 +61,7 @@ object Utils {
      */
     fun List<LottoRoundEntity>.makeStatisticItem(): List<StatisticItem> {
         // Array 만들기
-        val countArray = Array(45){0} // 0~44 까지 배열 생성
+        val countArray = Array(46){0} // 0~45 까지 배열 생성
 
         // Array 에 카운트하기
         this.forEach {
@@ -73,10 +73,11 @@ object Utils {
             countArray[it.drwtNo6]+=1
         }
 
-        // 가장 높은거 6개 or 8개
+        // 가장 높은거 8개 -> StatisticItem 으로 변환
         return countArray
             .mapIndexed { index, count -> index to count }
             .sortedByDescending { it.second }
+            .take(8)
             .map { StatisticItem(number = it.first.toString(), count = it.second.toString()) }
     }
 }

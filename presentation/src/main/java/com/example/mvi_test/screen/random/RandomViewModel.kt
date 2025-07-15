@@ -23,7 +23,6 @@ class RandomViewModel @Inject constructor(
 ): BaseViewModel() {
 
     val sideEffectState = MutableSharedFlow<RandomEffectState>()
-
     val keywordUIState = MutableStateFlow<KeywordUIState>(KeywordUIState.Loading)
     val lottoUIState = MutableStateFlow<LottoUIState>(LottoUIState.Loading)
 

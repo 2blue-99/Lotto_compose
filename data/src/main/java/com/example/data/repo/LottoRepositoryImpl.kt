@@ -17,7 +17,6 @@ import com.example.domain.util.CommonUtils.currentDateTimeString
 import com.example.domain.util.CommonUtils.getPastDate
 import com.example.domain.util.ResourceState
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -59,7 +58,7 @@ class LottoRepositoryImpl @Inject constructor(
 
     override suspend fun getRangeStatistic(range: RangeType): List<StatisticItem> {
         // 해당 범위의 로또 정보 가져오기
-        val targetMonth = getPastDate(range.month)
+        val targetMonth = getPastDate(range.monthValue)
 
         // 범위에 해당하는 로또 회차 리스트
         val roundRangeList = lottoRoundDao.getRangeLottoRoundDao(targetMonth)
