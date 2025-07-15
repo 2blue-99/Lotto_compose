@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,9 +45,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.model.StatisticItem
 import com.example.domain.type.RangeType
 import com.example.mvi_test.R
+import com.example.mvi_test.designsystem.common.CommonButton
 import com.example.mvi_test.designsystem.common.CommonExpandableBox
 import com.example.mvi_test.designsystem.common.CommonLottoCircle
 import com.example.mvi_test.designsystem.common.DynamicHorizontalSelector
+import com.example.mvi_test.designsystem.common.HorizontalSpacer
 import com.example.mvi_test.designsystem.common.VerticalSpacer
 import com.example.mvi_test.screen.random.state.RandomEffectState
 import com.example.mvi_test.screen.statistic.StatisticViewModel
@@ -55,6 +58,8 @@ import com.example.mvi_test.screen.statistic.state.StatisticEffectState
 import com.example.mvi_test.screen.statistic.state.StatisticUIState
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.DarkGray
+import com.example.mvi_test.ui.theme.LightGray
+import com.example.mvi_test.ui.theme.PrimaryColor
 import com.example.mvi_test.ui.theme.ScreenBackground
 import com.example.mvi_test.util.Utils.toLottoColor
 import kotlinx.coroutines.delay
@@ -151,6 +156,9 @@ fun StatisticScreen(
             )
         }
 
+        item {
+            SelectContent()
+        }
     }
 }
 
@@ -331,8 +339,59 @@ fun StatisticItem(
     }
 }
 
+@Composable
+fun SelectContent(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White, RoundedCornerShape(16.dp))
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "포함시킬 번호",
+            style = CommonStyle.text16Bold
+        )
+
+        VerticalSpacer(10.dp)
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(7f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row {
+                    Text(
+                        text = "숫자를 선택해 주세요",
+                        style = CommonStyle.text16Bold,
+                        color = LightGray
+                    )
+                }
+                VerticalSpacer(4.dp)
+                HorizontalDivider(color =  LightGray)
+            }
+
+            HorizontalSpacer(8.dp)
+
+            CommonButton(
+                text = "추첨하기",
+                enableColor = PrimaryColor,
+                enabled = true,
+                modifier = Modifier
+                    .weight(3f)
+            )
+        }
+    }
+}
+
 @Preview
 @Composable
-private fun StatisticItemPreview() {
-
+private fun SelectContentPreview() {
+    SelectContent()
 }
