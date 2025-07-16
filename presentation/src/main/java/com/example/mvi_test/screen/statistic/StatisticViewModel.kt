@@ -1,7 +1,9 @@
 package com.example.mvi_test.screen.statistic
 
 import androidx.lifecycle.viewModelScope
+import com.example.domain.model.LottoItem
 import com.example.domain.repository.LottoRepository
+import com.example.domain.repository.UserRepository
 import com.example.domain.type.RangeType
 import com.example.mvi_test.base.BaseViewModel
 import com.example.mvi_test.screen.random.state.RandomEffectState
@@ -17,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StatisticViewModel @Inject constructor(
-    private val lottoRepository: LottoRepository
+    private val lottoRepository: LottoRepository,
+    private val userRepository: UserRepository
 ) : BaseViewModel() {
     val sideEffectState = MutableSharedFlow<StatisticEffectState>()
     val statisticUIState = MutableStateFlow<StatisticUIState>(StatisticUIState.Loading)
@@ -25,7 +28,7 @@ class StatisticViewModel @Inject constructor(
     fun actionHandler(action: StatisticActionState){
         when(action){
             is StatisticActionState.OnClickRange -> getRangeLottoStatistic(action.range)
-            is StatisticActionState.OnClickDelete -> {  }
+            is StatisticActionState.OnClickSave -> { saveLottoItemList(action.list) }
             is StatisticActionState.OnClickShare -> {  }
         }
     }
@@ -45,6 +48,12 @@ class StatisticViewModel @Inject constructor(
         ioScope.launch {
             val itemList = lottoRepository.getRangeStatistic(range)
             statisticUIState.value = StatisticUIState.Success(itemList)
+        }
+    }
+
+    private fun saveLottoItemList(list: List<LottoItem>){
+        ioScope.launch {
+            lottoRepository.insertLottoRecodeDao(list)
         }
     }
 }

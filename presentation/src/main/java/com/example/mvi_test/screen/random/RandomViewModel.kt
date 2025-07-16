@@ -41,12 +41,12 @@ class RandomViewModel @Inject constructor(
     //**********************************************************************************************
     // Mark: Function
     //**********************************************************************************************
-    fun actionHandler(intent: RandomActionState){
-        when(intent){
-            is RandomActionState.AddKeyword -> { addKeyword(intent.title) }
-            is RandomActionState.DeleteKeyword -> { deleteKeyword(intent.targetId) }
-            is RandomActionState.OnClickDraw -> { drawLotto(intent.keyword) }
-            is RandomActionState.OnClickSave -> { saveLottoItemList(intent.list) }
+    fun actionHandler(action: RandomActionState){
+        when(action){
+            is RandomActionState.AddKeyword -> { addKeyword(action.title) }
+            is RandomActionState.DeleteKeyword -> { deleteKeyword(action.targetId) }
+            is RandomActionState.OnClickDraw -> { drawLotto(action.keyword) }
+            is RandomActionState.OnClickSave -> { saveLottoItemList(action.list) }
         }
     }
 

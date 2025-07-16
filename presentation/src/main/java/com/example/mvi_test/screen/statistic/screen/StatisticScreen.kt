@@ -48,12 +48,12 @@ import com.example.domain.type.RangeType
 import com.example.domain.util.CommonMessage
 import com.example.mvi_test.R
 import com.example.mvi_test.designsystem.common.CommonButton
+import com.example.mvi_test.designsystem.common.CommonDrawResultContent
 import com.example.mvi_test.designsystem.common.CommonExpandableBox
 import com.example.mvi_test.designsystem.common.CommonLottoCircle
 import com.example.mvi_test.designsystem.common.DynamicHorizontalSelector
 import com.example.mvi_test.designsystem.common.HorizontalSpacer
 import com.example.mvi_test.designsystem.common.VerticalSpacer
-import com.example.mvi_test.screen.random.state.RandomEffectState
 import com.example.mvi_test.screen.statistic.StatisticViewModel
 import com.example.mvi_test.screen.statistic.state.StatisticActionState
 import com.example.mvi_test.screen.statistic.state.StatisticEffectState
@@ -63,12 +63,9 @@ import com.example.mvi_test.ui.theme.DarkGray
 import com.example.mvi_test.ui.theme.LightGray
 import com.example.mvi_test.ui.theme.PrimaryColor
 import com.example.mvi_test.ui.theme.ScreenBackground
-import com.example.mvi_test.util.Utils.setAllFalse
 import com.example.mvi_test.util.Utils.toLottoColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.selects.select
-import timber.log.Timber
 
 @Composable
 fun StatisticScreen(
@@ -185,6 +182,16 @@ fun StatisticScreen(
             SelectContent(
                 onClickDraw = { expand = false },
                 selectList = selectNumberList.toList()
+            )
+        }
+
+        item {
+            CommonDrawResultContent(
+                onClickSave = { list ->
+                    actionHandler(StatisticActionState.OnClickSave(list))
+                    effectHandler(StatisticEffectState.ShowToast(CommonMessage.RANDOM_SAVED_SUCCESS))
+                },
+                lottoList = emptyList()
             )
         }
     }
