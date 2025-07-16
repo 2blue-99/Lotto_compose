@@ -10,5 +10,8 @@ enum class CommonMessage(
 
     // Random
     RANDOM_EMPTY_KEYWORD("키워드를 입력해 주세요."),
-    RANDOM_SAVED_SUCCESS("추첨 번호를 저장하였습니다.")
+    RANDOM_SAVED_SUCCESS("추첨 번호를 저장하였습니다."),
+
+    // Statistic
+    STATISTIC_SELECT_FAIL("최대 6개까지 선택할 수 있습니다.")
 }

@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -44,6 +45,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.model.StatisticItem
 import com.example.domain.type.RangeType
+import com.example.domain.util.CommonMessage
 import com.example.mvi_test.R
 import com.example.mvi_test.designsystem.common.CommonButton
 import com.example.mvi_test.designsystem.common.CommonExpandableBox
@@ -61,9 +63,12 @@ import com.example.mvi_test.ui.theme.DarkGray
 import com.example.mvi_test.ui.theme.LightGray
 import com.example.mvi_test.ui.theme.PrimaryColor
 import com.example.mvi_test.ui.theme.ScreenBackground
+import com.example.mvi_test.util.Utils.setAllFalse
 import com.example.mvi_test.util.Utils.toLottoColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.selects.select
+import timber.log.Timber
 
 @Composable
 fun StatisticScreen(
@@ -76,8 +81,8 @@ fun StatisticScreen(
     LaunchedEffect(Unit) {
         viewModel.sideEffectState.collectLatest { effect ->
             when(effect){
-                is RandomEffectState.ShowToast -> { Toast.makeText(context, effect.message.message, Toast.LENGTH_SHORT).show() }
-                is RandomEffectState.ShowSnackbar -> {  }
+                is StatisticEffectState.ShowToast -> { Toast.makeText(context, effect.message.message, Toast.LENGTH_SHORT).show() }
+                is StatisticEffectState.ShowSnackbar -> {  }
                 else -> {}
             }
         }
@@ -98,10 +103,19 @@ fun StatisticScreen(
     modifier: Modifier = Modifier
 ) {
     var rangeType by remember { mutableStateOf(RangeType.ONE_YEAR) } // 통계 조회 범위
+    var expand by remember { mutableStateOf(false) }
+    val selectNumberList = remember { mutableStateListOf<String>() } // 선택 로또 리스트
 
+    // 범위 변경 시 이벤트 발생
     LaunchedEffect(rangeType) {
         actionHandler(StatisticActionState.OnClickRange(rangeType))
     }
+
+    // 범위 변경 시 선택 로또 초기화
+    LaunchedEffect(statisticUIState) {
+        selectNumberList.clear()
+    }
+
 
     LazyColumn(
         modifier = modifier
@@ -152,12 +166,26 @@ fun StatisticScreen(
         item {
             StatisticContent(
                 rangeType = rangeType,
-                itemList = if(statisticUIState is StatisticUIState.Success) statisticUIState.statisticItem else emptyList()
+                itemList = if(statisticUIState is StatisticUIState.Success) statisticUIState.statisticItem else emptyList(),
+                expand = expand,
+                onChangeExpand = { expand = it },
+                changeSelectState = { state, number ->
+                    if (state) {
+                        // 로또 선택 처리
+                        selectNumberList.add(number)
+                    } else {
+                        // 로또 선택 해제
+                        selectNumberList.remove(number)
+                    }
+                }
             )
         }
 
         item {
-            SelectContent()
+            SelectContent(
+                onClickDraw = { expand = false },
+                selectList = selectNumberList.toList()
+            )
         }
     }
 }
@@ -174,26 +202,16 @@ private fun StatisticScreenPreview() {
 fun StatisticContent(
     rangeType: RangeType = RangeType.THREE_MONTH,
     itemList: List<StatisticItem> = emptyList(),
+    expand: Boolean = false,
+    onChangeExpand: (Boolean) -> Unit = {},
+    changeSelectState: (Boolean, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    var expand by remember { mutableStateOf(false) }
-//    var visible by remember { mutableStateOf(false) }
-
-//    val alpha by animateFloatAsState(
-//        targetValue = if(visible) 1f else 0f,
-//        animationSpec = tween(durationMillis = if(visible) 500 else 0),
-//        label = "contentAlpha"
-//    )
-
-    // 컨텐츠 페이드 인아웃 애니메이션
-//    LaunchedEffect(itemList) {
-//        if(itemList.isNotEmpty()){
-//            visible = false
-//            delay(500)
-//            visible = true
-//        }
-//    }
+    // 최초 진입 확장 딜레이
+    LaunchedEffect(Unit) {
+        delay(500)
+        onChangeExpand(true)
+    }
 
     Column(
         modifier = Modifier
@@ -204,7 +222,8 @@ fun StatisticContent(
     ) {
         // 통계 결과
         if(itemList.isNotEmpty()){
-            val higherCount = itemList.first().count.toInt().toFloat() // 막대 그래프 비율 산정을 위한 가장 큰 값 변수화
+            // 막대 그래프 비율 산정을 위한 가장 큰 값 변수화
+            val higherCount = itemList.first().count.toInt().toFloat()
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -212,7 +231,7 @@ fun StatisticContent(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
                 ){
-                    expand = !expand
+                    onChangeExpand(!expand)
                 }
             ) {
                 Text(
@@ -232,28 +251,27 @@ fun StatisticContent(
 
             Column(
                 modifier = Modifier
-//                    .alpha(alpha)
                     .fillMaxWidth()
             ) {
                 // 기본 리스트
-                itemList.slice(0..3).forEach {
+                itemList.slice(0..2).forEachIndexed { index, item ->
                     StatisticItem(
-                        item = it,
-                        percentage = it.count.toInt() / higherCount
+                        item = item,
+                        percentage = item.count.toInt() / higherCount,
+                        onclickItem = changeSelectState
                     )
                 }
 
                 // 확장 리스트
                 AnimatedVisibility(
                     visible = expand,
-//            enter = fadeIn(animationSpec = tween(durationMillis = 1000)) + expandVertically(),
-//            exit = fadeOut(animationSpec = tween(durationMillis = 300)) + shrinkVertically()
                 ) {
                     Column {
-                        itemList.slice(4..6).forEach {
+                        itemList.slice(3..5).forEachIndexed { index, item ->
                             StatisticItem(
-                                item = it,
-                                percentage = it.count.toInt() / higherCount
+                                item = item,
+                                percentage = item.count.toInt() / higherCount,
+                                onclickItem = changeSelectState
                             )
                         }
                     }
@@ -280,18 +298,26 @@ fun StatisticContent(
 @Preview
 @Composable
 private fun StatisticContentPreview() {
-    StatisticContent()
+    StatisticContent(
+        changeSelectState = {b,s ->}
+    )
 }
 
 @Composable
 fun StatisticItem(
     item: StatisticItem,
     percentage: Float = 1f, // 0~1
-    onclickItem: (Boolean) -> Unit = {},
+    onclickItem: (Boolean, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val gradientList = listOf(Color.White, item.number.toInt().toLottoColor())
     val shrinkGradient = Brush.linearGradient(colors = gradientList)
+    var checked by remember { mutableStateOf(false) }
+
+    // checked 초기화 처리
+    LaunchedEffect(item) {
+        checked = false
+    }
 
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -299,8 +325,11 @@ fun StatisticItem(
     ) {
         Box { // CheckBox 는 Box 로 싸매야 Preview 에 범위가 나옴
             Checkbox(
-                checked = false,
-                onCheckedChange = onclickItem,
+                checked = checked,
+                onCheckedChange = {
+                    checked = !checked
+                    onclickItem(checked, item.number)
+                },
                 colors = CheckboxDefaults.colors(
                     checkedColor = DarkGray,
                     uncheckedColor = DarkGray,
@@ -341,6 +370,8 @@ fun StatisticItem(
 
 @Composable
 fun SelectContent(
+    onClickDraw: () -> Unit = {},
+    selectList: List<String> = listOf("7","7","7"),
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -367,11 +398,30 @@ fun SelectContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row {
-                    Text(
-                        text = "숫자를 선택해 주세요",
-                        style = CommonStyle.text16Bold,
-                        color = LightGray
-                    )
+                    // 선택 리스트가 비었을 경우
+                    if(selectList.isEmpty()){
+                        Box(
+                            modifier = Modifier.height(30.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "숫자를 선택해 주세요",
+                                style = CommonStyle.text16Bold,
+                                color = LightGray
+                            )
+                        }
+                    } else {
+                        selectList.forEachIndexed { index, number ->
+                            CommonLottoCircle(
+                                targetNumber = number,
+                                isAnimation = false,
+                                modifier = Modifier.size(30.dp)
+                            )
+                            if(index < selectList.lastIndex){
+                                HorizontalSpacer(4.dp)
+                            }
+                        }
+                    }
                 }
                 VerticalSpacer(4.dp)
                 HorizontalDivider(color =  LightGray)
@@ -384,7 +434,8 @@ fun SelectContent(
                 enableColor = PrimaryColor,
                 enabled = true,
                 modifier = Modifier
-                    .weight(3f)
+                    .weight(3f),
+                onClick = onClickDraw
             )
         }
     }

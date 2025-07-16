@@ -19,7 +19,7 @@ import javax.inject.Inject
 class StatisticViewModel @Inject constructor(
     private val lottoRepository: LottoRepository
 ) : BaseViewModel() {
-    val sideEffectState = MutableSharedFlow<RandomEffectState>()
+    val sideEffectState = MutableSharedFlow<StatisticEffectState>()
     val statisticUIState = MutableStateFlow<StatisticUIState>(StatisticUIState.Loading)
 
     fun actionHandler(action: StatisticActionState){
@@ -32,10 +32,10 @@ class StatisticViewModel @Inject constructor(
 
     fun effectHandler(eventState: StatisticEffectState){
         viewModelScope.launch {
-//            when(eventState){
-//                is StatisticEffectState.ShowToast -> {}
-//                is com.example.mvi_test.screen.random.state.RandomEffectState.StatisticEffectState.ShowSnackbar -> {}
-//            }
+            when(eventState){
+                is StatisticEffectState.ShowToast -> sideEffectState.emit(StatisticEffectState.ShowToast(eventState.message))
+                else -> {}
+            }
         }
     }
 
