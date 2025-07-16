@@ -53,6 +53,7 @@ import com.example.domain.model.LottoItem
 import com.example.domain.util.CommonMessage
 import com.example.mvi_test.R
 import com.example.mvi_test.designsystem.common.CommonButton
+import com.example.mvi_test.designsystem.common.CommonDrawResultContent
 import com.example.mvi_test.designsystem.common.CommonExpandableBox
 import com.example.mvi_test.designsystem.common.CommonFlowRow
 import com.example.mvi_test.designsystem.common.CommonLazyRow
@@ -168,9 +169,11 @@ fun RandomScreen(
             )
         }
         item {
-            RandomResultContent(
-                actionHandler = actionHandler,
-                effectHandler = effectHandler,
+            CommonDrawResultContent(
+                onClickSave = { list ->
+                    actionHandler(RandomActionState.OnClickSave(list))
+                    effectHandler(RandomEffectState.ShowToast(CommonMessage.RANDOM_SAVED_SUCCESS))
+                },
                 lottoList = if(lottoUIState is LottoUIState.Success) lottoUIState.lottoList else emptyList()
             )
         }
@@ -354,153 +357,6 @@ fun KeywordContent(
 @Composable
 private fun KeywordBoxPreview() {
     KeywordContent()
-}
-
-@Composable
-fun RandomResultContent(
-    actionHandler: (RandomActionState) -> Unit = {},
-    effectHandler: (RandomEffectState) -> Unit = {},
-    lottoList: List<LottoItem> = testLottoList(),
-    modifier: Modifier = Modifier
-) {
-    val itemList = remember { mutableStateListOf<Int>() }
-    val checkBoxStates = remember { mutableStateListOf(false,false,false,false,false) }
-    // 하단 버튼(저장, 복사, 공유) 활성화/비활성화 여부
-    var isDrawCompleted by remember { mutableStateOf(false) }
-    // 저장하기 1번이상 클릭 여부
-    var isSaved by remember { mutableStateOf(false) }
-
-    LaunchedEffect(lottoList) {
-        if(lottoList.isNotEmpty()) {
-            // 추첨 결과 아이템 순차 노출
-            launch {
-                // 기존의 추첨 결과 초기화
-                itemList.clear()
-                // 기존의 체크박스 상태 초기화
-                repeat(5) { index ->
-                    delay(DRAW_ITEM_SHOW_TIME)
-                    itemList.add(index)
-                }
-            }
-            // 전체 로또 노출 완료 여부 - 로또 아이템 체크박스 활성화
-            launch {
-                checkBoxStates.setAllFalse()
-                delay(DRAW_COMPLETE_TIME)
-                checkBoxStates.setAllTrue()
-            }
-
-            // 전체 로또 노출 완료 여부 - 하단 버튼 활성화
-            launch {
-                isDrawCompleted = false
-                delay(DRAW_COMPLETE_TIME)
-                isDrawCompleted = true
-            }
-        }
-    }
-
-    Box {
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .background(Color.White, RoundedCornerShape(16.dp))
-                .padding(16.dp)
-                .heightIn(min = 200.dp)
-                .animateContentSize()
-        ) {
-            Text(
-                text = "추첨 결과",
-                style = CommonStyle.text16Bold
-            )
-
-            VerticalSpacer(10.dp)
-
-            itemList.forEach { index ->
-                RandomListItem(
-                    targetList = lottoList[index],
-                    checkBox = checkBoxStates[index],
-                    onCheckChange = {
-                        checkBoxStates[index] = it
-                    },
-                    index = index
-                )
-                if(index < itemList.lastIndex){
-                    HorizontalDivider(color = Color.LightGray)
-                }
-            }
-        }
-
-        // 로또가 비어있을 때
-        AnimatedVisibility(
-            visible = lottoList.isEmpty(),
-            modifier = Modifier.matchParentSize()
-        ) {
-            Box(
-                modifier = Modifier,
-                contentAlignment = Alignment.Center
-            ){
-                Text(
-                    text = "추첨하기 버튼을 눌러주세요.",
-                    style = CommonStyle.text20Bold,
-                    color = Color.LightGray
-                )
-            }
-        }
-    }
-
-    VerticalSpacer(10.dp)
-
-    val saveCount = checkBoxStates.toList().count { it }
-    val saveEnabled = if(isDrawCompleted && saveCount != 0 && !isSaved) true else false
-    val saveText = if(!isDrawCompleted || isSaved) "저장하기" else "${saveCount}개 저장하기"
-
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        CommonButton(
-            modifier = Modifier
-                .weight(2f)
-                .height(50.dp),
-            enableColor = SubColor,
-            disableColor = LightGray,
-            enabled = saveEnabled,
-            onClick = {
-                val checkedItemList = checkBoxStates.toList().indices.mapIndexedNotNull { index, _ ->
-                    if(checkBoxStates[index]) lottoList[index] else null
-                }
-                actionHandler(RandomActionState.OnClickSave(checkedItemList))
-                effectHandler(RandomEffectState.ShowToast(CommonMessage.RANDOM_SAVED_SUCCESS))
-                isSaved = true
-            },
-            text = saveText // 저장하기
-        )
-        CommonButton(
-            modifier = Modifier
-                .weight(1f)
-                .height(50.dp),
-            enableColor = DarkGray,
-            disableColor = LightGray,
-            enabled = isDrawCompleted,
-            onClick = {},
-            text = "복사하기"
-        )
-        CommonButton(
-            modifier = Modifier
-                .weight(1f)
-                .height(50.dp),
-            enableColor = DarkGray,
-            disableColor = LightGray,
-            enabled = isDrawCompleted,
-            onClick = {},
-            text = "공유하기"
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun RandomResultPreview() {
-    RandomResultContent()
 }
 
 @Composable
