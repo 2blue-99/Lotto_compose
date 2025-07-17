@@ -81,7 +81,7 @@ dependencies {
     implementation(libs.accompanist.flowlayout) // 최신 버전 확인 필요
 
     // Compose Status bar
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.33.2-alpha") // 버전은 최신으로!
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

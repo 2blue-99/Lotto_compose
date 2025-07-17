@@ -3,18 +3,15 @@ package com.example.mvi_test.ui
 import android.app.Activity
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.Icon
@@ -47,7 +44,6 @@ import com.example.mvi_test.screen.setting.navigation.navigateToSetting
 import com.example.mvi_test.screen.setting.navigation.settingScreen
 import com.example.mvi_test.screen.statistic.navigation.navigateToStatistic
 import com.example.mvi_test.screen.statistic.navigation.statisticScreen
-import timber.log.Timber
 
 @Composable
 fun MyApp() {
@@ -60,25 +56,21 @@ fun MyApp() {
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState,
-//                modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing)
             )
-        }
+        },
 //        bottomBar = {
 //            BottomNavigationBar(navController)
 //        }
     ) { padding ->
-        Box(
-            modifier = Modifier.padding(padding)
-        ) {
-            NavHostContainer(
-                onShowSnackbar = {
-                    snackbarHostState.showSnackbar(
-                        message = it.message,
-                    )
-                },
-                navController = navController,
-            )
-        }
+        NavHostContainer(
+            onShowSnackbar = {
+                snackbarHostState.showSnackbar(
+                    message = it.message,
+                )
+            },
+            navController = navController,
+            paddingValue = padding
+        )
     }
 }
 
@@ -132,17 +124,18 @@ fun BottomNavigationBar(
 @Composable
 fun NavHostContainer(
     onShowSnackbar: suspend (CommonMessage) -> Unit,
-    navController: NavHostController
+    navController: NavHostController,
+    paddingValue: PaddingValues,
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavigationItem.Home.route
+        startDestination = NavigationItem.Home.route,
     ){
         homeScreen(
             navigateToRandom = navController::navigateToRandom,
             navigateToRecode = navController::navigateToRecode,
             navigateToSetting = navController::navigateToSetting,
-            navigateToStatistic = navController::navigateToStatistic
+            navigateToStatistic = navController::navigateToStatistic,
         )
 
         randomScreen(
@@ -151,12 +144,16 @@ fun NavHostContainer(
         )
 
         statisticScreen(
-            popBackStack = {}
+            popBackStack = {},
         )
 
-        recodeScreen(navController::popBackStack)
+        recodeScreen(
+            navController::popBackStack,
+        )
 
-        settingScreen(navController::popBackStack)
+        settingScreen(
+            navController::popBackStack,
+        )
     }
 }
 

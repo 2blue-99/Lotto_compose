@@ -1,10 +1,15 @@
 package com.example.mvi_test.ui.theme
 
+import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 
 //private val DarkColorScheme = darkColorScheme(
 //    primary = Purple80,
@@ -33,18 +38,20 @@ fun MVI_TestTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-//        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-//            val context = LocalContext.current
-//            dynamicLightColorScheme(context)
-//        }
 
-//        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    // TODO 이게 꼭 필요한지 체크
+    val view = LocalView.current
+    val window = (view.context as? Activity)?.window
+
+    SideEffect {
+        val window = (view.context as Activity).window
+        window.statusBarColor = Color.Transparent.toArgb()
+        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
     }
 
+
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = LightColorScheme,
         typography = Typography,
         content = content
     )
