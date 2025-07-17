@@ -45,7 +45,7 @@ class RandomViewModel @Inject constructor(
         when(action){
             is RandomActionState.AddKeyword -> { addKeyword(action.title) }
             is RandomActionState.DeleteKeyword -> { deleteKeyword(action.targetId) }
-            is RandomActionState.OnClickDraw -> { drawLotto(action.keyword) }
+            is RandomActionState.OnClickDraw -> { drawLottoList(action.keyword) }
             is RandomActionState.OnClickSave -> { saveLottoItemList(action.list) }
         }
     }
@@ -80,11 +80,9 @@ class RandomViewModel @Inject constructor(
     /**
      * 로또 추첨
      */
-    private fun drawLotto(keyword: String){
-        ioScope.launch {
-            val lottoItemList = makeLotto(keyword)
-            lottoUIState.value = LottoUIState.Success(lottoItemList)
-        }
+    private fun drawLottoList(keyword: String){
+        val lottoItemList = makeLotto(keyword)
+        lottoUIState.value = LottoUIState.Success(lottoItemList)
     }
 
     private fun saveLottoItemList(list: List<LottoItem>){

@@ -32,7 +32,7 @@ object Utils {
 
 
     /**
-     * 5개의 LottoItem 제작
+     * 5개의 LottoItem 제작 - 키워드
      */
     fun makeLotto(input: String): List<LottoItem> {
         val word = input.map { it.code }.sum().toLong()
@@ -44,6 +44,38 @@ object Utils {
             // 보너스 번호를 제외한 6개 추첨
             repeat(6){
                 lottoList.add(random.nextInt(1,46))
+            }
+            // 리스트 정렬
+            val sortedList = lottoList.sorted()
+            val item = LottoItem(
+                sequence = index.toAlphabet(),
+                sum = sortedList.sum().toString(),
+                oddEndEvent = sortedList.toOddEventValue(),
+                highEndLow = sortedList.toHighLowValue(),
+                drawList = sortedList.map { it.toString() }
+            )
+            resultList.add(item)
+        }
+        return resultList
+    }
+
+    /**
+     * 5개의 LottoItem 제작 - 필수값
+     */
+    fun makeLotto(inputList: List<String>): List<LottoItem> {
+        val random = Random
+
+        val resultList = mutableListOf<LottoItem>()
+        repeat(5){ index ->
+            val lottoList = mutableListOf<Int>()
+            // 필수값 삽입
+            inputList.forEach { lottoList.add(it.toInt()) }
+            // 보너스 번호를 제외한 6개 추첨
+            while(lottoList.size < 6){
+                val number = random.nextInt(1,46)
+                if(!inputList.contains(number.toString())){
+                    lottoList.add(number)
+                }
             }
             // 리스트 정렬
             val sortedList = lottoList.sorted()

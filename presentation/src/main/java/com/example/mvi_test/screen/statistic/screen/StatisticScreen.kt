@@ -9,6 +9,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -54,6 +55,7 @@ import com.example.mvi_test.designsystem.common.CommonLottoCircle
 import com.example.mvi_test.designsystem.common.DynamicHorizontalSelector
 import com.example.mvi_test.designsystem.common.HorizontalSpacer
 import com.example.mvi_test.designsystem.common.VerticalSpacer
+import com.example.mvi_test.screen.random.state.LottoUIState
 import com.example.mvi_test.screen.statistic.StatisticViewModel
 import com.example.mvi_test.screen.statistic.state.StatisticActionState
 import com.example.mvi_test.screen.statistic.state.StatisticEffectState
@@ -74,6 +76,7 @@ fun StatisticScreen(
 ) {
     val context = LocalContext.current
     val statisticUIState by viewModel.statisticUIState.collectAsStateWithLifecycle()
+    val lottoUIState by viewModel.lottoUIState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.sideEffectState.collectLatest { effect ->
@@ -87,6 +90,7 @@ fun StatisticScreen(
 
     StatisticScreen(
         statisticUIState = statisticUIState,
+        lottoUIState = lottoUIState,
         actionHandler = viewModel::actionHandler,
         effectHandler = viewModel::effectHandler
     )
@@ -95,6 +99,7 @@ fun StatisticScreen(
 @Composable
 fun StatisticScreen(
     statisticUIState: StatisticUIState = StatisticUIState.Loading,
+    lottoUIState: LottoUIState = LottoUIState.Loading,
     actionHandler: (StatisticActionState) -> Unit,
     effectHandler: (StatisticEffectState) -> Unit,
     modifier: Modifier = Modifier
@@ -113,14 +118,14 @@ fun StatisticScreen(
         selectNumberList.clear()
     }
 
-
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .background(ScreenBackground)
-            .padding(16.dp),
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        contentPadding = PaddingValues(bottom = 50.dp)
     ) {
         item {
             CommonExpandableBox(
@@ -180,7 +185,11 @@ fun StatisticScreen(
 
         item {
             SelectContent(
-                onClickDraw = { expand = false },
+                // 추첨하기 버튼 클릭
+                onClickDraw = {
+                    expand = false
+                    actionHandler(StatisticActionState.OnClickDraw(selectNumberList.toList()))
+                },
                 selectList = selectNumberList.toList()
             )
         }
@@ -191,8 +200,13 @@ fun StatisticScreen(
                     actionHandler(StatisticActionState.OnClickSave(list))
                     effectHandler(StatisticEffectState.ShowToast(CommonMessage.RANDOM_SAVED_SUCCESS))
                 },
-                lottoList = emptyList()
+                lottoList = if(lottoUIState is LottoUIState.Success) lottoUIState.lottoList else emptyList(),
+                mainColor = PrimaryColor
             )
+        }
+
+        item {
+//            HorizontalSpacer(30.dp)
         }
     }
 }
@@ -201,7 +215,10 @@ fun StatisticScreen(
 @Composable
 private fun StatisticScreenPreview() {
     StatisticScreen(
-        StatisticUIState.Loading,{},{}
+        StatisticUIState.Loading,
+        LottoUIState.Loading,
+        {},
+        {}
     )
 }
 

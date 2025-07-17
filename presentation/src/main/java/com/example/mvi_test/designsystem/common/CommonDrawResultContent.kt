@@ -48,6 +48,7 @@ import kotlinx.coroutines.launch
 fun CommonDrawResultContent(
     onClickSave: (List<LottoItem>) -> Unit = {},
     lottoList: List<LottoItem> = testLottoList(),
+    mainColor: Color,
     modifier: Modifier = Modifier
 ) {
     val itemList = remember { mutableStateListOf<Int>() }
@@ -150,7 +151,7 @@ fun CommonDrawResultContent(
             modifier = Modifier
                 .weight(2f)
                 .height(50.dp),
-            enableColor = SubColor,
+            enableColor = mainColor,
             disableColor = LightGray,
             enabled = saveEnabled,
             onClick = {
@@ -188,5 +189,7 @@ fun CommonDrawResultContent(
 @Preview
 @Composable
 private fun RandomResultPreview() {
-    CommonDrawResultContent()
+    CommonDrawResultContent(
+        mainColor = SubColor
+    )
 }

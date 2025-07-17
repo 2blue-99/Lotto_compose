@@ -2,18 +2,17 @@ package com.example.mvi_test.screen.random.screen
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,14 +20,12 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -70,15 +67,11 @@ import com.example.mvi_test.ui.theme.DarkGray
 import com.example.mvi_test.ui.theme.LightGray
 import com.example.mvi_test.ui.theme.ScreenBackground
 import com.example.mvi_test.ui.theme.SubColor
+import com.example.mvi_test.util.DRAW_COMPLETE_TIME
 import com.example.mvi_test.util.Utils.containsKeyword
-import com.example.mvi_test.util.Utils.setAllFalse
-import com.example.mvi_test.util.Utils.setAllTrue
 import com.example.mvi_test.util.Utils.testLottoItem
-import com.example.mvi_test.util.Utils.testLottoList
 import com.example.mvi_test.util.Utils.toAlphabet
 import com.example.mvi_test.util.Utils.toKeyword
-import com.example.mvi_test.util.DRAW_COMPLETE_TIME
-import com.example.mvi_test.util.DRAW_ITEM_SHOW_TIME
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -127,9 +120,10 @@ fun RandomScreen(
         modifier = modifier
             .fillMaxSize()
             .background(ScreenBackground)
-            .padding(16.dp),
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        contentPadding = PaddingValues(bottom = 50.dp)
     ) {
         item {
             CommonExpandableBox(
@@ -174,7 +168,8 @@ fun RandomScreen(
                     actionHandler(RandomActionState.OnClickSave(list))
                     effectHandler(RandomEffectState.ShowToast(CommonMessage.RANDOM_SAVED_SUCCESS))
                 },
-                lottoList = if(lottoUIState is LottoUIState.Success) lottoUIState.lottoList else emptyList()
+                lottoList = if(lottoUIState is LottoUIState.Success) lottoUIState.lottoList else emptyList(),
+                mainColor = SubColor
             )
         }
     }
