@@ -262,15 +262,16 @@ fun StatisticContent(
         onChangeExpand(true)
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White, RoundedCornerShape(16.dp))
-            .animateContentSize()
-            .padding(16.dp)
-    ) {
-        when(statisticUIState){
-            is StatisticUIState.Success -> {
+    when (statisticUIState) {
+        is StatisticUIState.Success -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White, RoundedCornerShape(16.dp))
+                    .animateContentSize()
+                    .padding(16.dp)
+            ) {
+
                 val itemList = statisticUIState.statisticItem
                 // 막대 그래프 비율 산정을 위한 가장 큰 값 변수화
                 val higherCount = itemList.first().count.toInt().toFloat()
@@ -280,7 +281,7 @@ fun StatisticContent(
                     modifier = Modifier.clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
-                    ){
+                    ) {
                         onChangeExpand(!expand)
                     }
                 ) {
@@ -328,8 +329,8 @@ fun StatisticContent(
                     }
                 }
             }
-            else -> StatisticEmpty() // 비었을 경우
         }
+        else -> StatisticEmpty() // 비었을 경우
     }
 }
 
