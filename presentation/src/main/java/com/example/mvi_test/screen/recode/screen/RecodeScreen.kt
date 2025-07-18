@@ -250,10 +250,21 @@ fun RecodeItem(
                     modifier = Modifier
                         .weight(8f)
                 ) {
-                    CommonLottoAutoRow(
-                        lottoItem = item,
-                        isAnimation = false
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        CommonLottoAutoRow(
+                            lottoItem = item,
+                            isAnimation = false
+                        )
+                        // 총합, 홀짝, 고저 정보
+                        VerticalSpacer(4.dp)
+                        Text(
+                            text = item.toLottoInfo(),
+                            style = CommonStyle.text12,
+                            color = DarkGray
+                        )
+                    }
                 }
             }
         }

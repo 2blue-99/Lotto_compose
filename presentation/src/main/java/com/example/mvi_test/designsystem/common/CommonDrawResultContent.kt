@@ -300,13 +300,5 @@ fun RandomListItem(
 @Preview
 @Composable
 private fun RandomListItemPreview() {
-    RandomListItem(
-//        targetList = listOf(
-//            listOf(1, 5, 10, 11, 20, 30, 36),
-//            listOf(2, 6, 12, 17, 21, 35, 41),
-//            listOf(3, 7, 13, 18, 22, 33, 44),
-//            listOf(4, 8, 14, 19, 23, 29, 39),
-//            listOf(9, 15, 24, 28, 31, 34, 45)
-//        )
-    )
+    RandomListItem()
 }

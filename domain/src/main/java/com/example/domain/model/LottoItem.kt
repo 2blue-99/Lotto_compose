@@ -14,5 +14,5 @@ data class LottoItem(
     /**
      * 총합 / 홀짝 / 고처 반환
      */
-    fun toLottoInfo() = "총합 $sum  홀짝 $oddEndEvent  고저 $highEndLow"
+    fun toLottoInfo() = "총합 $sum   홀짝 $oddEndEvent   고저 $highEndLow"
 }
