@@ -412,6 +412,17 @@ fun SelectContent(
     selectList: List<String> = listOf("7","7","7"),
     modifier: Modifier = Modifier
 ) {
+    // 추첨하기 클릭 가능 여부
+    var drawClickable by remember { mutableStateOf(true) }
+
+    LaunchedEffect(drawClickable) {
+        if(!drawClickable){
+            // 로또 추첨 결과가 완료되는 시간 : 얼추 1.8초
+            delay(DRAW_COMPLETE_TIME)
+            drawClickable = true
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -468,12 +479,15 @@ fun SelectContent(
             HorizontalSpacer(8.dp)
 
             CommonButton(
-                text = "추첨하기",
                 enableColor = PrimaryColor,
-                enabled = true,
+                enabled = drawClickable,
                 modifier = Modifier
                     .weight(3f),
-                onClick = onClickDraw
+                onClick = {
+                    drawClickable = false
+                    onClickDraw()
+                },
+                text = "추첨하기",
             )
         }
     }

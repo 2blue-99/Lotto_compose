@@ -194,7 +194,8 @@ fun KeywordContent(
 ) {
     var text by remember { mutableStateOf("") }
     var expand by remember { mutableStateOf(false) }
-    var drawState by remember { mutableStateOf(true) }
+    // 추첨하기 클릭 가능 여부
+    var drawClickable by remember { mutableStateOf(true) }
 
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
@@ -212,11 +213,11 @@ fun KeywordContent(
         expand = true
     }
 
-    LaunchedEffect(drawState) {
-        if(!drawState){
+    LaunchedEffect(drawClickable) {
+        if(!drawClickable){
             // 로또 추첨 결과가 완료되는 시간 : 얼추 1.8초
             delay(DRAW_COMPLETE_TIME)
-            drawState = true
+            drawClickable = true
         }
     }
 
@@ -277,14 +278,14 @@ fun KeywordContent(
                     .height(50.dp),
                 enableColor = SubColor,
                 disableColor = LightGray,
-                enabled = drawState,
+                enabled = drawClickable,
                 onClick = {
                     // Empty 체크
                     if(text.isNotBlank()){
                         focusManager.clearFocus()
                         keyboardController?.hide()
                         expand = false
-                        drawState = false
+                        drawClickable = false
                         rememberCoroutineScope.launch {
                             delay(100) // TODO 해당 딜레이가 없으면 부모 컴포넌트가 숨겨지기 전에 업데이트된게 보여서 추가한 임시방편
                             if(!keywordList.containsKeyword(text)){
