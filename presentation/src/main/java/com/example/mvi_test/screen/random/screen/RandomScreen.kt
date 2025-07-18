@@ -77,7 +77,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @Composable
-fun RandomScreen(
+fun RandomRoute(
     onShowSnackbar: suspend (CommonMessage) -> Unit = {},
     popBackStack: () -> Unit,
     modifier: Modifier = Modifier,
@@ -120,7 +120,8 @@ fun RandomScreen(
         modifier = modifier
             .fillMaxSize()
             .background(ScreenBackground)
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .padding(top = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = PaddingValues(bottom = 50.dp)

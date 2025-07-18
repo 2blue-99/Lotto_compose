@@ -48,15 +48,17 @@ import com.example.mvi_test.ui.theme.Red
 import com.example.mvi_test.ui.theme.ScreenBackground
 
 @Composable
-fun RecodeScreen(
+fun RecodeRoute(
     popBackStack: () -> Unit = {},
+    modifier: Modifier,
     viewModel: RecodeViewModel = hiltViewModel()
 ) {
     val recodeUIState by viewModel.recodeUIState.collectAsStateWithLifecycle()
 
     RecodeScreen(
         recodeUIState = recodeUIState,
-        actionHandler = viewModel::actionHandler
+        actionHandler = viewModel::actionHandler,
+        modifier = modifier
     )
 }
 
@@ -67,10 +69,11 @@ fun RecodeScreen(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(ScreenBackground)
-            .padding(16.dp),
+            .padding(horizontal = 16.dp)
+            .padding(top = 16.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

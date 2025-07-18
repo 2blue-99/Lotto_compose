@@ -3,6 +3,7 @@ package com.example.mvi_test.ui
 import android.app.Activity
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -44,6 +45,7 @@ import com.example.mvi_test.screen.setting.navigation.navigateToSetting
 import com.example.mvi_test.screen.setting.navigation.settingScreen
 import com.example.mvi_test.screen.statistic.navigation.navigateToStatistic
 import com.example.mvi_test.screen.statistic.navigation.statisticScreen
+import com.example.mvi_test.ui.theme.ScreenBackground
 
 @Composable
 fun MyApp() {
@@ -136,23 +138,28 @@ fun NavHostContainer(
             navigateToRecode = navController::navigateToRecode,
             navigateToSetting = navController::navigateToSetting,
             navigateToStatistic = navController::navigateToStatistic,
+            modifier = Modifier.padding(paddingValue)
         )
 
         randomScreen(
             onShowSnackbar = onShowSnackbar,
             popBackStack = navController::popBackStack,
+            modifier = Modifier.background(ScreenBackground).padding(paddingValue)
         )
 
         statisticScreen(
             popBackStack = {},
+            modifier = Modifier.background(ScreenBackground).padding(paddingValue)
         )
 
         recodeScreen(
             navController::popBackStack,
+            modifier = Modifier.background(ScreenBackground).padding(paddingValue)
         )
 
         settingScreen(
             navController::popBackStack,
+            modifier = Modifier.background(ScreenBackground).padding(paddingValue)
         )
     }
 }

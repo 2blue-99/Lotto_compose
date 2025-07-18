@@ -67,7 +67,7 @@ import com.example.mvi_test.ui.theme.SubColor
 import kotlin.math.absoluteValue
 
 @Composable
-fun HomeScreen(
+fun HomeRoute(
     navigateToSetting: () -> Unit = {},
     navigateToRandom: () -> Unit = {},
     navigateToRecode: () -> Unit = {},
@@ -103,9 +103,8 @@ fun HomeScreen(
             .fillMaxSize(),
     ) {
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             MainTopBar(
@@ -151,51 +150,42 @@ private fun MainTopBar(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .height(66.dp),
+            .height(66.dp)
+            .padding(horizontal = 20.dp),
         color = Color.Transparent,
     ) {
-        Surface(
-            modifier = Modifier.padding(horizontal = 20.dp),
-            color = Color.Transparent,
+        Box(
+            contentAlignment = Alignment.CenterStart
         ) {
-            Box(
-                contentAlignment = Alignment.CenterStart
-            ) {
-                Text(
-                    text = "행운 로또",
-                    style = CommonStyle.text18
-                )
-            }
-            Box(
-                contentAlignment = Alignment.CenterEnd
-            ) {
-                Row {
-                    IconButton(
-                        onClick = onQRClick
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.qr_icon),
-                            contentDescription = "QR",
-                            tint = DarkGray
-                        )
-                    }
-                    IconButton(
-                        onClick = onSettingClick
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Settings,
-                            contentDescription = "Setting",
-                            tint = DarkGray
-                        )
-                    }
+            Text(
+                text = "행운 로또",
+                style = CommonStyle.text18
+            )
+        }
+        Box(
+            contentAlignment = Alignment.CenterEnd
+        ) {
+            Row {
+                IconButton(
+                    onClick = onQRClick
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.qr_icon),
+                        contentDescription = "QR",
+                        tint = DarkGray
+                    )
+                }
+                IconButton(
+                    onClick = onSettingClick
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Setting",
+                        tint = DarkGray
+                    )
                 }
             }
         }
-//        Box(
-//            contentAlignment = Alignment.BottomCenter
-//        ) {
-//            HorizontalDivider()
-//        }
     }
 }
 

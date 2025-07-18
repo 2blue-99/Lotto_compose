@@ -70,7 +70,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun StatisticScreen(
+fun StatisticRoute(
     modifier: Modifier = Modifier,
     viewModel: StatisticViewModel = hiltViewModel()
 ) {
@@ -92,7 +92,8 @@ fun StatisticScreen(
         statisticUIState = statisticUIState,
         lottoUIState = lottoUIState,
         actionHandler = viewModel::actionHandler,
-        effectHandler = viewModel::effectHandler
+        effectHandler = viewModel::effectHandler,
+        modifier = modifier
     )
 }
 
@@ -122,7 +123,8 @@ fun StatisticScreen(
         modifier = modifier
             .fillMaxSize()
             .background(ScreenBackground)
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .padding(top = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = PaddingValues(bottom = 50.dp)
@@ -233,7 +235,7 @@ fun StatisticContent(
 ) {
     // 최초 진입 확장 딜레이
     LaunchedEffect(Unit) {
-        delay(500)
+        delay(200)
         onChangeExpand(true)
     }
 
