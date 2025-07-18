@@ -4,6 +4,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
 import com.example.domain.model.Keyword
 import com.example.domain.model.LottoItem
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -143,20 +144,38 @@ object Utils {
         return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(currentTime))
     }
 
-
-
-
-
-
+    /**
+     * 모두 True 처리
+     */
     fun SnapshotStateList<Boolean>.setAllTrue() {
         this.indices.forEach {
             this[it] = true
         }
     }
 
+    /**
+     * 모두 False 처리
+     */
     fun SnapshotStateList<Boolean>.setAllFalse() {
         this.indices.forEach {
             this[it] = false
         }
+    }
+
+    /**
+     * 추첨 결과 복사하기
+     */
+    fun drawResultToString(list: List<List<String>>): String {
+        val format = list.map {
+            it.map {
+                if(it.toInt() in 1..9) "0"+it
+                else it
+            }.joinToString(" ")
+        }.joinToString("\n")
+
+        return "\"최신 로또 추첨\" 결과" +
+                "\n\n$format\"" +
+                "\n\n\"최신 로또 추첨\" 무료 다운로드" +
+                "\nwww.naver.com".trimIndent()
     }
 }
