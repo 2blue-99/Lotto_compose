@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -65,6 +66,7 @@ import com.example.mvi_test.ui.theme.DarkGray
 import com.example.mvi_test.ui.theme.LightGray
 import com.example.mvi_test.ui.theme.PrimaryColor
 import com.example.mvi_test.ui.theme.ScreenBackground
+import com.example.mvi_test.util.DRAW_COMPLETE_TIME
 import com.example.mvi_test.util.Utils.toLottoColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -108,6 +110,7 @@ fun StatisticScreen(
     var rangeType by remember { mutableStateOf(RangeType.ONE_YEAR) } // 통계 조회 범위
     var expand by remember { mutableStateOf(false) }
     val selectNumberList = remember { mutableStateListOf<String>() } // 선택 로또 리스트
+    val lazyState = rememberLazyListState()
 
     // 범위 변경 시 이벤트 발생
     LaunchedEffect(rangeType) {
@@ -119,12 +122,21 @@ fun StatisticScreen(
         selectNumberList.clear()
     }
 
+    // 로또 추첨 완료 시, 화면 아래로 자동 스크롤
+    LaunchedEffect(lottoUIState) {
+        if(lottoUIState is LottoUIState.Success){
+            delay(DRAW_COMPLETE_TIME)
+            lazyState.animateScrollToItem(2)
+        }
+    }
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .background(ScreenBackground)
             .padding(horizontal = 16.dp)
             .padding(top = 16.dp),
+        state = lazyState,
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = PaddingValues(bottom = 50.dp)
