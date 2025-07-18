@@ -1,10 +1,11 @@
 package com.example.mvi_test.util
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
 import com.example.domain.model.Keyword
 import com.example.domain.model.LottoItem
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -173,9 +174,22 @@ object Utils {
             }.joinToString(" ")
         }.joinToString("\n")
 
-        return "\"최신 로또 추첨\" 결과" +
+        return "\"최신 로또 추첨\" 결과입니다." +
                 "\n\n$format\"" +
                 "\n\n\"최신 로또 추첨\" 무료 다운로드" +
                 "\nwww.naver.com".trimIndent()
+    }
+
+    /**
+     * 추첨 결과 공유하기
+     */
+    fun Context.shareLotto(inputText: String) {
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, inputText)
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, "Share Lotto")
+        this.startActivity(shareIntent)
     }
 }

@@ -29,6 +29,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -46,6 +49,8 @@ import com.example.mvi_test.ui.theme.DarkGray
 import com.example.mvi_test.ui.theme.LightGray
 import com.example.mvi_test.ui.theme.Red
 import com.example.mvi_test.ui.theme.ScreenBackground
+import com.example.mvi_test.util.Utils.drawResultToString
+import com.example.mvi_test.util.Utils.shareLotto
 
 @Composable
 fun RecodeRoute(
@@ -193,6 +198,9 @@ fun RecodeItem(
     actionHandler: (RecodeActionState) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    val clipboardManager = LocalClipboardManager.current
+    val context = LocalContext.current
+
     // 아이템 생성 시 페이드 아웃 -> 인
     var expanded by remember { mutableStateOf(false) }
 
@@ -201,6 +209,8 @@ fun RecodeItem(
         animationSpec = tween(300),
         label = "expanded_item"
     )
+
+    val lottoList = lottoRecode.lottoItem.map { it.drawList }
 
     Column(
         modifier = modifier
@@ -252,6 +262,16 @@ fun RecodeItem(
             SelectControllerButton(
                 onClickDelete = {
                     actionHandler(RecodeActionState.OnClickDelete(saveDate = lottoRecode.saveDate))
+                },
+                // 복사하기
+                onclickCopy = {
+                    val text = drawResultToString(lottoList)
+                    clipboardManager.setText(AnnotatedString(text))
+                },
+                // 공유하기
+                onClickShare = {
+                    val text = drawResultToString(lottoList)
+                    context.shareLotto(text)
                 }
             )
         }
@@ -273,6 +293,8 @@ private fun RecodeItemPreview() {
 @Composable
 fun SelectControllerButton(
     onClickDelete: () -> Unit = {},
+    onclickCopy: () -> Unit = {},
+    onClickShare: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -293,14 +315,14 @@ fun SelectControllerButton(
         CommonButton(
             modifier = Modifier.weight(1f),
             enabled = true,
-            onClick = {},
+            onClick = onclickCopy,
             text = "복사하기"
         )
 
         CommonButton(
             modifier = Modifier.weight(1f),
             enabled = true,
-            onClick = {},
+            onClick = onClickShare,
             text = "공유하기"
         )
     }
