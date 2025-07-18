@@ -1,8 +1,17 @@
 package com.example.mvi_test.screen.statistic.screen
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -17,6 +26,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -182,7 +193,7 @@ fun StatisticScreen(
         item {
             StatisticContent(
                 rangeType = rangeType,
-                itemList = if(statisticUIState is StatisticUIState.Success) statisticUIState.statisticItem else emptyList(),
+                statisticUIState = statisticUIState,
                 expand = expand,
                 onChangeExpand = { expand = it },
                 changeSelectState = { state, number ->
@@ -198,7 +209,7 @@ fun StatisticScreen(
         }
 
         item {
-            SelectContent(
+            SelectDrawContent(
                 // 추첨하기 버튼 클릭
                 onClickDraw = {
                     expand = false
@@ -239,7 +250,7 @@ private fun StatisticScreenPreview() {
 @Composable
 fun StatisticContent(
     rangeType: RangeType = RangeType.THREE_MONTH,
-    itemList: List<StatisticItem> = emptyList(),
+    statisticUIState: StatisticUIState = StatisticUIState.Loading,
     expand: Boolean = false,
     onChangeExpand: (Boolean) -> Unit = {},
     changeSelectState: (Boolean, String) -> Unit,
@@ -258,78 +269,84 @@ fun StatisticContent(
             .animateContentSize()
             .padding(16.dp)
     ) {
-        // 통계 결과
-        if(itemList.isNotEmpty()){
-            // 막대 그래프 비율 산정을 위한 가장 큰 값 변수화
-            val higherCount = itemList.first().count.toInt().toFloat()
+        when(statisticUIState){
+            is StatisticUIState.Success -> {
+                val itemList = statisticUIState.statisticItem
+                // 막대 그래프 비율 산정을 위한 가장 큰 값 변수화
+                val higherCount = itemList.first().count.toInt().toFloat()
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ){
-                    onChangeExpand(!expand)
-                }
-            ) {
-                Text(
-                    text = "최근 ${rangeType.monthText} 추첨 통계",
-                    style = CommonStyle.text16Bold,
-                    modifier = modifier.weight(1f)
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ){
+                        onChangeExpand(!expand)
+                    }
+                ) {
+                    Text(
+                        text = "최근 ${rangeType.monthText} 추첨 통계",
+                        style = CommonStyle.text16Bold,
+                        modifier = modifier.weight(1f)
+                    )
 
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    tint = DarkGray,
-                    contentDescription = "expandable",
-                )
-            }
-
-            VerticalSpacer(10.dp)
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                // 기본 리스트
-                itemList.slice(0..2).forEachIndexed { index, item ->
-                    StatisticItem(
-                        item = item,
-                        percentage = item.count.toInt() / higherCount,
-                        onclickItem = changeSelectState
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        tint = DarkGray,
+                        contentDescription = "expandable",
                     )
                 }
 
-                // 확장 리스트
-                AnimatedVisibility(
-                    visible = expand,
+                VerticalSpacer(10.dp)
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
                 ) {
-                    Column {
-                        itemList.slice(3..5).forEachIndexed { index, item ->
-                            StatisticItem(
-                                item = item,
-                                percentage = item.count.toInt() / higherCount,
-                                onclickItem = changeSelectState
-                            )
+                    // 기본 리스트
+                    itemList.slice(0..2).forEachIndexed { index, item ->
+                        StatisticItem(
+                            item = item,
+                            percentage = item.count.toInt() / higherCount,
+                            onclickItem = changeSelectState
+                        )
+                    }
+
+                    // 확장 리스트
+                    AnimatedVisibility(
+                        visible = expand,
+                    ) {
+                        Column {
+                            itemList.slice(3..5).forEachIndexed { index, item ->
+                                StatisticItem(
+                                    item = item,
+                                    percentage = item.count.toInt() / higherCount,
+                                    onclickItem = changeSelectState
+                                )
+                            }
                         }
                     }
                 }
             }
-        } else {
-            // 리스트가 비어있는 경우
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "데이터를 불러올 수 없습니다..",
-                    style = CommonStyle.text18Bold,
-                    color = Color.LightGray
-                )
-            }
+            else -> StatisticEmpty() // 비었을 경우
         }
+    }
+}
+
+@Composable
+fun StatisticEmpty(modifier: Modifier = Modifier) {
+    // 리스트가 비어있는 경우
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "데이터를 불러올 수 없습니다..",
+            style = CommonStyle.text18Bold,
+            color = Color.LightGray
+        )
     }
 }
 
@@ -407,7 +424,7 @@ fun StatisticItem(
 }
 
 @Composable
-fun SelectContent(
+fun SelectDrawContent(
     onClickDraw: () -> Unit = {},
     selectList: List<String> = listOf("7","7","7"),
     modifier: Modifier = Modifier
@@ -446,33 +463,38 @@ fun SelectContent(
                     .weight(7f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row {
-                    // 선택 리스트가 비었을 경우
-                    if(selectList.isEmpty()){
-                        Box(
-                            modifier = Modifier.height(30.dp),
-                            contentAlignment = Alignment.Center
+                // 존재하거나 빈 여부에 따라서 애니메이션 적용
+                AnimatedContent(
+                    targetState = selectList.isNotEmpty(),
+                    label = "SelectListSwitch"
+                ) { isNotEmpty ->
+                    if(isNotEmpty){
+                        LazyRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
                         ) {
-                            Text(
-                                text = "숫자를 선택해 주세요",
-                                style = CommonStyle.text16Bold,
-                                color = LightGray
-                            )
-                        }
-                    } else {
-                        selectList.forEachIndexed { index, number ->
-                            CommonLottoCircle(
-                                targetNumber = number,
-                                isAnimation = false,
-                                modifier = Modifier.size(30.dp)
-                            )
-                            if(index < selectList.lastIndex){
-                                HorizontalSpacer(4.dp)
+                            // 키를 걸어서 불필요한 애니메이션 방지
+                            itemsIndexed(items = selectList, key = {index, item -> item}){ index, number ->
+                                CommonLottoCircle(
+                                    targetNumber = number,
+                                    isAnimation = false,
+                                    modifier = Modifier
+                                        .animateItem()
+                                        .size(30.dp)
+                                )
+                                if (index < selectList.lastIndex) {
+                                    HorizontalSpacer(4.dp)
+                                }
                             }
                         }
+                    }else{
+                        // 비었을 경우
+                        SelectDrawEmpty()
                     }
                 }
+
                 VerticalSpacer(4.dp)
+
                 HorizontalDivider(color =  LightGray)
             }
 
@@ -493,8 +515,22 @@ fun SelectContent(
     }
 }
 
+@Composable
+fun SelectDrawEmpty(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.height(30.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "숫자를 선택해 주세요",
+            style = CommonStyle.text16Bold,
+            color = LightGray
+        )
+    }
+}
+
 @Preview
 @Composable
 private fun SelectContentPreview() {
-    SelectContent()
+    SelectDrawContent()
 }
