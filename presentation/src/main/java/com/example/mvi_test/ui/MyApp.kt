@@ -3,6 +3,9 @@ package com.example.mvi_test.ui
 import android.app.Activity
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -132,6 +135,8 @@ fun NavHostContainer(
     NavHost(
         navController = navController,
         startDestination = NavigationItem.Home.route,
+        enterTransition = { fadeIn(animationSpec = tween(300)) },
+        exitTransition = { fadeOut(animationSpec = tween(300)) }
     ){
         homeScreen(
             navigateToRandom = navController::navigateToRandom,
