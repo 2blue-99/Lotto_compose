@@ -2,6 +2,8 @@ package com.example.mvi_test.designsystem.common
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,6 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -30,21 +35,20 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.domain.model.LottoItem
-import com.example.mvi_test.screen.random.screen.RandomListItem
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.DarkGray
 import com.example.mvi_test.ui.theme.LightGray
-import com.example.mvi_test.ui.theme.SubColor
 import com.example.mvi_test.util.DRAW_COMPLETE_TIME
 import com.example.mvi_test.util.DRAW_ITEM_SHOW_TIME
 import com.example.mvi_test.util.Utils.drawResultToString
 import com.example.mvi_test.util.Utils.setAllFalse
 import com.example.mvi_test.util.Utils.setAllTrue
 import com.example.mvi_test.util.Utils.shareLotto
+import com.example.mvi_test.util.Utils.testLottoItem
 import com.example.mvi_test.util.Utils.testLottoList
+import com.example.mvi_test.util.Utils.toAlphabet
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 @Composable
@@ -52,6 +56,7 @@ fun CommonDrawResultContent(
     onClickSave: (List<LottoItem>) -> Unit = {},
     lottoList: List<LottoItem> = testLottoList(),
     mainColor: Color,
+    containInfo: Boolean = false, // 총합 홀짝 고저 노출여부
     modifier: Modifier = Modifier
 ) {
     val clipboardManager = LocalClipboardManager.current
@@ -110,7 +115,7 @@ fun CommonDrawResultContent(
 
             itemList.forEach { index ->
                 RandomListItem(
-                    targetList = lottoList[index],
+                    targetItem = lottoList[index],
                     checkBox = checkBoxStates[index],
                     onCheckChange = {
                         checkBoxStates[index] = it
@@ -215,10 +220,93 @@ fun CommonDrawResultContent(
     }
 }
 
+@Composable
+fun RandomListItem(
+    index: Int = 0,
+    checkBox: Boolean = false,
+    onCheckChange: (Boolean) -> Unit = {},
+    targetItem: LottoItem = testLottoItem(),
+    containInfo: Boolean = true, // 총합, 홀짝, 고저 정보
+    modifier: Modifier = Modifier
+) {
+    // 아이템 생성 시 페이드 아웃 -> 인
+    val alpha = remember { Animatable(0f) }
+    // targetList 를 CommonLottoAutoRow 에 바로 넣을 경우, 결과가 살짝 보이는 이슈 존재 -> 상태로 관리
+    val lottoItem by remember { mutableStateOf(targetItem) }
+
+    LaunchedEffect(Unit) {
+        alpha.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = 800)
+        )
+    }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        modifier = modifier
+            .alpha(alpha.value)
+            .background(Color.White)
+            .padding(6.dp),
+    ) {
+        Box(
+            modifier = Modifier
+                .weight(1f),
+        ) {
+            Checkbox(
+                checked = checkBox,
+                onCheckedChange = onCheckChange,
+                colors = CheckboxDefaults.colors(
+                    checkedColor = DarkGray,
+                    uncheckedColor = DarkGray,
+                )
+            )
+        }
+        Box(
+            modifier = Modifier
+                .weight(1f),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = index.toAlphabet(),
+                style = CommonStyle.text16,
+                color = DarkGray
+            )
+        }
+        Box(
+            modifier = Modifier
+                .weight(8f)
+        ) {
+            Column(
+                horizontalAlignment = Alignment.End
+            ) {
+                CommonLottoAutoRow(
+                    lottoItem = lottoItem
+                )
+                // 총합, 홀짝, 고저 정보
+                if(containInfo){
+                    VerticalSpacer(4.dp)
+                    Text(
+                        text = lottoItem.toLottoInfo(),
+                        style = CommonStyle.text12,
+                        color = DarkGray
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Preview
 @Composable
-private fun RandomResultPreview() {
-    CommonDrawResultContent(
-        mainColor = SubColor
+private fun RandomListItemPreview() {
+    RandomListItem(
+//        targetList = listOf(
+//            listOf(1, 5, 10, 11, 20, 30, 36),
+//            listOf(2, 6, 12, 17, 21, 35, 41),
+//            listOf(3, 7, 13, 18, 22, 33, 44),
+//            listOf(4, 8, 14, 19, 23, 29, 39),
+//            listOf(9, 15, 24, 28, 31, 34, 45)
+//        )
     )
 }
