@@ -31,7 +31,7 @@ class HomeViewModel @Inject constructor(
 
     fun updateUserName(){
         ioScope.launch {
-            userDataStore.setUserName("리 푸 름")
+            userDataStore.setUserName("")
         }
     }
 
