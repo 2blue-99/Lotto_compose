@@ -23,6 +23,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,6 +54,8 @@ import com.example.mvi_test.ui.theme.Red
 import com.example.mvi_test.ui.theme.ScreenBackground
 import com.example.mvi_test.util.Utils.drawResultToString
 import com.example.mvi_test.util.Utils.shareLotto
+import kotlinx.coroutines.delay
+import kotlin.math.exp
 
 @Composable
 fun RecodeRoute(
@@ -129,6 +132,9 @@ fun RecodeContent(
     actionHandler: (RecodeActionState) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+
+
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -149,7 +155,8 @@ fun RecodeContent(
                         ) {
                             RecodeItem(
                                 lottoRecode = lottoRecode,
-                                actionHandler = actionHandler
+                                actionHandler = actionHandler,
+                                isFirstExpand = index == 0
                             )
                         }
                     }
@@ -183,6 +190,7 @@ private fun RecodeContentPreview() {
 fun RecodeItem(
     lottoRecode: LottoRecode = LottoRecode(),
     actionHandler: (RecodeActionState) -> Unit = {},
+    isFirstExpand: Boolean =false, // 첫번째 항목은 자동 확장 처리
     modifier: Modifier = Modifier
 ) {
     val clipboardManager = LocalClipboardManager.current
@@ -190,6 +198,12 @@ fun RecodeItem(
 
     // 아이템 생성 시 페이드 아웃 -> 인
     var expanded by remember { mutableStateOf(false) }
+
+
+    LaunchedEffect(isFirstExpand) {
+        delay(200)
+        expanded = isFirstExpand
+    }
 
     // Column Background Animation 보류
 //    val backgroundColor by animateColorAsState(
