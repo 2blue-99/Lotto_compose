@@ -118,7 +118,6 @@ fun RandomScreen(
     ) {
         item {
             CommonExpandableBox(
-                showQuestion = true,
                 shrinkContent = {
                     Box(
                         modifier = Modifier.fillMaxWidth(),

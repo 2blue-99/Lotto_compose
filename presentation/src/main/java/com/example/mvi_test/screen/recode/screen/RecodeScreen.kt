@@ -87,7 +87,6 @@ fun RecodeScreen(
         // 탑 바
         CommonExpandableBox(
             modifier = Modifier.height(80.dp),
-            showQuestion = false,
             shrinkContent = {
                 Box(
                     modifier = Modifier.fillMaxWidth(),
@@ -170,7 +169,6 @@ fun RecodeContent(
                     )
                 }
             }
-
         }
     }
 }

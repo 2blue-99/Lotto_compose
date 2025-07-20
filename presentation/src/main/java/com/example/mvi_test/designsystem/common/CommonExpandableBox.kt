@@ -42,7 +42,6 @@ import com.example.mvi_test.ui.theme.SubColor
 fun CommonExpandableBox(
     shrinkColor: List<Color> = listOf(Color(0xFF227DBD), Color(0xFF528B35)),
     expandColor: List<Color> = listOf(Color(0xFFFF8A00), Color(0xFFFFD500)),
-    showQuestion: Boolean = true,
     shrinkContent: @Composable () -> Unit,
     expandContent: @Composable (() -> Unit)? = null,
     modifier: Modifier = Modifier,
@@ -93,7 +92,7 @@ fun CommonExpandableBox(
             ) {
                 shrinkContent()
 
-                if(showQuestion){
+                expandContent?.let {
                     Box(
                         modifier = Modifier
                             .align(Alignment.CenterEnd)

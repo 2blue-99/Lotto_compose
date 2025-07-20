@@ -154,7 +154,6 @@ fun StatisticScreen(
     ) {
         item {
             CommonExpandableBox(
-                showQuestion = true,
                 shrinkContent = {
                     Box(
                         modifier = Modifier.fillMaxWidth(),
@@ -172,14 +171,14 @@ fun StatisticScreen(
                         }
                     }
                 },
-                expandContent = {
-                    Text(
-                        text = stringResource(R.string.random_bar_explain),
-                        style = CommonStyle.text14,
-                        color = Color.White,
-                        textAlign = TextAlign.Center,
-                    )
-                }
+//                expandContent = {
+//                    Text(
+//                        text = stringResource(R.string.random_bar_explain),
+//                        style = CommonStyle.text14,
+//                        color = Color.White,
+//                        textAlign = TextAlign.Center,
+//                    )
+//                }
             )
         }
 
