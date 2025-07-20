@@ -1,5 +1,6 @@
 package com.example.mvi_test.screen.recode.screen
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -131,57 +133,44 @@ fun RecodeContent(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
-            .padding(16.dp),
     ) {
-        // 컨트롤 버튼
-        Text(
-            text = "추첨 기록",
-            style = CommonStyle.text16Bold,
-            modifier = Modifier.padding(start = 8.dp)
-        )
-
-        VerticalSpacer(10.dp)
-
-        AnimatedVisibility(recodeList.isNotEmpty()) {
-            LazyColumn(
-                modifier = Modifier.heightIn(min = 200.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                contentPadding = PaddingValues(bottom = 50.dp)
-            ) {
-                itemsIndexed(recodeList, key = { _, item -> item.saveDate }) { index, lottoRecode ->
-                    Column(
-                        modifier = Modifier.animateItem()
-                    ) {
-                        RecodeItem(
-                            lottoRecode = lottoRecode,
-                            actionHandler = actionHandler
-                        )
-                        if (index != recodeList.lastIndex) {
-                            VerticalSpacer(16.dp)
-
-                            HorizontalDivider(modifier = Modifier.background(LightGray))
+        AnimatedContent(recodeList.isEmpty()) { empty ->
+            if(!empty){
+                LazyColumn(
+                    modifier = Modifier.heightIn(min = 200.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    contentPadding = PaddingValues(bottom = 50.dp)
+                ) {
+                    itemsIndexed(recodeList, key = { _, item -> item.saveDate }) { index, lottoRecode ->
+                        Card (
+                            modifier = Modifier
+                                .animateItem()
+                                .background(Color.White, RoundedCornerShape(16.dp))
+                        ) {
+                            RecodeItem(
+                                lottoRecode = lottoRecode,
+                                actionHandler = actionHandler
+                            )
                         }
                     }
                 }
+            }else{
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White, RoundedCornerShape(16.dp))
+                        .height(300.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "추첨 기록이 비어있어요.",
+                        style = CommonStyle.text24Bold,
+                        color = Color.LightGray
+                    )
+                }
             }
-        }
 
-        AnimatedVisibility(recodeList.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "추첨 기록이 비어있어요.",
-                    style = CommonStyle.text24Bold,
-                    color = Color.LightGray
-                )
-            }
         }
     }
 }
@@ -204,11 +193,12 @@ fun RecodeItem(
     // 아이템 생성 시 페이드 아웃 -> 인
     var expanded by remember { mutableStateOf(false) }
 
-    val backgroundColor by animateColorAsState(
-        targetValue = if(expanded) ScreenBackground else Color.White,
-        animationSpec = tween(300),
-        label = "expanded_item"
-    )
+    // Column Background Animation 보류
+//    val backgroundColor by animateColorAsState(
+//        targetValue = if(expanded) ScreenBackground else Color.White,
+//        animationSpec = tween(300),
+//        label = "expanded_item"
+//    )
 
     val lottoList = lottoRecode.lottoItem.map { it.drawList }
 
@@ -217,8 +207,8 @@ fun RecodeItem(
             .fillMaxWidth()
             .clip(RoundedCornerShape(10.dp))
             .clickable { expanded = !expanded }
-            .background(backgroundColor)
-            .padding(10.dp)
+            .background(Color.White)
+            .padding(16.dp)
     ) {
         Text(
             text = lottoRecode.saveDate,
