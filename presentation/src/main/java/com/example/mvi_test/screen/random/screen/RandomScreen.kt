@@ -2,8 +2,6 @@ package com.example.mvi_test.screen.random.screen
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,8 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -32,7 +28,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -46,7 +41,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.model.Keyword
-import com.example.domain.model.LottoItem
 import com.example.domain.util.CommonMessage
 import com.example.mvi_test.R
 import com.example.mvi_test.designsystem.common.CommonButton
@@ -54,7 +48,6 @@ import com.example.mvi_test.designsystem.common.CommonDrawResultContent
 import com.example.mvi_test.designsystem.common.CommonExpandableBox
 import com.example.mvi_test.designsystem.common.CommonFlowRow
 import com.example.mvi_test.designsystem.common.CommonLazyRow
-import com.example.mvi_test.designsystem.common.CommonLottoAutoRow
 import com.example.mvi_test.designsystem.common.HorizontalSpacer
 import com.example.mvi_test.designsystem.common.VerticalSpacer
 import com.example.mvi_test.screen.random.RandomViewModel
@@ -63,14 +56,11 @@ import com.example.mvi_test.screen.random.state.LottoUIState
 import com.example.mvi_test.screen.random.state.RandomActionState
 import com.example.mvi_test.screen.random.state.RandomEffectState
 import com.example.mvi_test.ui.theme.CommonStyle
-import com.example.mvi_test.ui.theme.DarkGray
 import com.example.mvi_test.ui.theme.LightGray
 import com.example.mvi_test.ui.theme.ScreenBackground
 import com.example.mvi_test.ui.theme.SubColor
 import com.example.mvi_test.util.DRAW_COMPLETE_TIME
 import com.example.mvi_test.util.Utils.containsKeyword
-import com.example.mvi_test.util.Utils.testLottoItem
-import com.example.mvi_test.util.Utils.toAlphabet
 import com.example.mvi_test.util.Utils.toKeyword
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest

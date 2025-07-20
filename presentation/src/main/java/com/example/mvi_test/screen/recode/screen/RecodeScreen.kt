@@ -228,44 +228,42 @@ fun RecodeItem(
 
         VerticalSpacer(8.dp)
 
-        lottoRecode.lottoItem.forEach { item ->
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .padding(2.dp),
-            ){
-                Box(
+        lottoRecode.lottoItem.forEachIndexed { index, item ->
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
                     modifier = Modifier
-                        .weight(2f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = item.sequence,
-                        style = CommonStyle.text16,
-                        color = DarkGray
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .weight(8f)
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.End
+                        .padding(2.dp),
+                ){
+                    Box(
+                        modifier = Modifier
+                            .weight(2f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = item.sequence,
+                            style = CommonStyle.text16,
+                            color = DarkGray
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .weight(8f)
                     ) {
                         CommonLottoAutoRow(
                             lottoItem = item,
                             isAnimation = false
                         )
-                        // 총합, 홀짝, 고저 정보
-                        VerticalSpacer(4.dp)
-                        Text(
-                            text = item.toLottoInfo(),
-                            style = CommonStyle.text12,
-                            color = DarkGray
-                        )
                     }
                 }
+                VerticalSpacer(4.dp)
+                if(index < lottoRecode.lottoItem.lastIndex){
+                    HorizontalDivider(color = LightGray)
+                }
+                VerticalSpacer(4.dp)
             }
         }
 

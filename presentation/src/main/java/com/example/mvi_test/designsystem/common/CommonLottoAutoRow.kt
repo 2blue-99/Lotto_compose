@@ -4,12 +4,15 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,6 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.domain.model.LottoItem
 import com.example.mvi_test.ui.theme.CommonStyle
+import com.example.mvi_test.ui.theme.DarkGray
+import com.example.mvi_test.ui.theme.ScreenBackground
 import com.example.mvi_test.util.Utils.testLottoItem
 import com.example.mvi_test.util.Utils.toLottoColor
 import kotlinx.coroutines.launch
@@ -33,27 +38,47 @@ fun CommonLottoAutoRow(
     lottoItem: LottoItem = testLottoItem(),
     isAnimation: Boolean = true, // 위로 올라오는 애니메이션 노출 여부
 ) {
-    Row(
+    Column(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        horizontalAlignment = Alignment.End
     ) {
-        lottoItem.drawList.forEachIndexed { index, item ->
-            CommonLottoCircle(
-                targetNumber = item,
-                isAnimation = isAnimation,
-                modifier = Modifier
-                    .padding(horizontal = 2.dp)
-                    .weight(1f)
-                    .aspectRatio(1f)
-            )
-            // 플러스 아이콘 TODO 보너스 번호는 제외시키자
-//            if(index == 5){
-//                Icon(
-//                    imageVector = Icons.Default.Add,
-//                    tint = Color.LightGray,
-//                    contentDescription = "plus"
-//                )
-//            }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            lottoItem.drawList.forEachIndexed { index, item ->
+                CommonLottoCircle(
+                    targetNumber = item,
+                    isAnimation = isAnimation,
+                    modifier = Modifier
+                        .padding(horizontal = 2.dp)
+                        .weight(1f)
+                        .aspectRatio(1f)
+                )
+            }
+        }
+        // 총합, 홀짝, 고저 정보
+        VerticalSpacer(6.dp)
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            listOf(
+                "총합 ${lottoItem.sum}",
+                "홀짝 ${lottoItem.oddEndEvent}",
+                "고저 ${lottoItem.highEndLow}"
+            ).forEach { info ->
+                Box(
+                    modifier = Modifier
+                        .background(ScreenBackground, RoundedCornerShape(4.dp))
+                        .padding(4.dp)
+                ) {
+                    Text(
+                        text = info,
+                        style = CommonStyle.text12,
+                        color = DarkGray
+                    )
+                }
+            }
         }
     }
 }
@@ -95,7 +120,11 @@ fun CommonLottoCircle(
             .graphicsLayer { translationY = offsetY.value }
             .alpha(alpha.value)
             .clip(CircleShape)
-            .background(targetNumber.toIntOrNull()?.toLottoColor() ?: Color.White),
+            .background(
+                targetNumber
+                    .toIntOrNull()
+                    ?.toLottoColor() ?: Color.White
+            ),
         contentAlignment = Alignment.Center
     ){
         Text(

@@ -56,7 +56,6 @@ fun CommonDrawResultContent(
     onClickSave: (List<LottoItem>) -> Unit = {},
     lottoList: List<LottoItem> = testLottoList(),
     mainColor: Color,
-    containInfo: Boolean = false, // 총합 홀짝 고저 노출여부
     modifier: Modifier = Modifier
 ) {
     val clipboardManager = LocalClipboardManager.current
@@ -226,7 +225,6 @@ fun RandomListItem(
     checkBox: Boolean = false,
     onCheckChange: (Boolean) -> Unit = {},
     targetItem: LottoItem = testLottoItem(),
-    containInfo: Boolean = true, // 총합, 홀짝, 고저 정보
     modifier: Modifier = Modifier
 ) {
     // 아이템 생성 시 페이드 아웃 -> 인
@@ -277,22 +275,9 @@ fun RandomListItem(
             modifier = Modifier
                 .weight(8f)
         ) {
-            Column(
-                horizontalAlignment = Alignment.End
-            ) {
-                CommonLottoAutoRow(
-                    lottoItem = lottoItem
-                )
-                // 총합, 홀짝, 고저 정보
-                if(containInfo){
-                    VerticalSpacer(4.dp)
-                    Text(
-                        text = lottoItem.toLottoInfo(),
-                        style = CommonStyle.text12,
-                        color = DarkGray
-                    )
-                }
-            }
+            CommonLottoAutoRow(
+                lottoItem = lottoItem
+            )
         }
     }
 }
