@@ -1,5 +1,6 @@
 package com.example.mvi_test.screen.home.screen
 
+import android.widget.Toast
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -20,8 +21,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -40,6 +39,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -51,6 +51,7 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.model.LottoRound
+import com.example.domain.util.CommonMessage
 import com.example.mvi_test.R
 import com.example.mvi_test.screen.home.HomeViewModel
 import com.example.mvi_test.screen.home.state.HomeActionState
@@ -59,11 +60,13 @@ import com.example.mvi_test.designsystem.common.CommonAdBanner
 import com.example.mvi_test.designsystem.common.CommonLottoContent
 import com.example.mvi_test.designsystem.common.HorizontalSpacer
 import com.example.mvi_test.designsystem.common.VerticalSpacer
+import com.example.mvi_test.screen.home.state.HomeEffectState
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.DarkGray
 import com.example.mvi_test.ui.theme.PrimaryColor
 import com.example.mvi_test.ui.theme.Red
 import com.example.mvi_test.ui.theme.SubColor
+import kotlinx.coroutines.flow.collectLatest
 import kotlin.math.absoluteValue
 
 @Composable
@@ -75,7 +78,19 @@ fun HomeRoute(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val uiState by viewModel.homeUIState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.sideEffectState.collectLatest { effect ->
+            when(effect){
+                is HomeEffectState.ShowToast -> { Toast.makeText(context, effect.message.message, Toast.LENGTH_SHORT).show() }
+                is HomeEffectState.ShowSnackbar -> { /*onShowSnackbar(effect.message)*/ }
+                else -> {}
+            }
+        }
+    }
+
 
     HomeScreen(
         navigateToSetting = navigateToSetting,
@@ -83,7 +98,8 @@ fun HomeRoute(
         navigateToRecode = navigateToRecode,
         navigateToStatistic = navigateToStatistic,
         uiState = uiState,
-        intentHandler = viewModel::intentHandler,
+        actionHandler = viewModel::actionHandler,
+        effectHandler = viewModel::effectHandler,
         modifier = modifier
     )
 }
@@ -95,7 +111,8 @@ fun HomeScreen(
     navigateToRecode: () -> Unit = {},
     navigateToStatistic: () -> Unit = {},
     uiState: HomeUIState = HomeUIState.Loading,
-    intentHandler: (HomeActionState) -> Unit = {},
+    actionHandler: (HomeActionState) -> Unit = {},
+    effectHandler: (HomeEffectState) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -121,6 +138,8 @@ fun HomeScreen(
             )
 
             ButtonLayout(
+                actionHandler = actionHandler,
+                effectHandler = effectHandler,
                 navigateToRandom = navigateToRandom,
                 navigateToRecode = navigateToRecode,
                 navigateToStatistic = navigateToStatistic,
@@ -139,7 +158,7 @@ fun HomeScreen(
 fun HomeScreenPreview() {
     HomeScreen(
         uiState = HomeUIState.Loading,
-        intentHandler = {}
+        actionHandler = {}
     )
 }
 
@@ -429,6 +448,8 @@ private fun LottoInfoItemPreview() {
 
 @Composable
 fun ButtonLayout(
+    actionHandler: (HomeActionState) -> Unit,
+    effectHandler: (HomeEffectState) -> Unit,
     navigateToRandom: () -> Unit = {},
     navigateToRecode: () -> Unit = {},
     navigateToStatistic: () -> Unit = {},
@@ -472,7 +493,7 @@ fun ButtonLayout(
 //                icon = Icons.Default.Star,
                 titleText = "복권 명당",
                 modifier = Modifier.weight(1f),
-                onClick = {},
+                onClick = { effectHandler(HomeEffectState.ShowToast(CommonMessage.HOME_NOT_READY_YET)) },
             )
         }
     }
@@ -481,7 +502,7 @@ fun ButtonLayout(
 @Preview
 @Composable
 private fun ButtonRowPreview() {
-    ButtonLayout()
+    ButtonLayout({},{})
 }
 
 @Composable
