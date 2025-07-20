@@ -256,7 +256,7 @@ fun StatisticContent(
     modifier: Modifier = Modifier
 ) {
     // 최초 진입 확장 딜레이
-    LaunchedEffect(Unit) {
+    LaunchedEffect(rangeType) {
         delay(200)
         onChangeExpand(true)
     }
