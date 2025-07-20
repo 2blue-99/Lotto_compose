@@ -74,7 +74,7 @@ fun HomeRoute(
     navigateToStatistic: () -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
-){
+) {
     val uiState by viewModel.homeUIState.collectAsStateWithLifecycle()
 
     HomeScreen(
@@ -115,7 +115,9 @@ fun HomeScreen(
             VerticalSpacer(10.dp)
 
             LottoPager(
-                lottoRoundList = if(uiState is HomeUIState.Success) uiState.lottoRounds else listOf(LottoRound()),
+                lottoRoundList = if (uiState is HomeUIState.Success) uiState.lottoRounds else listOf(
+                    LottoRound()
+                ),
             )
 
             ButtonLayout(
@@ -134,7 +136,7 @@ fun HomeScreen(
 
 @Preview
 @Composable
-fun  HomeScreenPreview(){
+fun HomeScreenPreview() {
     HomeScreen(
         uiState = HomeUIState.Loading,
         intentHandler = {}
@@ -216,7 +218,9 @@ fun LottoPager(
         modifier = modifier.fillMaxWidth()
     ) {
         HorizontalPager(
-            modifier = Modifier.fillMaxWidth().zIndex(2f),
+            modifier = Modifier
+                .fillMaxWidth()
+                .zIndex(2f),
             state = pagerState,
             contentPadding = PaddingValues(horizontal = 36.dp)
         ) { page ->
@@ -263,20 +267,20 @@ fun LottoCardItem(
         modifier = modifier
             .padding(horizontal = 8.dp)
             .fillMaxWidth()
-            .clickable {  }
+            .clickable { }
     ) {
         Box(
             modifier = Modifier
                 .background(gradient)
                 .padding(20.dp)
                 .padding(top = 10.dp),
-        ){
+        ) {
             Column(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = lottoRoundItem.drawDate ,
+                    text = lottoRoundItem.drawDate,
                     style = CommonStyle.text12,
                     color = Color.White
                 )
@@ -332,7 +336,7 @@ fun LottoInfo(
 ) {
     val gradient = Brush.verticalGradient(colors = listOf(PrimaryColor, Color.White))
 
-    Surface (
+    Surface(
         modifier = modifier
             .padding(horizontal = 30.dp)
             .fillMaxWidth(),
@@ -389,7 +393,9 @@ fun LottoInfoItem(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier.fillMaxWidth().padding(vertical = 10.dp)
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 10.dp)
     ) {
         Text(
             text = titleText,
@@ -419,7 +425,6 @@ fun LottoInfoItem(
 private fun LottoInfoItemPreview() {
     LottoInfoItem()
 }
-
 
 
 @Composable
