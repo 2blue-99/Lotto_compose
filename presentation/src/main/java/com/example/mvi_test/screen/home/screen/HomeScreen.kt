@@ -175,15 +175,15 @@ private fun MainTopBar(
                         tint = DarkGray
                     )
                 }
-                IconButton(
-                    onClick = onSettingClick
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = "Setting",
-                        tint = DarkGray
-                    )
-                }
+//                IconButton(
+//                    onClick = onSettingClick
+//                ) {
+//                    Icon(
+//                        imageVector = Icons.Default.Settings,
+//                        contentDescription = "Setting",
+//                        tint = DarkGray
+//                    )
+//                }
             }
         }
     }
