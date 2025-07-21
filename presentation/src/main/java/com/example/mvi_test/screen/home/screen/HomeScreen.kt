@@ -91,7 +91,6 @@ fun HomeRoute(
         }
     }
 
-
     HomeScreen(
         navigateToSetting = navigateToSetting,
         navigateToRandom = navigateToRandom,
@@ -298,12 +297,26 @@ fun LottoCardItem(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
-                Text(
-                    text = lottoRoundItem.drawDate,
-                    style = CommonStyle.text12,
-                    color = Color.White
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = lottoRoundItem.drawDate,
+                        style = CommonStyle.text12,
+                        color = Color.White,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .background(Color.White)
+                            .padding(vertical = 4.dp, horizontal = 10.dp)
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.calendar_icon),
+                            contentDescription = "calendar"
+                        )
+                    }
+                }
                 Row(
                     verticalAlignment = Alignment.Bottom
                 ) {

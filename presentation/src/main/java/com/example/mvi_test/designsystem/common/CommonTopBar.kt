@@ -39,7 +39,6 @@ fun CommonTopBar(
                 onClick = onBackClick
             ) {
                 Icon(
-
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                     contentDescription = "뒤로가기"
                 )
