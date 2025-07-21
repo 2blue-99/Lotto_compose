@@ -1,5 +1,6 @@
 package com.example.mvi_test.screen.home
 
+import android.widget.Toast
 import androidx.lifecycle.viewModelScope
 import com.example.data.datastore.UserDataStore
 import com.example.domain.repository.LottoRepository
@@ -50,8 +51,14 @@ class HomeViewModel @Inject constructor(
     fun effectHandler(eventState: HomeEffectState){
         viewModelScope.launch {
             when(eventState){
-                is HomeEffectState.ShowToast -> sideEffectState.emit(HomeEffectState.ShowToast(eventState.message))
-                is HomeEffectState.ShowSnackbar -> sideEffectState.emit(HomeEffectState.ShowSnackbar(eventState.message))
+                else -> {sideEffectState.emit(eventState)}
+//                is HomeEffectState.ShowToast -> sideEffectState.emit(HomeEffectState.ShowToast(eventState.message))
+//                is HomeEffectState.ShowSnackbar -> sideEffectState.emit(HomeEffectState.ShowSnackbar(eventState.message))
+//                is HomeEffectState.NavigateToSetting -> sideEffectState.emit(eventState)
+//                is HomeEffectState.NavigateToRandom -> navigateToRandom()
+//                is HomeEffectState.NavigateToRecode -> navigateToRecode()
+//                is HomeEffectState.NavigateToStatistic -> navigateToStatistic()
+//                is HomeEffectState.DialogState -> { dialogVisibleState = effect.show }
             }
         }
     }

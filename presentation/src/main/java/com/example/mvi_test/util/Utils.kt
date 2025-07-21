@@ -146,6 +146,15 @@ object Utils {
     }
 
     /**
+     * 타겟 년 월 일 포멧
+     *
+     * @return yyyy-MM-dd
+     */
+    fun Long.targetTimeFormat(): String {
+        return SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(this))
+    }
+
+    /**
      * 모두 True 처리
      */
     fun SnapshotStateList<Boolean>.setAllTrue() {

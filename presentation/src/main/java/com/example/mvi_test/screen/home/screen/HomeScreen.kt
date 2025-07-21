@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -33,6 +35,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -57,6 +62,7 @@ import com.example.mvi_test.screen.home.HomeViewModel
 import com.example.mvi_test.screen.home.state.HomeActionState
 import com.example.mvi_test.screen.home.state.HomeUIState
 import com.example.mvi_test.designsystem.common.CommonAdBanner
+import com.example.mvi_test.designsystem.common.CommonDatePicker
 import com.example.mvi_test.designsystem.common.CommonLottoContent
 import com.example.mvi_test.designsystem.common.HorizontalSpacer
 import com.example.mvi_test.designsystem.common.VerticalSpacer
@@ -66,6 +72,7 @@ import com.example.mvi_test.ui.theme.DarkGray
 import com.example.mvi_test.ui.theme.PrimaryColor
 import com.example.mvi_test.ui.theme.Red
 import com.example.mvi_test.ui.theme.SubColor
+import com.example.mvi_test.ui.theme.white50
 import kotlinx.coroutines.flow.collectLatest
 import kotlin.math.absoluteValue
 
@@ -79,24 +86,32 @@ fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val uiState by viewModel.homeUIState.collectAsStateWithLifecycle()
+    val homeUiState by viewModel.homeUIState.collectAsStateWithLifecycle()
+    var dialogVisibleState by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.sideEffectState.collectLatest { effect ->
             when(effect){
                 is HomeEffectState.ShowToast -> { Toast.makeText(context, effect.message.message, Toast.LENGTH_SHORT).show() }
                 is HomeEffectState.ShowSnackbar -> { /*onShowSnackbar(effect.message)*/ }
-                else -> {}
+                is HomeEffectState.NavigateToSetting -> navigateToSetting()
+                is HomeEffectState.NavigateToRandom -> navigateToRandom()
+                is HomeEffectState.NavigateToRecode -> navigateToRecode()
+                is HomeEffectState.NavigateToStatistic -> navigateToStatistic()
+                is HomeEffectState.DialogState -> { dialogVisibleState = effect.show }
             }
         }
     }
 
+    if(dialogVisibleState){
+        CommonDatePicker(
+            onDismiss = { dialogVisibleState = false },
+            onConfirm = {},
+        )
+    }
+
     HomeScreen(
-        navigateToSetting = navigateToSetting,
-        navigateToRandom = navigateToRandom,
-        navigateToRecode = navigateToRecode,
-        navigateToStatistic = navigateToStatistic,
-        uiState = uiState,
+        homeUiState = homeUiState,
         actionHandler = viewModel::actionHandler,
         effectHandler = viewModel::effectHandler,
         modifier = modifier
@@ -105,11 +120,7 @@ fun HomeRoute(
 
 @Composable
 fun HomeScreen(
-    navigateToSetting: () -> Unit = {},
-    navigateToRandom: () -> Unit = {},
-    navigateToRecode: () -> Unit = {},
-    navigateToStatistic: () -> Unit = {},
-    uiState: HomeUIState = HomeUIState.Loading,
+    homeUiState: HomeUIState = HomeUIState.Loading,
     actionHandler: (HomeActionState) -> Unit = {},
     effectHandler: (HomeEffectState) -> Unit = {},
     modifier: Modifier = Modifier
@@ -124,14 +135,15 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             MainTopBar(
-                onSettingClick = navigateToSetting,
+                onSettingClick = effectHandler,
                 onQRClick = {}
             )
 
             VerticalSpacer(10.dp)
 
             LottoPager(
-                lottoRoundList = if (uiState is HomeUIState.Success) uiState.lottoRounds else listOf(
+                effectHandler = effectHandler,
+                lottoRoundList = if (homeUiState is HomeUIState.Success) homeUiState.lottoRounds else listOf(
                     LottoRound()
                 ),
             )
@@ -139,9 +151,6 @@ fun HomeScreen(
             ButtonLayout(
                 actionHandler = actionHandler,
                 effectHandler = effectHandler,
-                navigateToRandom = navigateToRandom,
-                navigateToRecode = navigateToRecode,
-                navigateToStatistic = navigateToStatistic,
             )
 
             VerticalSpacer(10.dp)
@@ -156,14 +165,14 @@ fun HomeScreen(
 @Composable
 fun HomeScreenPreview() {
     HomeScreen(
-        uiState = HomeUIState.Loading,
+        homeUiState = HomeUIState.Loading,
         actionHandler = {}
     )
 }
 
 @Composable
 private fun MainTopBar(
-    onSettingClick: () -> Unit = {},
+    onSettingClick: (HomeEffectState) -> Unit = {},
     onQRClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
@@ -217,6 +226,7 @@ private fun MainTopBarPreview() {
 
 @Composable
 fun LottoPager(
+    effectHandler: (HomeEffectState) -> Unit,
     lottoRoundList: List<LottoRound> = emptyList(),
     modifier: Modifier = Modifier
 ) {
@@ -243,6 +253,7 @@ fun LottoPager(
             contentPadding = PaddingValues(horizontal = 36.dp)
         ) { page ->
             LottoCardItem(
+                effectHandler = effectHandler,
                 lottoRoundItem = lottoRoundList.getOrNull(page) ?: LottoRound(),
                 modifier = Modifier.graphicsLayer {
                     val pageOffset = (
@@ -271,11 +282,12 @@ fun LottoPager(
 @Preview
 @Composable
 private fun LottoPagerPreview() {
-    LottoPager(emptyList())
+    LottoPager({},emptyList())
 }
 
 @Composable
 fun LottoCardItem(
+    effectHandler: (HomeEffectState) -> Unit,
     lottoRoundItem: LottoRound = LottoRound(),
     modifier: Modifier = Modifier
 ) {
@@ -285,7 +297,7 @@ fun LottoCardItem(
         modifier = modifier
             .padding(horizontal = 8.dp)
             .fillMaxWidth()
-            .clickable { }
+            .clickable { effectHandler(HomeEffectState.DialogState(true)) }
     ) {
         Box(
             modifier = Modifier
@@ -298,7 +310,8 @@ fun LottoCardItem(
                 horizontalAlignment = Alignment.Start
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = lottoRoundItem.drawDate,
@@ -308,11 +321,12 @@ fun LottoCardItem(
                     )
                     Box(
                         modifier = Modifier
-                            .background(Color.White)
-                            .padding(vertical = 4.dp, horizontal = 10.dp)
+                            .background(white50, RoundedCornerShape(6.dp))
+                            .padding(vertical = 2.dp, horizontal = 10.dp),
                     ) {
                         Icon(
-                            imageVector = ImageVector.vectorResource(R.drawable.calendar_icon),
+                            imageVector = Icons.Default.DateRange,
+                            tint = Color.White,
                             contentDescription = "calendar"
                         )
                     }
@@ -358,7 +372,7 @@ fun LottoCardItem(
 @Preview
 @Composable
 private fun LottoCardItemPreview() {
-    LottoCardItem()
+    LottoCardItem({})
 }
 
 @Composable
@@ -463,9 +477,6 @@ private fun LottoInfoItemPreview() {
 fun ButtonLayout(
     actionHandler: (HomeActionState) -> Unit,
     effectHandler: (HomeEffectState) -> Unit,
-    navigateToRandom: () -> Unit = {},
-    navigateToRecode: () -> Unit = {},
-    navigateToStatistic: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -479,7 +490,7 @@ fun ButtonLayout(
                 titleText = "랜덤 로또 추첨",
                 descriptionText = "행운",
                 modifier = Modifier.weight(1f),
-                onClick = navigateToRandom,
+                onClick = { effectHandler(HomeEffectState.NavigateToRandom) },
             )
             Spacer(modifier = Modifier.width(24.dp))
             HomeIconButton(
@@ -487,7 +498,7 @@ fun ButtonLayout(
                 icon = ImageVector.vectorResource(R.drawable.recode_icon),
                 titleText = "저장 기록",
                 modifier = Modifier.weight(1f),
-                onClick = navigateToRecode,
+                onClick = { effectHandler(HomeEffectState.NavigateToRecode) },
             )
         }
         Spacer(modifier = Modifier.height(26.dp))
@@ -498,7 +509,7 @@ fun ButtonLayout(
                 titleText = "통계 로또 추첨",
                 descriptionText = "데이터 기반",
                 modifier = Modifier.weight(1f),
-                onClick = navigateToStatistic,
+                onClick = { effectHandler(HomeEffectState.NavigateToStatistic) },
             )
             Spacer(modifier = Modifier.width(26.dp))
             HomeIconButton(
