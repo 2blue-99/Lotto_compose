@@ -1,5 +1,6 @@
 package com.example.mvi_test.screen.home.state
 
+import com.example.domain.model.RoundSpinner
 import com.example.domain.util.CommonMessage
 
 sealed class HomeEffectState {
@@ -9,6 +10,6 @@ sealed class HomeEffectState {
     data object NavigateToRandom: HomeEffectState()
     data object NavigateToRecode: HomeEffectState()
     data object NavigateToStatistic: HomeEffectState()
-    data class DialogState(val show: Boolean): HomeEffectState()
+    // TODO 단발성 다이알로그는 이쪽이 맞음
 }
 

@@ -42,12 +42,13 @@ import timber.log.Timber
 
 @Composable
 fun CommonSpinnerDialog(
-    startIndex: Int?, // 초기 스타팅 인덱스
+    lastIndex: Int, // 마지막 회차
+    initIndex: Int?, // 초기 인덱스
     onDismiss: () -> Unit,
     onConfirm: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val list = (1..1000).toList()
+    val roundList = (1..lastIndex).toList()
     val lazyListState = rememberLazyListState()
     val flingBehavior = rememberSnapFlingBehavior(lazyListState)
     val coroutineScope = rememberCoroutineScope()
@@ -60,9 +61,9 @@ fun CommonSpinnerDialog(
         )
     }
 
-    LaunchedEffect(startIndex) {
-        startIndex?.let {
-            lazyListState.scrollToItem(startIndex)
+    LaunchedEffect(initIndex) {
+        initIndex?.let {
+            lazyListState.scrollToItem(initIndex)
         }
     }
 
@@ -95,7 +96,7 @@ fun CommonSpinnerDialog(
                         .fadingEdge(fadingEdgeGradient),
                     contentPadding = PaddingValues(padding)
                 ) {
-                    itemsIndexed(list) { index, number ->
+                    itemsIndexed(roundList) { index, number ->
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth(),
@@ -142,17 +143,16 @@ fun CommonSpinnerDialog(
                     enableColor = PrimaryColor,
                     text =  "확인",
                     onClick = {
-                        // 현재 중간에 있는 아이템 선택
-                        val targetIndex = (lazyListState.firstVisibleItemIndex+1) + visibleItemsMiddle
+                        // 맨 위에 있는 아이템 인덱스
+                        val targetIndex = lazyListState.firstVisibleItemIndex
                         // 회전 중이라면 스크롤 중지 처리
                         if(lazyListState.isScrollInProgress){
-                            Timber.d("isScrollInProgress")
                             coroutineScope.launch {
                                 lazyListState.animateScrollToItem(targetIndex)
                             }
                             // 아이템 선택 처리
                         }else{
-                            onConfirm(targetIndex)
+                            onConfirm(roundList[targetIndex])
                         }
                     },
                 )
@@ -164,19 +164,17 @@ fun CommonSpinnerDialog(
 @Composable
 fun SpinnerItem(
     number: String = "7",
-    onClick: (String) -> Unit = {},
     height: Dp = 40.dp,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(height)
-            .clickable { onClick(number) },
+            .height(height),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "$number",
+            text = "${number} 회차",
             style = CommonStyle.text16
         )
     }
@@ -193,5 +191,5 @@ private fun Modifier.fadingEdge(brush: Brush) = this
 @Preview
 @Composable
 private fun CommonSpinnerDialogPreview() {
-    CommonSpinnerDialog(0, {}, {})
+    CommonSpinnerDialog(1180,0, {}, {})
 }

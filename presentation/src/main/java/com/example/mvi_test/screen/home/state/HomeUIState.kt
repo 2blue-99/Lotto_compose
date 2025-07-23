@@ -10,7 +10,7 @@ sealed interface HomeUIState {
 
     data class Success(
         val lottoRounds: List<LottoRound>,
-        val position: Int? = null // 회차 정보 초기 Index
+        val initPosition: Int? = null // 회차 정보 세팅 인덱스
     ) : HomeUIState
 }
 

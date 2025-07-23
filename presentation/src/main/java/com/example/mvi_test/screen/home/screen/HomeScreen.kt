@@ -1,8 +1,6 @@
 package com.example.mvi_test.screen.home.screen
 
 import android.widget.Toast
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,15 +33,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
@@ -56,17 +52,19 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.model.LottoRound
+import com.example.domain.model.RoundSpinner
 import com.example.domain.util.CommonMessage
 import com.example.mvi_test.R
-import com.example.mvi_test.screen.home.HomeViewModel
-import com.example.mvi_test.screen.home.state.HomeActionState
-import com.example.mvi_test.screen.home.state.HomeUIState
 import com.example.mvi_test.designsystem.common.CommonAdBanner
 import com.example.mvi_test.designsystem.common.CommonLottoContent
 import com.example.mvi_test.designsystem.common.CommonSpinnerDialog
 import com.example.mvi_test.designsystem.common.HorizontalSpacer
 import com.example.mvi_test.designsystem.common.VerticalSpacer
+import com.example.mvi_test.screen.home.HomeViewModel
+import com.example.mvi_test.screen.home.state.DialogState
+import com.example.mvi_test.screen.home.state.HomeActionState
 import com.example.mvi_test.screen.home.state.HomeEffectState
+import com.example.mvi_test.screen.home.state.HomeUIState
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.DarkGray
 import com.example.mvi_test.ui.theme.PrimaryColor
@@ -75,6 +73,7 @@ import com.example.mvi_test.ui.theme.SubColor
 import com.example.mvi_test.ui.theme.white50
 import com.example.mvi_test.util.baseAnimateScrollToPage
 import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 import kotlin.math.absoluteValue
 
 @Composable
@@ -88,7 +87,7 @@ fun HomeRoute(
 ) {
     val context = LocalContext.current
     val homeUiState by viewModel.homeUIState.collectAsStateWithLifecycle()
-    var dialogVisibleState by remember { mutableStateOf(false) }
+    val spinnerDialogState by viewModel.spinnerDialogState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.sideEffectState.collectLatest { effect ->
@@ -99,29 +98,14 @@ fun HomeRoute(
                 is HomeEffectState.NavigateToRandom -> navigateToRandom()
                 is HomeEffectState.NavigateToRecode -> navigateToRecode()
                 is HomeEffectState.NavigateToStatistic -> navigateToStatistic()
-                is HomeEffectState.DialogState -> { dialogVisibleState = effect.show }
+                else -> {}
             }
         }
     }
 
-    if(dialogVisibleState){
-        CommonSpinnerDialog(
-            startIndex = when(val state = homeUiState){
-                is HomeUIState.Success -> state.position
-                else -> null
-            },
-            onDismiss = {
-                dialogVisibleState = false
-            },
-            onConfirm = { index ->
-                dialogVisibleState = false
-                viewModel.actionHandler(HomeActionState.OnChangeRoundPosition(index))
-            }
-        )
-    }
-
     HomeScreen(
         homeUiState = homeUiState,
+        spinnerDialogState = spinnerDialogState,
         actionHandler = viewModel::actionHandler,
         effectHandler = viewModel::effectHandler,
         modifier = modifier
@@ -131,10 +115,24 @@ fun HomeRoute(
 @Composable
 fun HomeScreen(
     homeUiState: HomeUIState = HomeUIState.Loading,
+    spinnerDialogState: DialogState<RoundSpinner> = DialogState.Hide,
     actionHandler: (HomeActionState) -> Unit = {},
     effectHandler: (HomeEffectState) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    if(spinnerDialogState is DialogState.Show){
+        CommonSpinnerDialog(
+            lastIndex = spinnerDialogState.data.lastIndex,
+            initIndex = spinnerDialogState.data.initIndex,
+            onDismiss = {
+                actionHandler(HomeActionState.HideDialog)
+            },
+            onConfirm = { index ->
+                actionHandler(HomeActionState.OnChangeRoundPosition(index))
+            }
+        )
+    }
+
     Surface(
         modifier = modifier
             .fillMaxSize(),
@@ -152,11 +150,11 @@ fun HomeScreen(
             VerticalSpacer(10.dp)
 
             LottoPager(
-                effectHandler = effectHandler,
+                actionHandler = actionHandler,
                 lottoRoundList = if (homeUiState is HomeUIState.Success) homeUiState.lottoRounds else listOf(
                     LottoRound()
                 ),
-                roundPosition = if (homeUiState is HomeUIState.Success) homeUiState.position else null
+                roundPosition = if (homeUiState is HomeUIState.Success) homeUiState.initPosition else null
             )
 
             ButtonLayout(
@@ -237,7 +235,7 @@ private fun MainTopBarPreview() {
 
 @Composable
 fun LottoPager(
-    effectHandler: (HomeEffectState) -> Unit,
+    actionHandler: (HomeActionState) -> Unit,
     lottoRoundList: List<LottoRound> = emptyList(),
     roundPosition: Int?,
     modifier: Modifier = Modifier
@@ -250,7 +248,7 @@ fun LottoPager(
 
     LaunchedEffect(roundPosition) {
         if(roundPosition != null){
-            pagerState.baseAnimateScrollToPage(roundPosition)
+            pagerState.baseAnimateScrollToPage(roundPosition-1) // 페이지 0 부터 시작하는 Index 고려
         }
     }
 
@@ -265,8 +263,17 @@ fun LottoPager(
             contentPadding = PaddingValues(horizontal = 36.dp)
         ) { page ->
             LottoCardItem(
-                effectHandler = effectHandler,
                 lottoRoundItem = lottoRoundList.getOrNull(page) ?: LottoRound(),
+                onClickDialog = {
+                    actionHandler(
+                        HomeActionState.ShowDialog(
+                            RoundSpinner(
+                                lastIndex = lottoRoundList.last().drawNumber.toInt(),
+                                initIndex = pagerState.currentPage
+                            )
+                        )
+                    )
+                },
                 modifier = Modifier.graphicsLayer {
                     val pageOffset = (
                             (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
@@ -299,8 +306,8 @@ private fun LottoPagerPreview() {
 
 @Composable
 fun LottoCardItem(
-    effectHandler: (HomeEffectState) -> Unit,
     lottoRoundItem: LottoRound = LottoRound(),
+    onClickDialog: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val gradient = Brush.linearGradient(colors = listOf(PrimaryColor, SubColor))
@@ -309,7 +316,7 @@ fun LottoCardItem(
         modifier = modifier
             .padding(horizontal = 8.dp)
             .fillMaxWidth()
-            .clickable { effectHandler(HomeEffectState.DialogState(true)) }
+            .clickable { onClickDialog() }
     ) {
         Box(
             modifier = Modifier
@@ -384,7 +391,9 @@ fun LottoCardItem(
 @Preview
 @Composable
 private fun LottoCardItemPreview() {
-    LottoCardItem({})
+    LottoCardItem(
+        onClickDialog = {}
+    )
 }
 
 @Composable

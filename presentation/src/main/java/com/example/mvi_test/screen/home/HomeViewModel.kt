@@ -1,14 +1,14 @@
 package com.example.mvi_test.screen.home
 
-import android.widget.Toast
 import androidx.lifecycle.viewModelScope
 import com.example.data.datastore.UserDataStore
+import com.example.domain.model.RoundSpinner
 import com.example.domain.repository.LottoRepository
 import com.example.mvi_test.base.BaseViewModel
+import com.example.mvi_test.screen.home.state.DialogState
 import com.example.mvi_test.screen.home.state.HomeActionState
 import com.example.mvi_test.screen.home.state.HomeEffectState
 import com.example.mvi_test.screen.home.state.HomeUIState
-import com.example.mvi_test.screen.random.state.RandomEffectState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,38 +22,32 @@ class HomeViewModel @Inject constructor(
 ): BaseViewModel() {
     val sideEffectState = MutableSharedFlow<HomeEffectState>()
     val homeUIState = MutableStateFlow<HomeUIState>(HomeUIState.Loading)
+    val spinnerDialogState = MutableStateFlow<DialogState<RoundSpinner>>(DialogState.Hide)
 
     init {
         ioScope.launch {
             lottoRepo.getLottoRoundDao().collect { list ->
                 homeUIState.value = HomeUIState.Success(
                     lottoRounds = list,
-                    position = list.lastIndex
+                    initPosition = list.lastIndex
                 )
             }
-        }
-    }
-
-    fun addLotto(){
-
-    }
-
-    fun updateUserName(){
-        ioScope.launch {
-            userDataStore.setUserName("")
         }
     }
 
     fun actionHandler(intent: HomeActionState){
         when(intent){
             is HomeActionState.OnChangeRoundPosition -> {
-                when(val state = homeUIState.value){
-                    is HomeUIState.Success -> {
-                        homeUIState.value = state.copy(position = intent.position)
-                    }
-                    else -> {}
+                // 다이알로그 숨김처리
+                spinnerDialogState.value = DialogState.Hide
+                // UI State 변경
+                val uiState = homeUIState.value
+                if(uiState is HomeUIState.Success){
+                    homeUIState.value = uiState.copy(initPosition = intent.targetRound)
                 }
             }
+            is HomeActionState.ShowDialog -> { spinnerDialogState.value = DialogState.Show(intent.spinnerItem) }
+            is HomeActionState.HideDialog -> { spinnerDialogState.value = DialogState.Hide }
         }
     }
 
