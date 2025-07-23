@@ -25,8 +25,11 @@ class HomeViewModel @Inject constructor(
 
     init {
         ioScope.launch {
-            lottoRepo.getLottoRoundDao().collect {
-                homeUIState.value = HomeUIState.Success(it)
+            lottoRepo.getLottoRoundDao().collect { list ->
+                homeUIState.value = HomeUIState.Success(
+                    lottoRounds = list,
+                    position = list.lastIndex
+                )
             }
         }
     }
@@ -43,8 +46,14 @@ class HomeViewModel @Inject constructor(
 
     fun actionHandler(intent: HomeActionState){
         when(intent){
-            is HomeActionState.OnBackClick -> {}
-            else -> {}
+            is HomeActionState.OnChangeRoundPosition -> {
+                when(val state = homeUIState.value){
+                    is HomeUIState.Success -> {
+                        homeUIState.value = state.copy(position = intent.position)
+                    }
+                    else -> {}
+                }
+            }
         }
     }
 

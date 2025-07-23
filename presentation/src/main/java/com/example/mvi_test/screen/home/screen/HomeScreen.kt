@@ -62,8 +62,8 @@ import com.example.mvi_test.screen.home.HomeViewModel
 import com.example.mvi_test.screen.home.state.HomeActionState
 import com.example.mvi_test.screen.home.state.HomeUIState
 import com.example.mvi_test.designsystem.common.CommonAdBanner
-import com.example.mvi_test.designsystem.common.CommonDatePicker
 import com.example.mvi_test.designsystem.common.CommonLottoContent
+import com.example.mvi_test.designsystem.common.CommonSpinnerDialog
 import com.example.mvi_test.designsystem.common.HorizontalSpacer
 import com.example.mvi_test.designsystem.common.VerticalSpacer
 import com.example.mvi_test.screen.home.state.HomeEffectState
@@ -73,6 +73,7 @@ import com.example.mvi_test.ui.theme.PrimaryColor
 import com.example.mvi_test.ui.theme.Red
 import com.example.mvi_test.ui.theme.SubColor
 import com.example.mvi_test.ui.theme.white50
+import com.example.mvi_test.util.baseAnimateScrollToPage
 import kotlinx.coroutines.flow.collectLatest
 import kotlin.math.absoluteValue
 
@@ -104,10 +105,18 @@ fun HomeRoute(
     }
 
     if(dialogVisibleState){
-        CommonDatePicker(
-            onDismiss = { dialogVisibleState = false },
-            onConfirm = {},
-            onClickFuture = { viewModel.effectHandler(HomeEffectState.ShowToast(it)) }
+        CommonSpinnerDialog(
+            startIndex = when(val state = homeUiState){
+                is HomeUIState.Success -> state.position
+                else -> null
+            },
+            onDismiss = {
+                dialogVisibleState = false
+            },
+            onConfirm = { index ->
+                dialogVisibleState = false
+                viewModel.actionHandler(HomeActionState.OnChangeRoundPosition(index))
+            }
         )
     }
 
@@ -147,6 +156,7 @@ fun HomeScreen(
                 lottoRoundList = if (homeUiState is HomeUIState.Success) homeUiState.lottoRounds else listOf(
                     LottoRound()
                 ),
+                roundPosition = if (homeUiState is HomeUIState.Success) homeUiState.position else null
             )
 
             ButtonLayout(
@@ -229,18 +239,19 @@ private fun MainTopBarPreview() {
 fun LottoPager(
     effectHandler: (HomeEffectState) -> Unit,
     lottoRoundList: List<LottoRound> = emptyList(),
+    roundPosition: Int?,
     modifier: Modifier = Modifier
 ) {
     val pagerState = rememberPagerState(pageCount = { lottoRoundList.size })
 
     LaunchedEffect(lottoRoundList) {
-        pagerState.animateScrollToPage(
-            page = lottoRoundList.lastIndex,
-            animationSpec = tween(
-                durationMillis = 500,
-                easing = FastOutSlowInEasing
-            )
-        )
+        pagerState.baseAnimateScrollToPage(lottoRoundList.lastIndex)
+    }
+
+    LaunchedEffect(roundPosition) {
+        if(roundPosition != null){
+            pagerState.baseAnimateScrollToPage(roundPosition)
+        }
     }
 
     Column(
@@ -283,7 +294,7 @@ fun LottoPager(
 @Preview
 @Composable
 private fun LottoPagerPreview() {
-    LottoPager({},emptyList())
+    LottoPager({},emptyList(), 10)
 }
 
 @Composable

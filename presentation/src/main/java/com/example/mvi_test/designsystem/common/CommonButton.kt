@@ -23,8 +23,8 @@ fun CommonButton(
     enableColor: Color = DarkGray,
     disableColor: Color = LightGray,
     enabled: Boolean = true,
-    onClick: () -> Unit = {},
-    text: String = "Title"
+    text: String = "Title",
+    onClick: () -> Unit = {}
 ) {
     val color by animateColorAsState(
         targetValue = if(enabled) enableColor else disableColor,

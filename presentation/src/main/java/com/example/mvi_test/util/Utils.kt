@@ -2,6 +2,8 @@ package com.example.mvi_test.util
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
 import com.example.domain.model.Keyword
@@ -214,4 +216,17 @@ object Utils {
         val shareIntent = Intent.createChooser(sendIntent, "Share Lotto")
         this.startActivity(shareIntent)
     }
+}
+
+/**
+ * Base 페이저 스크롤 애니메이션
+ */
+suspend fun PagerState.baseAnimateScrollToPage(index: Int){
+    this.animateScrollToPage(
+        page = index,
+        animationSpec = tween(
+            durationMillis = 500,
+            easing = androidx.compose.animation.core.FastOutSlowInEasing
+        )
+    )
 }

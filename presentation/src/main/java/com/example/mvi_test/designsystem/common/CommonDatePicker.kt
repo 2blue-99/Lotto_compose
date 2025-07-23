@@ -30,6 +30,9 @@ fun CommonDatePicker(
     onClickFuture: (CommonMessage) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    // TODO https://developer.android.com/develop/ui/compose/components/datepickers?hl=ko#range 여기 참고
+
     val today = System.currentTimeMillis()
     val currentYear = Calendar.getInstance().get(Calendar.YEAR)
     val datePickerState = rememberDatePickerState(
