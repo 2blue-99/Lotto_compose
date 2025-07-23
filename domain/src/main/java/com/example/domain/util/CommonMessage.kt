@@ -8,6 +8,9 @@ enum class CommonMessage(
     COMMON_COPY_SUCCESS("클립보드에 "),
     COMMON_SHARE_SUCCESS("공유하기"),
 
+    // DatePicker
+    DATE_PICKER_FUTURE_DISABLE("과거만 선택이 가능합니다"),
+
     // Home
     HOME_NOT_READY_YET("곧 업데이트 예정입니다"),
 

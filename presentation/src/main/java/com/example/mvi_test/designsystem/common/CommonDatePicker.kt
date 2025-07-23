@@ -1,12 +1,8 @@
 package com.example.mvi_test.designsystem.common
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
@@ -18,12 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.domain.util.CommonMessage
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.DarkGray
-import com.example.mvi_test.ui.theme.LightGray
-import com.example.mvi_test.ui.theme.PrimaryColor
+import com.example.mvi_test.ui.theme.SubColor
+import com.example.mvi_test.util.Utils.isAfterToday
 import com.example.mvi_test.util.Utils.targetTimeFormat
-import timber.log.Timber
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,6 +27,7 @@ import java.util.Calendar
 fun CommonDatePicker(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
+    onClickFuture: (CommonMessage) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val today = System.currentTimeMillis()
@@ -40,6 +37,14 @@ fun CommonDatePicker(
         yearRange = 2002..currentYear
     )
 
+    // 미래 날짜 선택 제한
+    LaunchedEffect(datePickerState.selectedDateMillis) {
+        if(datePickerState.selectedDateMillis.isAfterToday()){
+            onClickFuture(CommonMessage.DATE_PICKER_FUTURE_DISABLE)
+            datePickerState.selectedDateMillis = today
+        }
+    }
+
     DatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
@@ -47,7 +52,7 @@ fun CommonDatePicker(
                 Text(
                     text = "확인",
                     style = CommonStyle.text16Bold,
-                    color = PrimaryColor
+                    color = SubColor
                 )
             }
         },
@@ -80,7 +85,7 @@ fun CommonDatePicker(
             },
             colors = DatePickerDefaults.colors(
                 containerColor = Color.White,
-                selectedDayContainerColor = PrimaryColor,
+                selectedDayContainerColor = SubColor,
             )
         )
     }
@@ -89,5 +94,5 @@ fun CommonDatePicker(
 @Preview
 @Composable
 private fun CommonDatePickerPreview() {
-    CommonDatePicker({},{})
+    CommonDatePicker({},{},{})
 }

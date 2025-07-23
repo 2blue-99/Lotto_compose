@@ -25,9 +25,25 @@ class LottoRepositoryImpl @Inject constructor(
     private val lottoRecodeDao: LottoRecodeDao,
     private val lottoDataSource: LottoDataSourceImpl
 ): LottoRepository {
+
     override fun getLottoRoundDao(): Flow<List<LottoRound>> {
         return lottoRoundDao.getLottoRoundDao().map { it.map { it.toDomain() } }
     }
+
+    override suspend fun getRangeStatistic(range: RangeType): List<StatisticItem> {
+        // 해당 범위의 로또 정보 가져오기
+        val targetMonth = getPastDate(range.monthValue)
+
+        // 범위에 해당하는 로또 회차 리스트
+        val roundRangeList = lottoRoundDao.getRangeLottoRoundDao(targetMonth)
+
+        // 가공해서 List<StatisticItem> 로 만들기
+        return roundRangeList.makeStatisticItem()
+    }
+
+
+
+
 
     override fun getLottoRecodeDao(): Flow<List<LottoRecode>> {
         return lottoRecodeDao.getLottoRecodeDao().map { it.makeRecodeGroup() }
@@ -52,18 +68,5 @@ class LottoRepositoryImpl @Inject constructor(
 
     override suspend fun requestLottoData(round: Int): ResourceState<LottoRound> {
         return lottoDataSource.requestLottoData(round.toString()).toDomain { it.toDomain() }
-    }
-
-
-
-    override suspend fun getRangeStatistic(range: RangeType): List<StatisticItem> {
-        // 해당 범위의 로또 정보 가져오기
-        val targetMonth = getPastDate(range.monthValue)
-
-        // 범위에 해당하는 로또 회차 리스트
-        val roundRangeList = lottoRoundDao.getRangeLottoRoundDao(targetMonth)
-
-        // 가공해서 List<StatisticItem> 로 만들기
-        return roundRangeList.makeStatisticItem()
     }
 }

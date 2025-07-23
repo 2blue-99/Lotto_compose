@@ -9,6 +9,7 @@ import com.example.domain.model.LottoItem
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import kotlin.random.Random
 
 object Utils {
@@ -143,6 +144,18 @@ object Utils {
     fun currentTimeFormat(): String {
         val currentTime = System.currentTimeMillis()
         return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(currentTime))
+    }
+
+    fun Long?.isAfterToday(): Boolean {
+        return this?.let {
+            val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+            sdf.timeZone = TimeZone.getDefault()
+
+            val targetDate = sdf.format(Date(this)).toInt()
+            val todayDate = sdf.format(Date()).toInt()
+
+            targetDate > todayDate
+        } ?: false
     }
 
     /**

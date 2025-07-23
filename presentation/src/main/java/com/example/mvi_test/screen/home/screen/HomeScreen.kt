@@ -107,6 +107,7 @@ fun HomeRoute(
         CommonDatePicker(
             onDismiss = { dialogVisibleState = false },
             onConfirm = {},
+            onClickFuture = { viewModel.effectHandler(HomeEffectState.ShowToast(it)) }
         )
     }
 
