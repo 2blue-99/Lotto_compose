@@ -33,6 +33,11 @@ class HomeViewModel @Inject constructor(
                 )
             }
         }
+
+        ioScope.launch {
+            // TODO 네트워크 연결 여부 체크
+            lottoRepo.updateLottoRound()
+        }
     }
 
     fun actionHandler(intent: HomeActionState){

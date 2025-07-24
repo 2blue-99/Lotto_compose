@@ -14,10 +14,14 @@ interface LottoRepository {
      */
     fun getLottoRoundDao(): Flow<List<LottoRound>>
     /**
-     * 로또 범위 회차 정보 -> 통계 데이터
+     * 범위 기준 로또 회차 정보 -> 통계 데이터 변환
      */
     suspend fun getRangeStatistic(range: RangeType): List<StatisticItem>
 
+    /**
+     * 로또 회차 정보 업데이트 - API 조회
+     */
+    suspend fun updateLottoRound(): Boolean
 
 
     /**
@@ -30,14 +34,7 @@ interface LottoRepository {
     suspend fun insertLottoRecodeDao(list:List<LottoItem>)
 
     /**
-     * 로또 추첨 결과 저장
+     * 로또 추첨 결과 삭제
      */
     suspend fun deleteLottoRecodeDao(date: String)
-
-
-
-    /**
-     * 로또 API 조회
-     */
-    suspend fun requestLottoData(round: Int): ResourceState<LottoRound>
 }

@@ -15,7 +15,12 @@ interface LottoRoundDao {
     @Query("Select * From lotto_round Where drawDate >= :date")
     suspend fun getRangeLottoRoundDao(date: String): List<LottoRoundEntity>
 
+    // 1부터 빈틈없이 쌓이기 때문에 DB 사이즈로 판단하면 됨
+    @Query("Select Count(*) from lotto_round")
+    suspend fun getLastDrawNumber(): Int
+
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertLotto(lottoList: LottoRoundEntity)
+    suspend fun upsertLotto(lottoList: List<LottoRoundEntity>)
 }

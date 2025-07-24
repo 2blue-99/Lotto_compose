@@ -6,7 +6,10 @@ import com.example.domain.model.LottoItem
 import com.example.domain.model.LottoRecode
 import com.example.domain.model.StatisticItem
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 object Utils {
     // TODO 요일 로직
@@ -79,5 +82,32 @@ object Utils {
             .sortedByDescending { it.second }
             .take(8)
             .map { StatisticItem(number = it.first.toString(), count = it.second.toString()) }
+    }
+
+    /**
+     * 로또 최초 시작일로부터 오늘까지 몇번의 일주일이 있었는지 조회
+     */
+    fun getWeekCountBetweenTargetDate(): Int {
+
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+        val startCal = Calendar.getInstance().apply {
+            time = sdf.parse("2002-12-07")!!
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+
+        val todayCal = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+
+        val diffInMillis = todayCal.timeInMillis - startCal.timeInMillis
+        val days = TimeUnit.MILLISECONDS.toDays(diffInMillis).toInt()
+        return days / 7
     }
 }

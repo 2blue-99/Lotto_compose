@@ -1,5 +1,6 @@
 package com.example.data.remote.model
 
+import com.example.data.local.entity.LottoRoundEntity
 import com.example.data.util.Utils.formatComma
 import com.example.data.util.Utils.formatDate
 import com.example.domain.model.LottoRound
@@ -50,6 +51,25 @@ data class LottoResponse(
             drwtNo5.toString(),
             drwtNo6.toString(),
             bnusNo.toString()
+        )
+    }
+
+    fun toLottoRoundEntity(): LottoRoundEntity {
+        return LottoRoundEntity(
+            id = 0,
+            drawNumber = drawNumber,
+            drawDate = drawDate,
+            totalSellAmount = totalSellAmount,
+            firstWinTotalAmount = firstWinTotalAmount,
+            firstWinCount = firstWinCount,
+            firstWinPerAmount = firstWinPerAmount,
+            drwtNo1 = drwtNo1,
+            drwtNo2 = drwtNo2,
+            drwtNo3 = drwtNo3,
+            drwtNo4 = drwtNo4,
+            drwtNo5 = drwtNo5,
+            drwtNo6 = drwtNo6,
+            bnusNo = bnusNo
         )
     }
 }
