@@ -13,6 +13,8 @@ enum class CommonMessage(
 
     // Home
     HOME_NOT_READY_YET("곧 업데이트 예정입니다"),
+    HOME_NOT_CONNECTED("업데이트를 위해 네트워크 연결이 필요합니다"),
+    HOME_UPDATE_SUCCESS("업데이트 완료"),
 
     // Random
     RANDOM_EMPTY_KEYWORD("키워드를 입력해 주세요"),

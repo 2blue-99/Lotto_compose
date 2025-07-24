@@ -90,7 +90,7 @@ fun HomeRoute(
     val spinnerDialogState by viewModel.spinnerDialogState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.sideEffectState.collectLatest { effect ->
+        viewModel.sideEffectFlow.collect { effect ->
             when(effect){
                 is HomeEffectState.ShowToast -> { Toast.makeText(context, effect.message.message, Toast.LENGTH_SHORT).show() }
                 is HomeEffectState.ShowSnackbar -> { /*onShowSnackbar(effect.message)*/ }
