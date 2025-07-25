@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.model.LottoRecode
+import com.example.domain.type.DrawType
 import com.example.mvi_test.designsystem.common.CommonButton
 import com.example.mvi_test.designsystem.common.CommonExpandableBox
 import com.example.mvi_test.designsystem.common.CommonLottoAutoRow
@@ -50,8 +51,10 @@ import com.example.mvi_test.screen.recode.state.RecodeUIState
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.DarkGray
 import com.example.mvi_test.ui.theme.LightGray
+import com.example.mvi_test.ui.theme.PrimaryColor
 import com.example.mvi_test.ui.theme.Red
 import com.example.mvi_test.ui.theme.ScreenBackground
+import com.example.mvi_test.ui.theme.SubColor
 import com.example.mvi_test.util.Utils.drawResultToString
 import com.example.mvi_test.util.Utils.shareLotto
 import kotlinx.coroutines.delay
@@ -118,23 +121,12 @@ fun RecodeScreen(
     }
 }
 
-//@Preview
-//@Composable
-//private fun RecodeScreen() {
-//    RecodeScreen(
-//        recodeUIState = RecodeUIState.Loading
-//    )
-//}
-
 @Composable
 fun RecodeContent(
     recodeList: List<LottoRecode> = listOf(LottoRecode(),LottoRecode(),LottoRecode()),
     actionHandler: (RecodeActionState) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-
-
-
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -222,10 +214,9 @@ fun RecodeItem(
             .background(Color.White)
             .padding(16.dp)
     ) {
-        Text(
-            text = lottoRecode.saveDate,
-            style = CommonStyle.text16,
-            color = DarkGray
+        RecodeTitle(
+            date = lottoRecode.saveDate,
+            type = DrawType.LuckyDraw("행운", "ㅇㅇ")
         )
 
         VerticalSpacer(8.dp)
@@ -295,11 +286,46 @@ private fun RecodeItemPreview() {
     RecodeItem()
 }
 
-//@Preview
-//@Composable
-//private fun RecodeContentPreview() {
-//    RecodeContent()
-//}
+@Composable
+fun RecodeTitle(
+    date: String,
+    type: DrawType,
+    modifier: Modifier = Modifier
+) {
+    val color = if(type is DrawType.StatisticDraw) PrimaryColor else SubColor
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        Box(
+            modifier = modifier
+                .background(color, RoundedCornerShape(4.dp))
+                .padding(4.dp)
+        ) {
+            Text(
+                text = type.title,
+                style = CommonStyle.text12,
+                color = Color.White
+            )
+        }
+        Text(
+            text = date,
+            style = CommonStyle.text16,
+            color = DarkGray
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun RecodeTitlePreview() {
+    RecodeTitle(
+        "2025-07-25",
+        DrawType.LuckyDraw("행운", "ㅇㅇ")
+    )
+}
 
 @Composable
 fun SelectControllerButton(

@@ -10,6 +10,8 @@ import com.example.domain.model.LottoRecode
 data class LottoRecodeEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
+    val drawType: String, // 추첨 타입 (행운, 통계)
+    val drawData: String, // 추첨 데이터 (행운 키워드, 통계 리스트)
     val saveDate: String, // 저장일 + 그룹 아이디 역할
     val sequence: String, // A~B 순서
     val sum: String = "", // 총합

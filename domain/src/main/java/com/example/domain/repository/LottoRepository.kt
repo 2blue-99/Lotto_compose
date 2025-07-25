@@ -25,11 +25,11 @@ interface LottoRepository {
 
 
     /**
-     * 로또 추첨 결과 조회
+     * 저장 추천 리스트 조회
      */
     fun getLottoRecodeDao(): Flow<List<LottoRecode>>
     /**
-     * 로또 추첨 결과 저장
+     * 추첨 리스트 저장
      */
     suspend fun insertLottoRecodeDao(list:List<LottoItem>)
 

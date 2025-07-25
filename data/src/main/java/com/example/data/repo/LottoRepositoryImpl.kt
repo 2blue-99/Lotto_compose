@@ -97,11 +97,11 @@ class LottoRepositoryImpl @Inject constructor(
         return true
     }
 
+
+
     override fun getLottoRecodeDao(): Flow<List<LottoRecode>> {
         return lottoRecodeDao.getLottoRecodeDao().map { it.makeRecodeGroup() }
     }
-
-
 
     override suspend fun insertLottoRecodeDao(list:List<LottoItem>) {
         val currentTime = currentDateTimeString()
