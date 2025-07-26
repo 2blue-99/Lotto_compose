@@ -20,8 +20,6 @@ fun NavGraphBuilder.randomScreen(
 ){
     composable(
         route = randomRoute,
-//        exitTransition = { slideToLeftExit() },
-//        popEnterTransition = { slideToRightEnter() }
     ) {
         RandomRoute(
             onShowSnackbar,
