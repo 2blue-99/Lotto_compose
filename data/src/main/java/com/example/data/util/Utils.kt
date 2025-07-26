@@ -5,6 +5,7 @@ import com.example.data.local.entity.LottoRoundEntity
 import com.example.domain.model.LottoItem
 import com.example.domain.model.LottoRecode
 import com.example.domain.model.StatisticItem
+import timber.log.Timber
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -88,26 +89,41 @@ object Utils {
      * 로또 최초 시작일로부터 오늘까지 몇번의 일주일이 있었는지 조회
      */
     fun getWeekCountBetweenTargetDate(): Int {
-
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
         val startCal = Calendar.getInstance().apply {
             time = sdf.parse("2002-12-07")!!
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
+            set(Calendar.HOUR_OF_DAY, 20)
+            set(Calendar.MINUTE, 35)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }
 
-        val todayCal = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
+        // 현재 시간
+        val todayCal = Calendar.getInstance()
+        if(isBeforeSaturday2035(todayCal)){
+            todayCal.add(Calendar.DATE, -1)
         }
 
         val diffInMillis = todayCal.timeInMillis - startCal.timeInMillis
         val days = TimeUnit.MILLISECONDS.toDays(diffInMillis).toInt()
         return days / 7
+    }
+
+    /**
+     * 현재 시간이 로또 추첨 시간 토요일 20:35 이전인지 체크
+     */
+    private fun isBeforeSaturday2035(today : Calendar): Boolean {
+        // 토요일 검증
+        if(today.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY){
+            return false
+        }
+        val target = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 20)
+            set(Calendar.MINUTE, 35)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        return today.before(target)
     }
 }

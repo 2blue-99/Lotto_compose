@@ -181,7 +181,7 @@ fun KeywordContent(
     keywordList: List<Keyword> = listOf(Keyword(), Keyword(), Keyword(), Keyword(), Keyword()),
     modifier: Modifier = Modifier
 ) {
-    var text by remember { mutableStateOf("") }
+    var keyword by remember { mutableStateOf("") }
     var expand by remember { mutableStateOf(false) }
     // 추첨하기 클릭 가능 여부
     var drawClickable by remember { mutableStateOf(true) }
@@ -242,8 +242,8 @@ fun KeywordContent(
                     unfocusedIndicatorColor = Color.LightGray
                 ),
                 textStyle = CommonStyle.text20.copy(textAlign = TextAlign.Start),
-                value = text,
-                onValueChange = { text = it },
+                value = keyword,
+                onValueChange = { keyword = it },
                 placeholder = { Text(
                     text = "행운의 키워드를 입력해주세요.",
                     style = CommonStyle.text16
@@ -270,17 +270,17 @@ fun KeywordContent(
                 enabled = drawClickable,
                 onClick = {
                     // Empty 체크
-                    if(text.isNotBlank()){
+                    if(keyword.isNotBlank()){
                         focusManager.clearFocus()
                         keyboardController?.hide()
                         expand = false
                         drawClickable = false
                         rememberCoroutineScope.launch {
                             delay(100) // TODO 해당 딜레이가 없으면 부모 컴포넌트가 숨겨지기 전에 업데이트된게 보여서 추가한 임시방편
-                            if(!keywordList.containsKeyword(text)){
-                                actionHandler.invoke(RandomActionState.AddKeyword(text))
+                            if(!keywordList.containsKeyword(keyword)){
+                                actionHandler.invoke(RandomActionState.AddKeyword(keyword))
                             }
-                            actionHandler.invoke(RandomActionState.OnClickDraw(text))
+                            actionHandler.invoke(RandomActionState.OnClickDraw(keyword))
                         }
                     }else{
                         rememberCoroutineScope.launch {
@@ -309,7 +309,7 @@ fun KeywordContent(
                         keywordList = keywordList,
                         removable = true,
                         onClickChip = {
-                            text = it
+                            keyword = it
                             expand = false
                             focusManager.clearFocus()
                         },
@@ -329,7 +329,7 @@ fun KeywordContent(
                     keywordList = context.resources.getStringArray(R.array.keyword_list).map { it.toKeyword() },
                     removable = false,
                     onClickChip = {
-                        text = it
+                        keyword = it
                         expand = false
                         focusManager.clearFocus()
                     }

@@ -54,6 +54,7 @@ class HomeViewModel @Inject constructor(
 
         // 회차 정보 업데이트
         ioScope.launch {
+            // 온라인 여부 체크
             if(networkMonitor.isOnline.first()) {
                 if(lottoRepo.updateLottoRound()){
                     // 업데이트 완료

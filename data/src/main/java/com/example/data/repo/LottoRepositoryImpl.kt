@@ -61,6 +61,7 @@ class LottoRepositoryImpl @Inject constructor(
 
         // 최신 상태이므로 return
         if(localLatestRound == targetLatestRound){
+            Timber.d("최신 상태")
             return true
         }
 
