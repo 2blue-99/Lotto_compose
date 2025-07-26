@@ -47,7 +47,7 @@ class HomeViewModel @Inject constructor(
             lottoRepo.getLottoRoundDao().collect { list ->
                 homeUIState.value = HomeUIState.Success(
                     lottoRounds = list,
-                    initPosition = list.lastIndex
+                    initPosition = list.size
                 )
             }
         }

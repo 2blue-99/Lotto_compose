@@ -247,6 +247,7 @@ fun LottoPager(
     }
 
     LaunchedEffect(roundPosition) {
+        Timber.d("roundPosition : $roundPosition")
         if(roundPosition != null){
             pagerState.baseAnimateScrollToPage(roundPosition-1) // 페이지 0 부터 시작하는 Index 고려
         }
