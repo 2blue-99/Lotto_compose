@@ -28,6 +28,8 @@ object Mapper {
     fun LottoItem.toLottoRecodeReEntity(time: String) =
         LottoRecodeEntity(
             id = 0,
+            drawType = "",
+            drawData = "",
             saveDate = time,
             sequence = sequence,
             sum = sum,

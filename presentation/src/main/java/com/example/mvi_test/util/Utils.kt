@@ -8,6 +8,8 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
 import com.example.domain.model.Keyword
 import com.example.domain.model.LottoItem
+import kotlinx.coroutines.delay
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -48,7 +50,14 @@ object Utils {
             val lottoList = mutableListOf<Int>()
             // 보너스 번호를 제외한 6개 추첨
             repeat(6){
-                lottoList.add(random.nextInt(1,46))
+                while(true){
+                    val number = random.nextInt(1,46)
+                    if(!lottoList.contains(number)){
+                        lottoList.add(number)
+                        break
+                    }
+                    Timber.d("다시뽑음")
+                }
             }
             // 리스트 정렬
             val sortedList = lottoList.sorted()
