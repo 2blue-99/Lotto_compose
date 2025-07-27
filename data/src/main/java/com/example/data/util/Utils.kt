@@ -34,6 +34,7 @@ object Utils {
         var saveDate = this.firstOrNull()?.saveDate ?: ""
         // 추첨 데이터 (키워드 or 필수 번호)
         var drawData = this.firstOrNull()?.drawData ?: ""
+        // 추첨 타입 (행운, 통계)
         var drawType = if(this.firstOrNull()?.drawType == TYPE_LUCKY) DrawType.LuckyDraw(keyword = drawData) else DrawType.StatisticDraw(list = drawData)
         // 반환할 기록 리스트
         val recodeList = mutableListOf<LottoRecode>()
@@ -50,7 +51,6 @@ object Utils {
                     )
                 )
                 saveDate = item.saveDate
-                // 추첨 타입
                 drawData = item.drawData
                 drawType = if(item.drawType == TYPE_LUCKY) DrawType.LuckyDraw(keyword = drawData) else DrawType.StatisticDraw(list = drawData)
                 groupList.clear()
@@ -58,6 +58,7 @@ object Utils {
             groupList.add(item.toDomain())
         }
 
+        // 마지막 인덱스 처리
         if(groupList.isNotEmpty()) {
             recodeList.add(
                 LottoRecode(
