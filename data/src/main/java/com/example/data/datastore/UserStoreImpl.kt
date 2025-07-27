@@ -2,6 +2,7 @@ package com.example.data.datastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
@@ -12,15 +13,15 @@ class UserStoreImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ): UserDataStore {
     object PreferencesKey {
-        val TEST = stringPreferencesKey("user_name")
+        val REQUIRE_CAMERA_PERMISSION = booleanPreferencesKey("require_camera_permission")
     }
 
-    override val userNameFlow: Flow<String> =
-        dataStore.data.map { dataStore -> dataStore[PreferencesKey.TEST] ?: "디폴트" }
+    override val isRequireCameraPermission: Flow<Boolean> =
+        dataStore.data.map { dataStore -> dataStore[PreferencesKey.REQUIRE_CAMERA_PERMISSION] ?: false }
 
-    override suspend fun setUserName(name: String) {
+    override suspend fun setRequireCameraPermission(state: Boolean) {
         dataStore.edit { preferences ->
-            preferences[PreferencesKey.TEST] = name
+            preferences[PreferencesKey.REQUIRE_CAMERA_PERMISSION] = state
         }
     }
 }

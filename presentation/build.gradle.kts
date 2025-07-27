@@ -80,13 +80,13 @@ dependencies {
     // Flow Row
     implementation(libs.accompanist.flowlayout) // 최신 버전 확인 필요
 
+    implementation("androidx.camera:camera-camera2:1.3.1")
+    implementation("androidx.camera:camera-view:1.3.1")
+
     // ML Kit Barcode Scanning
-    implementation ("com.google.mlkit:barcode-scanning:17.3.0")
-    //camera
-    implementation ("androidx.camera:camera-core:1.3.4")
-    implementation ("androidx.camera:camera-camera2:1.3.4")
-    implementation ("androidx.camera:camera-lifecycle:1.3.4")
-    implementation ("androidx.camera:camera-view:1.3.4")
+    implementation("com.google.mlkit:barcode-scanning:17.2.0")
+
+    implementation(libs.accompanist.permissions)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

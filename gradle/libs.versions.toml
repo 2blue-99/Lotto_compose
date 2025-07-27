@@ -1,5 +1,6 @@
 [versions]
 accompanistFlowlayout = "0.34.0"
+accompanistPermissions = "0.36.0"
 agp = "8.7.3"
 hiltNavigationCompose = "1.2.0"
 kotlin = "2.0.0"
@@ -35,6 +36,7 @@ truthVersion = "1.4.4"
 
 [libraries]
 accompanist-flowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanistFlowlayout" }
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }

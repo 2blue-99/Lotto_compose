@@ -1,5 +1,6 @@
 package com.example.mvi_test.screen.qr
 
+import android.Manifest
 import androidx.annotation.OptIn
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.view.LifecycleCameraController
@@ -7,20 +8,20 @@ import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -28,7 +29,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.mvi_test.screen.random.state.QRScannerActionState
+import com.example.mvi_test.screen.random.state.QRScannerUIState
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -36,26 +45,77 @@ import com.google.mlkit.vision.common.InputImage
 import timber.log.Timber
 
 @Composable
-fun QRScannerRouth(modifier: Modifier = Modifier) {
+fun QRScannerRouth(
+    modifier: Modifier = Modifier,
+    viewModel: QRScannerViewModel = hiltViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    QRScannerScreen(modifier)
+    QRScannerScreen(
+        uiState,
+        viewModel::actionHandler,
+        modifier
+    )
 }
 
 @Composable
-fun QRScannerScreen(modifier: Modifier = Modifier) {
+fun QRScannerScreen(
+    uiState: QRScannerUIState = QRScannerUIState.Loading,
+    actionHandler: (QRScannerActionState) -> Unit = {},
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier,
+        color = Color.Black
+    ) {
+        if(uiState is QRScannerUIState.Success) {
+            CheckPermission(
+                actionHandler,
+                uiState.isRequiredCamera
+            )
 
-    // 권한
+            QRContainer()
+
+            TargetBox()
+        }
+    }
+
 
     Box(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(Color.Black),
         contentAlignment = Alignment.Center
     ){
-        Box {
-            QRContainer()
-        }
+    }
+}
 
-        TargetBox()
+@kotlin.OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun CheckPermission(
+    actionHandler: (QRScannerActionState) -> Unit,
+    isRequiredCamera: Boolean,
+    modifier: Modifier = Modifier
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val permissionState = rememberPermissionState(Manifest.permission.CAMERA)
+    // 요청 자체가 안되는 상황을 파악하기 위함
+    var requestState by rememberSaveable { mutableStateOf(isRequiredCamera) }
+
+    LaunchedEffect(Unit) {
+        // 권한 비허용 + 한번 이상 거부 X + 요청한적 없는 경우
+        if(!permissionState.status.isGranted && !permissionState.status.shouldShowRationale && !requestState){
+            permissionState.launchPermissionRequest()
+            actionHandler(QRScannerActionState.UpdateRequireCameraPermission)
+            Timber.d("권한 비허용 + 한번 이상 거부 X + 요청한적 없는 경우")
+        // 권한 비허용 + 사용자가 여러번 거절한 상태
+        }else if(!permissionState.status.isGranted && requestState){
+            // TODO 팝업창 만들어야 함
+            actionHandler(QRScannerActionState.UpdateRequireCameraPermission)
+            Timber.d("권한 비허용 + 사용자가 여러번 거절한 상태")
+        }else {
+            Timber.d("권한 허용")
+        }
     }
 }
 
@@ -64,7 +124,7 @@ fun TargetBox(modifier: Modifier = Modifier) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     Box(
         modifier = Modifier
-            .width(screenWidth-100.dp)
+            .width(screenWidth - 100.dp)
             .aspectRatio(1f)
             .border(4.dp, color = Color.White)
     )
@@ -78,7 +138,9 @@ private fun TargetBoxPreview() {
 
 @OptIn(ExperimentalGetImage::class)
 @Composable
-fun QRContainer(modifier: Modifier = Modifier) {
+fun QRContainer(
+    modifier: Modifier = Modifier
+) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
