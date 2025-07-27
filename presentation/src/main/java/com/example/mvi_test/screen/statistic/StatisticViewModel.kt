@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.domain.model.LottoItem
 import com.example.domain.repository.LottoRepository
 import com.example.domain.repository.UserRepository
+import com.example.domain.type.DrawType.Companion.TYPE_STATISTIC
 import com.example.domain.type.RangeType
 import com.example.mvi_test.base.BaseViewModel
 import com.example.mvi_test.screen.random.state.LottoUIState
@@ -15,6 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,7 +32,7 @@ class StatisticViewModel @Inject constructor(
         when(action){
             is StatisticActionState.OnClickRange -> getRangeLottoStatistic(action.range)
             is StatisticActionState.OnClickDraw -> drawLottoList(action.inputList)
-            is StatisticActionState.OnClickSave -> saveLottoItemList(action.list)
+            is StatisticActionState.OnClickSave -> saveLottoItemList(action.requireNumber, action.list)
             is StatisticActionState.OnClickShare -> {  }
         }
     }
@@ -59,9 +61,14 @@ class StatisticViewModel @Inject constructor(
         lottoUIState.value = LottoUIState.Success(lottoItemList)
     }
 
-    private fun saveLottoItemList(list: List<LottoItem>){
+    private fun saveLottoItemList(requireNumber: String, list: List<LottoItem>){
+        Timber.d("requireNumber : $requireNumber")
         ioScope.launch {
-            lottoRepository.insertLottoRecodeDao(list)
+            lottoRepository.insertLottoRecodeDao(
+                drawType = TYPE_STATISTIC,
+                drawData = requireNumber,
+                list = list
+            )
         }
     }
 }

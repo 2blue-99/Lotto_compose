@@ -4,11 +4,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.domain.model.LottoItem
 import com.example.domain.repository.LottoRepository
 import com.example.domain.repository.UserRepository
+import com.example.domain.type.DrawType.Companion.TYPE_LUCKY
+import com.example.domain.util.CommonMessage
 import com.example.mvi_test.base.BaseViewModel
 import com.example.mvi_test.screen.random.state.KeywordUIState
+import com.example.mvi_test.screen.random.state.LottoUIState
 import com.example.mvi_test.screen.random.state.RandomActionState
 import com.example.mvi_test.screen.random.state.RandomEffectState
-import com.example.mvi_test.screen.random.state.LottoUIState
 import com.example.mvi_test.util.Utils.makeLotto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -46,7 +48,10 @@ class RandomViewModel @Inject constructor(
             is RandomActionState.AddKeyword -> { addKeyword(action.title) }
             is RandomActionState.DeleteKeyword -> { deleteKeyword(action.targetId) }
             is RandomActionState.OnClickDraw -> { drawLottoList(action.keyword) }
-            is RandomActionState.OnClickSave -> { saveLottoItemList(action.list) }
+            is RandomActionState.OnClickSave -> {
+                saveLottoItemList(action.drawKeyword, action.list)
+                effectHandler(RandomEffectState.ShowToast(CommonMessage.RANDOM_SAVED_SUCCESS))
+            }
         }
     }
 
@@ -85,9 +90,13 @@ class RandomViewModel @Inject constructor(
         lottoUIState.value = LottoUIState.Success(lottoItemList)
     }
 
-    private fun saveLottoItemList(list: List<LottoItem>){
+    private fun saveLottoItemList(keyword: String, list: List<LottoItem>){
         ioScope.launch {
-            lottoRepository.insertLottoRecodeDao(list)
+            lottoRepository.insertLottoRecodeDao(
+                drawType = TYPE_LUCKY,
+                drawData = keyword,
+                list = list
+            )
         }
     }
 }

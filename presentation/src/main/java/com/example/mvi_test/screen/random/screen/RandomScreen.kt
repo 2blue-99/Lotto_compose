@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.model.Keyword
+import com.example.domain.type.DrawType.Companion.TYPE_LUCKY
 import com.example.domain.util.CommonMessage
 import com.example.mvi_test.R
 import com.example.mvi_test.designsystem.common.CommonButton
@@ -106,6 +107,9 @@ fun RandomScreen(
     effectHandler: (RandomEffectState) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    // 헹운 키워드 - 아이템 저장 시 포함시키기 위해 호스팅
+    var keyword by remember { mutableStateOf("") }
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -147,16 +151,20 @@ fun RandomScreen(
         }
         item {
             KeywordContent(
+                keyword = keyword,
+                keywordList = if(keywordUIState is KeywordUIState.Success) keywordUIState.keywordList else emptyList(),
+                onChangeKeyword = { keyword = it },
                 actionHandler = actionHandler,
                 effectHandler = effectHandler,
-                keywordList = if(keywordUIState is KeywordUIState.Success) keywordUIState.keywordList else emptyList(),
             )
         }
         item {
             CommonDrawResultContent(
                 onClickSave = { list ->
-                    actionHandler(RandomActionState.OnClickSave(list))
-                    effectHandler(RandomEffectState.ShowToast(CommonMessage.RANDOM_SAVED_SUCCESS))
+                    actionHandler(RandomActionState.OnClickSave(
+                        drawKeyword = keyword,
+                        list = list
+                    ))
                 },
                 lottoList = if(lottoUIState is LottoUIState.Success) lottoUIState.lottoList else emptyList(),
                 mainColor = SubColor
@@ -176,12 +184,13 @@ private fun RandomScreenPreview() {
 
 @Composable
 fun KeywordContent(
+    keyword: String = TYPE_LUCKY, // 행운 키워드
+    keywordList: List<Keyword> = listOf(Keyword(), Keyword(), Keyword(), Keyword(), Keyword()),
+    onChangeKeyword: (String) -> Unit = {},
     actionHandler: (RandomActionState) -> Unit = {},
     effectHandler: (RandomEffectState) -> Unit = {},
-    keywordList: List<Keyword> = listOf(Keyword(), Keyword(), Keyword(), Keyword(), Keyword()),
     modifier: Modifier = Modifier
 ) {
-    var keyword by remember { mutableStateOf("") }
     var expand by remember { mutableStateOf(false) }
     // 추첨하기 클릭 가능 여부
     var drawClickable by remember { mutableStateOf(true) }
@@ -243,7 +252,7 @@ fun KeywordContent(
                 ),
                 textStyle = CommonStyle.text20.copy(textAlign = TextAlign.Start),
                 value = keyword,
-                onValueChange = { keyword = it },
+                onValueChange = onChangeKeyword,
                 placeholder = { Text(
                     text = "행운의 키워드를 입력해주세요.",
                     style = CommonStyle.text16
@@ -309,7 +318,7 @@ fun KeywordContent(
                         keywordList = keywordList,
                         removable = true,
                         onClickChip = {
-                            keyword = it
+                            onChangeKeyword(it)
                             expand = false
                             focusManager.clearFocus()
                         },
@@ -329,7 +338,7 @@ fun KeywordContent(
                     keywordList = context.resources.getStringArray(R.array.keyword_list).map { it.toKeyword() },
                     removable = false,
                     onClickChip = {
-                        keyword = it
+                        onChangeKeyword(it)
                         expand = false
                         focusManager.clearFocus()
                     }

@@ -2,10 +2,9 @@ package com.example.mvi_test.screen.recode.screen
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,11 +15,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -58,7 +62,6 @@ import com.example.mvi_test.ui.theme.SubColor
 import com.example.mvi_test.util.Utils.drawResultToString
 import com.example.mvi_test.util.Utils.shareLotto
 import kotlinx.coroutines.delay
-import kotlin.math.exp
 
 @Composable
 fun RecodeRoute(
@@ -189,7 +192,7 @@ fun RecodeItem(
     val context = LocalContext.current
 
     // 아이템 생성 시 페이드 아웃 -> 인
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(true) }
 
 
     LaunchedEffect(isFirstExpand) {
@@ -210,72 +213,79 @@ fun RecodeItem(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(10.dp))
-            .clickable { expanded = !expanded }
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) { expanded = !expanded }
             .background(Color.White)
             .padding(16.dp)
     ) {
         RecodeTitle(
             date = lottoRecode.saveDate,
-            type = DrawType.LuckyDraw("행운", "ㅇㅇ")
+            type = lottoRecode.drawType,
         )
-
-        VerticalSpacer(8.dp)
-
-        lottoRecode.lottoItem.forEachIndexed { index, item ->
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .padding(2.dp),
-                ){
-                    Box(
-                        modifier = Modifier
-                            .weight(2f),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = item.sequence,
-                            style = CommonStyle.text16,
-                            color = DarkGray
-                        )
-                    }
-                    Box(
-                        modifier = Modifier
-                            .weight(8f)
-                    ) {
-                        CommonLottoAutoRow(
-                            lottoItem = item,
-                            isAnimation = false
-                        )
-                    }
-                }
-                VerticalSpacer(4.dp)
-                if(index < lottoRecode.lottoItem.lastIndex){
-                    HorizontalDivider(color = LightGray)
-                }
-                VerticalSpacer(4.dp)
-            }
-        }
-
+        // 확장 컨텐츠
         AnimatedVisibility(expanded) {
-            SelectControllerButton(
-                onClickDelete = {
-                    actionHandler(RecodeActionState.OnClickDelete(saveDate = lottoRecode.saveDate))
-                },
-                // 복사하기
-                onclickCopy = {
-                    val text = drawResultToString(lottoList)
-                    clipboardManager.setText(AnnotatedString(text))
-                },
-                // 공유하기
-                onClickShare = {
-                    val text = drawResultToString(lottoList)
-                    context.shareLotto(text)
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                VerticalSpacer(8.dp)
+
+                lottoRecode.lottoItem.forEachIndexed { index, item ->
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .padding(2.dp),
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .weight(2f),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = item.sequence,
+                                    style = CommonStyle.text16,
+                                    color = DarkGray
+                                )
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .weight(8f)
+                            ) {
+                                CommonLottoAutoRow(
+                                    lottoItem = item,
+                                    isAnimation = false,
+                                )
+                            }
+                        }
+                        VerticalSpacer(4.dp)
+                        if (index < lottoRecode.lottoItem.lastIndex) {
+                            HorizontalDivider(color = LightGray)
+                        }
+                        VerticalSpacer(4.dp)
+                    }
                 }
-            )
+
+                SelectControllerButton(
+                    onClickDelete = {
+                        actionHandler(RecodeActionState.OnClickDelete(saveDate = lottoRecode.saveDate))
+                    },
+                    // 복사하기
+                    onclickCopy = {
+                        val text = drawResultToString(lottoList)
+                        clipboardManager.setText(AnnotatedString(text))
+                    },
+                    // 공유하기
+                    onClickShare = {
+                        val text = drawResultToString(lottoList)
+                        context.shareLotto(text)
+                    }
+                )
+            }
         }
     }
 }
@@ -293,27 +303,68 @@ fun RecodeTitle(
     modifier: Modifier = Modifier
 ) {
     val color = if(type is DrawType.StatisticDraw) PrimaryColor else SubColor
+    var (infoTitle, info) = when(type){
+        is DrawType.LuckyDraw -> { "추첨키워드 : " to type.keyword }
+        is DrawType.StatisticDraw -> { "필수 번호 : " to type.list }
+    }
 
     Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = modifier
-                .background(color, RoundedCornerShape(4.dp))
-                .padding(4.dp)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            Text(
-                text = type.title,
-                style = CommonStyle.text12,
-                color = Color.White
-            )
+            Box(
+                modifier = modifier
+                    .background(color, RoundedCornerShape(4.dp))
+                    .padding(4.dp)
+            ) {
+                Text(
+                    text = type.tagName,
+                    style = CommonStyle.text14,
+                    color = Color.White,
+                )
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "저장일 : ",
+                    style = CommonStyle.text16Bold,
+                    color = DarkGray
+                )
+                Text(
+                    text = date,
+                    style = CommonStyle.text16,
+                    color = DarkGray
+                )
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = infoTitle,
+                    style = CommonStyle.text16Bold,
+                    color = DarkGray
+                )
+                Text(
+                    text = info,
+                    style = CommonStyle.text16,
+                    color = DarkGray,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
-        Text(
-            text = date,
-            style = CommonStyle.text16,
-            color = DarkGray
+        Icon(
+            modifier = Modifier.size(40.dp),
+            imageVector = Icons.Default.KeyboardArrowDown,
+            tint = DarkGray,
+            contentDescription = "expand"
         )
     }
 }
@@ -323,7 +374,7 @@ fun RecodeTitle(
 private fun RecodeTitlePreview() {
     RecodeTitle(
         "2025-07-25",
-        DrawType.LuckyDraw("행운", "ㅇㅇ")
+        DrawType.LuckyDraw(keyword = "행운 7777777777777777777777777777777777777777777777777")
     )
 }
 

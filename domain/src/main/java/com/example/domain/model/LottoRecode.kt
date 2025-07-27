@@ -1,12 +1,11 @@
 package com.example.domain.model
 
+import com.example.domain.type.DrawType
+import com.example.domain.type.DrawType.Companion.TYPE_LUCKY
+
 
 data class LottoRecode(
     val saveDate: String = "2025.06.14 (화) 15:38:48", // 저장일
+    val drawType: DrawType = DrawType.LuckyDraw(tagName = TYPE_LUCKY, keyword = "keyword"), // 추첨 타입 (행운, 통계)
     val lottoItem: List<LottoItem> = listOf(LottoItem()),
-//    val sequence: String = "A", // A~B 순서
-//    val sum: String = "100", // 총합
-//    val oddEndEvent: String = "3:3", // 홀짝 3:3
-//    val highEndLow: String = "2:4", // 고저 2:4
-//    val drawList: List<String> = listOf("7","7","7","7","7","7") // 보너스를 제외한 6개 추첨 결과
 )

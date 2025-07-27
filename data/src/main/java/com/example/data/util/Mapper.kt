@@ -6,30 +6,18 @@ import com.example.domain.model.Keyword
 import com.example.domain.model.LottoItem
 
 object Mapper {
-//    fun LottoRecode.toEntity(): LottoEntity = LottoEntity(
-//        id = id,
-//        drawNumber = drawNumber,
-//        drawDate,
-//        totalSellAmount,
-//        firstWinTotalAmount,
-//        firstWinCount,
-//        firstWinPerAmount,
-//        drwtNo1,
-//        drwtNo2,
-//        drwtNo3,
-//        drwtNo4,
-//        drwtNo5,
-//        drwtNo6,
-//        bnusNo
-//    )
-
     fun Keyword.toEntity(): KeywordEntity = KeywordEntity(id, title)
 
-    fun LottoItem.toLottoRecodeReEntity(time: String) =
+    /**
+     * @param type : 추첨 타입 (행운, 통계)
+     * @param data : 추첨 데이터 (키워드, 필수 번호)
+     *
+     */
+    fun LottoItem.toLottoRecodeReEntity(type: String, data: String, time: String) =
         LottoRecodeEntity(
             id = 0,
-            drawType = "",
-            drawData = "",
+            drawType = type,
+            drawData = data,
             saveDate = time,
             sequence = sequence,
             sum = sum,

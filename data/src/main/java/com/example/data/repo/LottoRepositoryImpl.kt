@@ -104,9 +104,9 @@ class LottoRepositoryImpl @Inject constructor(
         return lottoRecodeDao.getLottoRecodeDao().map { it.makeRecodeGroup() }
     }
 
-    override suspend fun insertLottoRecodeDao(list:List<LottoItem>) {
+    override suspend fun insertLottoRecodeDao(drawType: String, drawData: String, list:List<LottoItem>) {
         val currentTime = currentDateTimeString()
-        return lottoRecodeDao.upsertRecodeList(list.map { it.toLottoRecodeReEntity(currentTime) })
+        return lottoRecodeDao.upsertRecodeList(list.map { it.toLottoRecodeReEntity(drawType, drawData, currentTime) })
     }
 
     override suspend fun deleteLottoRecodeDao(date: String) {

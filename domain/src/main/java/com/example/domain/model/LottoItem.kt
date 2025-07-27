@@ -1,5 +1,7 @@
 package com.example.domain.model
 
+import com.example.domain.type.DrawType.Companion.TYPE_LUCKY
+
 /**
  * 랜덤 추첨 - 로또 아이템
  */

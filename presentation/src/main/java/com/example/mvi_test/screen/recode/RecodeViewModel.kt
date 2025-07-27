@@ -7,6 +7,7 @@ import com.example.mvi_test.screen.recode.state.RecodeUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,6 +19,7 @@ class RecodeViewModel @Inject constructor(
     init {
         ioScope.launch {
             lottoRepository.getLottoRecodeDao().collect {
+                Timber.d("it : $it")
                 recodeUIState.value = RecodeUIState.Success(it)
             }
         }

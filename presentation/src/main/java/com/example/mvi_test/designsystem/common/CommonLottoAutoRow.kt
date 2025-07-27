@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -24,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.domain.model.LottoItem
 import com.example.mvi_test.ui.theme.CommonStyle
@@ -37,14 +39,16 @@ import kotlinx.coroutines.launch
 fun CommonLottoAutoRow(
     lottoItem: LottoItem = testLottoItem(),
     isAnimation: Boolean = true, // 위로 올라오는 애니메이션 노출 여부
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.End
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End
         ) {
             lottoItem.drawList.forEachIndexed { index, item ->
                 CommonLottoCircle(
@@ -52,8 +56,7 @@ fun CommonLottoAutoRow(
                     isAnimation = isAnimation,
                     modifier = Modifier
                         .padding(horizontal = 2.dp)
-                        .weight(1f)
-                        .aspectRatio(1f)
+                        .size(34.dp)
                 )
             }
         }

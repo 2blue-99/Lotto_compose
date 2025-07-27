@@ -4,6 +4,7 @@ import com.example.domain.model.LottoItem
 import com.example.domain.model.LottoRecode
 import com.example.domain.model.LottoRound
 import com.example.domain.model.StatisticItem
+import com.example.domain.type.DrawType
 import com.example.domain.type.RangeType
 import com.example.domain.util.ResourceState
 import kotlinx.coroutines.flow.Flow
@@ -30,8 +31,12 @@ interface LottoRepository {
     fun getLottoRecodeDao(): Flow<List<LottoRecode>>
     /**
      * 추첨 리스트 저장
+     *
+     * @param drawType : 추첨 방식
+     * @param drawData : 추첨 활용 정보 (키워드 or 필수 번호)
+     * @param drawData : 추첨 번호 리스트
      */
-    suspend fun insertLottoRecodeDao(list:List<LottoItem>)
+    suspend fun insertLottoRecodeDao(drawType: String, drawData: String, list:List<LottoItem>)
 
     /**
      * 로또 추첨 결과 삭제

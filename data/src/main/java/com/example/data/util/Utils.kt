@@ -5,6 +5,9 @@ import com.example.data.local.entity.LottoRoundEntity
 import com.example.domain.model.LottoItem
 import com.example.domain.model.LottoRecode
 import com.example.domain.model.StatisticItem
+import com.example.domain.type.DrawType
+import com.example.domain.type.DrawType.Companion.TYPE_LUCKY
+import com.example.domain.type.DrawType.Companion.TYPE_STATISTIC
 import timber.log.Timber
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
@@ -27,7 +30,11 @@ object Utils {
      * 기록 화면에 노출될 수 있도록 LottoRecodeEntity 그룹핑
      */
     fun List<LottoRecodeEntity>.makeRecodeGroup(): List<LottoRecode> {
+        // 저장 날짜 - 리스트를 나누는 기준
         var saveDate = this.firstOrNull()?.saveDate ?: ""
+        // 추첨 데이터 (키워드 or 필수 번호)
+        var drawData = this.firstOrNull()?.drawData ?: ""
+        var drawType = if(this.firstOrNull()?.drawType == TYPE_LUCKY) DrawType.LuckyDraw(keyword = drawData) else DrawType.StatisticDraw(list = drawData)
         // 반환할 기록 리스트
         val recodeList = mutableListOf<LottoRecode>()
         // 날짜 기준 그룹 리스트
@@ -38,10 +45,14 @@ object Utils {
                 recodeList.add(
                     LottoRecode(
                         saveDate = saveDate,
+                        drawType = drawType,
                         lottoItem = groupList.toList()
                     )
                 )
                 saveDate = item.saveDate
+                // 추첨 타입
+                drawData = item.drawData
+                drawType = if(item.drawType == TYPE_LUCKY) DrawType.LuckyDraw(keyword = drawData) else DrawType.StatisticDraw(list = drawData)
                 groupList.clear()
             }
             groupList.add(item.toDomain())
@@ -51,6 +62,7 @@ object Utils {
             recodeList.add(
                 LottoRecode(
                     saveDate = saveDate,
+                    drawType = drawType,
                     lottoItem = groupList.toList()
                 )
             )

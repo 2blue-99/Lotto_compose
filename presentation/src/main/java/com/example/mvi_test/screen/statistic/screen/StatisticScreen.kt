@@ -4,14 +4,6 @@ import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.togetherWith
-import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -50,8 +42,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -59,7 +49,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.model.StatisticItem
 import com.example.domain.type.RangeType
 import com.example.domain.util.CommonMessage
-import com.example.mvi_test.R
 import com.example.mvi_test.designsystem.common.CommonButton
 import com.example.mvi_test.designsystem.common.CommonDrawResultContent
 import com.example.mvi_test.designsystem.common.CommonExpandableBox
@@ -221,7 +210,12 @@ fun StatisticScreen(
         item {
             CommonDrawResultContent(
                 onClickSave = { list ->
-                    actionHandler(StatisticActionState.OnClickSave(list))
+                    actionHandler(StatisticActionState.OnClickSave(
+                        // 필수 숫자 정렬 저장
+                        requireNumber = selectNumberList.map(String::toInt).sorted()
+                            .joinToString(", ", transform = Int::toString),
+                        list = list
+                    ))
                     effectHandler(StatisticEffectState.ShowToast(CommonMessage.RANDOM_SAVED_SUCCESS))
                 },
                 lottoList = if(lottoUIState is LottoUIState.Success) lottoUIState.lottoList else emptyList(),
