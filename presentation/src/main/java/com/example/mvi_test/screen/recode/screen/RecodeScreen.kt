@@ -30,6 +30,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -151,7 +152,6 @@ fun RecodeContent(
                             RecodeItem(
                                 lottoRecode = lottoRecode,
                                 actionHandler = actionHandler,
-                                isFirstExpand = index == 0
                             )
                         }
                     }
@@ -185,20 +185,13 @@ private fun RecodeContentPreview() {
 fun RecodeItem(
     lottoRecode: LottoRecode = LottoRecode(),
     actionHandler: (RecodeActionState) -> Unit = {},
-    isFirstExpand: Boolean =false, // 첫번째 항목은 자동 확장 처리
     modifier: Modifier = Modifier
 ) {
     val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
 
     // 아이템 생성 시 페이드 아웃 -> 인
-    var expanded by remember { mutableStateOf(true) }
-
-
-    LaunchedEffect(isFirstExpand) {
-        delay(200)
-        expanded = isFirstExpand
-    }
+    var expanded by remember { mutableStateOf(false) }
 
     // Column Background Animation 보류
 //    val backgroundColor by animateColorAsState(
