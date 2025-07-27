@@ -126,7 +126,7 @@ fun StatisticScreen(
     LaunchedEffect(lottoUIState) {
         if(lottoUIState is LottoUIState.Success){
             delay(DRAW_COMPLETE_TIME)
-            lazyState.animateScrollToItem(2, 120)
+            lazyState.animateScrollToItem(3)
         }
     }
 
