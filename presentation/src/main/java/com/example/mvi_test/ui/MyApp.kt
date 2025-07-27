@@ -40,6 +40,8 @@ import com.example.domain.util.CommonMessage
 import com.example.mvi_test.R
 import com.example.mvi_test.navigation.NavigationItem
 import com.example.mvi_test.screen.home.navigation.homeScreen
+import com.example.mvi_test.screen.qr.navigateToQR
+import com.example.mvi_test.screen.qr.qrScannerScreen
 import com.example.mvi_test.screen.random.navigation.navigateToRandom
 import com.example.mvi_test.screen.random.navigation.randomScreen
 import com.example.mvi_test.screen.recode.navigation.navigateToRecode
@@ -139,6 +141,7 @@ fun NavHostContainer(
         exitTransition = { fadeOut(animationSpec = tween(300)) }
     ){
         homeScreen(
+            navigateToQR = navController::navigateToQR,
             navigateToRandom = navController::navigateToRandom,
             navigateToRecode = navController::navigateToRecode,
             navigateToSetting = navController::navigateToSetting,
@@ -164,6 +167,10 @@ fun NavHostContainer(
 
         settingScreen(
             navController::popBackStack,
+            modifier = Modifier.background(ScreenBackground).padding(paddingValue)
+        )
+
+        qrScannerScreen(
             modifier = Modifier.background(ScreenBackground).padding(paddingValue)
         )
     }

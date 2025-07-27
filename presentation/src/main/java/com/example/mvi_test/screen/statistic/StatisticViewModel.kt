@@ -8,13 +8,16 @@ import com.example.domain.type.DrawType.Companion.TYPE_STATISTIC
 import com.example.domain.type.RangeType
 import com.example.mvi_test.base.BaseViewModel
 import com.example.mvi_test.screen.random.state.LottoUIState
+import com.example.mvi_test.screen.random.state.RandomEffectState
 import com.example.mvi_test.screen.statistic.state.StatisticActionState
 import com.example.mvi_test.screen.statistic.state.StatisticEffectState
 import com.example.mvi_test.screen.statistic.state.StatisticUIState
 import com.example.mvi_test.util.Utils.makeLotto
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -24,7 +27,9 @@ class StatisticViewModel @Inject constructor(
     private val lottoRepository: LottoRepository,
     private val userRepository: UserRepository
 ) : BaseViewModel() {
-    val sideEffectState = MutableSharedFlow<StatisticEffectState>()
+    private val _sideEffectState = Channel<StatisticEffectState>()
+    val sideEffectState = _sideEffectState.receiveAsFlow()
+
     val statisticUIState = MutableStateFlow<StatisticUIState>(StatisticUIState.Loading)
     val lottoUIState = MutableStateFlow<LottoUIState>(LottoUIState.Loading)
 
@@ -40,7 +45,7 @@ class StatisticViewModel @Inject constructor(
     fun effectHandler(eventState: StatisticEffectState){
         viewModelScope.launch {
             when(eventState){
-                is StatisticEffectState.ShowToast -> sideEffectState.emit(StatisticEffectState.ShowToast(eventState.message))
+                is StatisticEffectState.ShowToast -> _sideEffectState.trySend(StatisticEffectState.ShowToast(eventState.message))
                 else -> {}
             }
         }

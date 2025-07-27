@@ -36,7 +36,7 @@ class HomeViewModel @Inject constructor(
     //  또한 SharedFlow 는 여러명이 구독해서 값을 받을 수 있는 반면,
     //  Channel 은 한번만 소비되어 SideEffect 에 더 적합해 보임
     private val _sideEffectState = Channel<HomeEffectState>()
-    val sideEffectFlow = _sideEffectState.receiveAsFlow()
+    val sideEffectState = _sideEffectState.receiveAsFlow()
 
     val homeUIState = MutableStateFlow<HomeUIState>(HomeUIState.Loading)
     val spinnerDialogState = MutableStateFlow<DialogState<RoundSpinner>>(DialogState.Hide)
@@ -87,7 +87,7 @@ class HomeViewModel @Inject constructor(
     fun effectHandler(eventState: HomeEffectState){
         viewModelScope.launch {
             when(eventState){
-                else -> {_sideEffectState.send(eventState)}
+                else -> {_sideEffectState.trySend(eventState)}
 //                is HomeEffectState.ShowToast -> sideEffectState.emit(HomeEffectState.ShowToast(eventState.message))
 //                is HomeEffectState.ShowSnackbar -> sideEffectState.emit(HomeEffectState.ShowSnackbar(eventState.message))
 //                is HomeEffectState.NavigateToSetting -> sideEffectState.emit(eventState)

@@ -39,7 +39,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
@@ -72,12 +71,12 @@ import com.example.mvi_test.ui.theme.Red
 import com.example.mvi_test.ui.theme.SubColor
 import com.example.mvi_test.ui.theme.white50
 import com.example.mvi_test.util.baseAnimateScrollToPage
-import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 import kotlin.math.absoluteValue
 
 @Composable
 fun HomeRoute(
+    navigateToQR: () -> Unit = {},
     navigateToSetting: () -> Unit = {},
     navigateToRandom: () -> Unit = {},
     navigateToRecode: () -> Unit = {},
@@ -90,10 +89,11 @@ fun HomeRoute(
     val spinnerDialogState by viewModel.spinnerDialogState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.sideEffectFlow.collect { effect ->
+        viewModel.sideEffectState.collect { effect ->
             when(effect){
                 is HomeEffectState.ShowToast -> { Toast.makeText(context, effect.message.message, Toast.LENGTH_SHORT).show() }
                 is HomeEffectState.ShowSnackbar -> { /*onShowSnackbar(effect.message)*/ }
+                is HomeEffectState.NavigateToQR -> navigateToQR()
                 is HomeEffectState.NavigateToSetting -> navigateToSetting()
                 is HomeEffectState.NavigateToRandom -> navigateToRandom()
                 is HomeEffectState.NavigateToRecode -> navigateToRecode()
@@ -143,8 +143,7 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             MainTopBar(
-                onSettingClick = effectHandler,
-                onQRClick = {}
+                effectHandler = effectHandler,
             )
 
             VerticalSpacer(10.dp)
@@ -181,8 +180,7 @@ fun HomeScreenPreview() {
 
 @Composable
 private fun MainTopBar(
-    onSettingClick: (HomeEffectState) -> Unit = {},
-    onQRClick: () -> Unit = {},
+    effectHandler: (HomeEffectState) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -205,7 +203,9 @@ private fun MainTopBar(
         ) {
             Row {
                 IconButton(
-                    onClick = onQRClick
+                    onClick = {
+                        effectHandler(HomeEffectState.NavigateToQR)
+                    }
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.qr_icon),

@@ -13,8 +13,9 @@ import com.example.mvi_test.screen.random.state.RandomActionState
 import com.example.mvi_test.screen.random.state.RandomEffectState
 import com.example.mvi_test.util.Utils.makeLotto
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,7 +25,9 @@ class RandomViewModel @Inject constructor(
     private val userRepository: UserRepository
 ): BaseViewModel() {
 
-    val sideEffectState = MutableSharedFlow<RandomEffectState>()
+    private val _sideEffectState = Channel<RandomEffectState>()
+    val sideEffectState = _sideEffectState.receiveAsFlow()
+
     val keywordUIState = MutableStateFlow<KeywordUIState>(KeywordUIState.Loading)
     val lottoUIState = MutableStateFlow<LottoUIState>(LottoUIState.Loading)
 
@@ -58,8 +61,8 @@ class RandomViewModel @Inject constructor(
     fun effectHandler(eventState: RandomEffectState){
         viewModelScope.launch {
             when(eventState){
-                is RandomEffectState.ShowToast -> sideEffectState.emit(RandomEffectState.ShowToast(eventState.message))
-                is RandomEffectState.ShowSnackbar -> sideEffectState.emit(RandomEffectState.ShowSnackbar(eventState.message))
+                is RandomEffectState.ShowToast -> _sideEffectState.trySend(RandomEffectState.ShowToast(eventState.message))
+                is RandomEffectState.ShowSnackbar -> _sideEffectState.trySend(RandomEffectState.ShowSnackbar(eventState.message))
             }
         }
     }

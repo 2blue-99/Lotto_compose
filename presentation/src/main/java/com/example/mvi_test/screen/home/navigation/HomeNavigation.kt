@@ -13,6 +13,7 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null){
 }
 
 fun NavGraphBuilder.homeScreen(
+    navigateToQR: () -> Unit,
     navigateToSetting: () -> Unit,
     navigateToRandom: () -> Unit,
     navigateToRecode: () -> Unit,
@@ -25,6 +26,7 @@ fun NavGraphBuilder.homeScreen(
 //        popEnterTransition = { slideToRightEnter() }
     ) {
         HomeRoute(
+            navigateToQR,
             navigateToSetting,
             navigateToRandom,
             navigateToRecode,
