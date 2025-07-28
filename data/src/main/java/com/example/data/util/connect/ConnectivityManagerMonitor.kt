@@ -23,7 +23,7 @@ class ConnectivityManagerMonitor @Inject constructor(
     override val isOnline: Flow<Boolean> = callbackFlow {
         val connectivityManager = context.getSystemService<ConnectivityManager>()
         if (connectivityManager == null) {
-            channel.trySend(false)
+            channel.send(false)
             channel.close()
             return@callbackFlow
         }
@@ -47,7 +47,7 @@ class ConnectivityManagerMonitor @Inject constructor(
             .build()
         connectivityManager.registerNetworkCallback(request, callback)
 
-        channel.trySend(connectivityManager.isCurrentlyConnected())
+        channel.send(connectivityManager.isCurrentlyConnected())
 
         awaitClose {
             connectivityManager.unregisterNetworkCallback(callback)

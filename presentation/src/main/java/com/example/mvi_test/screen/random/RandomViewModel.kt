@@ -61,8 +61,8 @@ class RandomViewModel @Inject constructor(
     fun effectHandler(eventState: RandomEffectState){
         viewModelScope.launch {
             when(eventState){
-                is RandomEffectState.ShowToast -> _sideEffectState.trySend(RandomEffectState.ShowToast(eventState.message))
-                is RandomEffectState.ShowSnackbar -> _sideEffectState.trySend(RandomEffectState.ShowSnackbar(eventState.message))
+                is RandomEffectState.ShowToast -> _sideEffectState.send(RandomEffectState.ShowToast(eventState.message))
+                is RandomEffectState.ShowSnackbar -> _sideEffectState.send(RandomEffectState.ShowSnackbar(eventState.message))
             }
         }
     }

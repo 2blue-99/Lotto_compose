@@ -87,7 +87,7 @@ class HomeViewModel @Inject constructor(
     fun effectHandler(eventState: HomeEffectState){
         viewModelScope.launch {
             when(eventState){
-                else -> {_sideEffectState.trySend(eventState)}
+                else -> {_sideEffectState.send(eventState)}
 //                is HomeEffectState.ShowToast -> sideEffectState.emit(HomeEffectState.ShowToast(eventState.message))
 //                is HomeEffectState.ShowSnackbar -> sideEffectState.emit(HomeEffectState.ShowSnackbar(eventState.message))
 //                is HomeEffectState.NavigateToSetting -> sideEffectState.emit(eventState)

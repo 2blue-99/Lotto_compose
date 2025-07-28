@@ -45,7 +45,7 @@ class StatisticViewModel @Inject constructor(
     fun effectHandler(eventState: StatisticEffectState){
         viewModelScope.launch {
             when(eventState){
-                is StatisticEffectState.ShowToast -> _sideEffectState.trySend(StatisticEffectState.ShowToast(eventState.message))
+                is StatisticEffectState.ShowToast -> _sideEffectState.send(StatisticEffectState.ShowToast(eventState.message))
                 else -> {}
             }
         }

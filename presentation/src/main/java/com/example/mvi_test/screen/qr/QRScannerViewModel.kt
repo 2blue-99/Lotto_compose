@@ -39,8 +39,8 @@ class QRScannerViewModel @Inject constructor(
     fun effectHandler(eventState: QRScannerEffectState){
         viewModelScope.launch {
             when(eventState){
-                is QRScannerEffectState.ShowToast -> _sideEffectState.trySend(QRScannerEffectState.ShowToast(eventState.message))
-                is QRScannerEffectState.ShowSnackbar -> _sideEffectState.trySend(QRScannerEffectState.ShowSnackbar(eventState.message))
+                is QRScannerEffectState.ShowToast -> _sideEffectState.send(QRScannerEffectState.ShowToast(eventState.message))
+                is QRScannerEffectState.ShowSnackbar -> _sideEffectState.send(QRScannerEffectState.ShowSnackbar(eventState.message))
             }
         }
     }
