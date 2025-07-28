@@ -21,5 +21,8 @@ enum class CommonMessage(
     RANDOM_SAVED_SUCCESS("추첨 번호를 저장하였습니다"),
 
     // Statistic
-    STATISTIC_SELECT_FAIL("최대 6개까지 선택할 수 있습니다")
+    STATISTIC_SELECT_FAIL("최대 6개까지 선택할 수 있습니다"),
+
+    // QR Scanner
+    SCANNER_FAIL("인식에 실패하였습니다."),
 }

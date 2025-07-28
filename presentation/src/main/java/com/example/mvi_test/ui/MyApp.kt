@@ -171,6 +171,7 @@ fun NavHostContainer(
         )
 
         qrScannerScreen(
+            navController::popBackStack,
             modifier = Modifier.background(ScreenBackground).padding(paddingValue)
         )
     }

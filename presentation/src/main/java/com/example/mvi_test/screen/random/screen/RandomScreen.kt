@@ -83,7 +83,6 @@ fun RandomRoute(
             when(effect){
                 is RandomEffectState.ShowToast -> { Toast.makeText(context, effect.message.message, Toast.LENGTH_SHORT).show() }
                 is RandomEffectState.ShowSnackbar -> { onShowSnackbar(effect.message) }
-                else -> {}
             }
         }
     }

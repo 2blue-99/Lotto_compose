@@ -91,6 +91,8 @@ class ExampleUnitTest {
 fun test(): LottoRecodeEntity =
     LottoRecodeEntity(
         id = 0,
+        drawType = "",
+        drawData = "",
         saveDate = "2025.07.08 00:00:00",
         sequence = "A",
         sum = "100",

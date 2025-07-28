@@ -1,10 +1,9 @@
 package com.example.mvi_test.screen.qr
 
 import androidx.lifecycle.viewModelScope
-import com.example.domain.model.RoundSpinner
 import com.example.domain.repository.UserRepository
+import com.example.domain.type.DialogType
 import com.example.mvi_test.base.BaseViewModel
-import com.example.mvi_test.designsystem.common.DialogInfo
 import com.example.mvi_test.screen.home.state.DialogState
 import com.example.mvi_test.screen.qr.state.QRScannerActionState
 import com.example.mvi_test.screen.qr.state.QRScannerEffectState
@@ -24,7 +23,7 @@ class QRScannerViewModel @Inject constructor(
     val sideEffectState = _sideEffectState.receiveAsFlow()
 
     val uiState = MutableStateFlow<QRScannerUIState>(QRScannerUIState.Loading)
-    val dialogState = MutableStateFlow<DialogState<DialogInfo>>(DialogState.Hide)
+    val dialogState = MutableStateFlow<DialogState<DialogType>>(DialogState.Hide)
 
     init {
         modelScope.launch {
@@ -37,7 +36,7 @@ class QRScannerViewModel @Inject constructor(
     fun actionHandler(action: QRScannerActionState){
         when(action){
             is QRScannerActionState.UpdateRequireCameraPermission -> { setRequireCameraPermission() }
-            is QRScannerActionState.ShowDialog -> { dialogState.value = DialogState.Show(action.dialogInfo) }
+            is QRScannerActionState.ShowDialog -> { dialogState.value = DialogState.Show(action.dialogType) }
             is QRScannerActionState.HideDialog -> { dialogState.value = DialogState.Hide }
         }
     }
@@ -45,8 +44,7 @@ class QRScannerViewModel @Inject constructor(
     fun effectHandler(eventState: QRScannerEffectState){
         viewModelScope.launch {
             when(eventState){
-                is QRScannerEffectState.ShowToast -> _sideEffectState.send(QRScannerEffectState.ShowToast(eventState.message))
-                is QRScannerEffectState.ShowSnackbar -> _sideEffectState.send(QRScannerEffectState.ShowSnackbar(eventState.message))
+                else -> { _sideEffectState.send(eventState) }
             }
         }
     }

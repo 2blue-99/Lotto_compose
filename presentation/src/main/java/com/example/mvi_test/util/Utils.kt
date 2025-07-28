@@ -2,13 +2,14 @@ package com.example.mvi_test.util
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
 import com.example.domain.model.Keyword
 import com.example.domain.model.LottoItem
-import kotlinx.coroutines.delay
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -238,4 +239,22 @@ suspend fun PagerState.baseAnimateScrollToPage(index: Int){
             easing = androidx.compose.animation.core.FastOutSlowInEasing
         )
     )
+}
+
+/**
+ * 앱 설정 이동
+ */
+fun Context.openSetting() {
+    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+        data = Uri.fromParts("package", this@openSetting.packageName, null)
+    }
+    this.startActivity(intent)
+}
+
+/**
+ * URL 웹 브라우저 이동
+ */
+fun Context.openBrowser(url: String){
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    this.startActivity(intent)
 }

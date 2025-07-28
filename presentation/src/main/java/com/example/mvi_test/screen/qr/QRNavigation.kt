@@ -12,12 +12,14 @@ fun NavController.navigateToQR(navOptions: NavOptions? = null){
 }
 
 fun NavGraphBuilder.qrScannerScreen(
+    popBackStack: () -> Unit,
     modifier: Modifier = Modifier,
 ){
     composable(
         route = qrScannerRoute,
     ) {
         QRScannerRouth(
+            popBackStack,
             modifier
         )
     }
