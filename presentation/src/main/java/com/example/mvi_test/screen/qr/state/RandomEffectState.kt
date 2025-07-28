@@ -1,4 +1,4 @@
-package com.example.mvi_test.screen.random.state
+package com.example.mvi_test.screen.qr.state
 
 import com.example.domain.util.CommonMessage
 

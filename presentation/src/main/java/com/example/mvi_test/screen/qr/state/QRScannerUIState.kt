@@ -1,6 +1,4 @@
-package com.example.mvi_test.screen.random.state
-
-import com.example.domain.model.Keyword
+package com.example.mvi_test.screen.qr.state
 
 sealed interface QRScannerUIState {
 

@@ -1,11 +1,14 @@
 package com.example.mvi_test.screen.qr
 
 import androidx.lifecycle.viewModelScope
+import com.example.domain.model.RoundSpinner
 import com.example.domain.repository.UserRepository
 import com.example.mvi_test.base.BaseViewModel
-import com.example.mvi_test.screen.random.state.QRScannerActionState
-import com.example.mvi_test.screen.random.state.QRScannerEffectState
-import com.example.mvi_test.screen.random.state.QRScannerUIState
+import com.example.mvi_test.designsystem.common.DialogInfo
+import com.example.mvi_test.screen.home.state.DialogState
+import com.example.mvi_test.screen.qr.state.QRScannerActionState
+import com.example.mvi_test.screen.qr.state.QRScannerEffectState
+import com.example.mvi_test.screen.qr.state.QRScannerUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +24,7 @@ class QRScannerViewModel @Inject constructor(
     val sideEffectState = _sideEffectState.receiveAsFlow()
 
     val uiState = MutableStateFlow<QRScannerUIState>(QRScannerUIState.Loading)
+    val dialogState = MutableStateFlow<DialogState<DialogInfo>>(DialogState.Hide)
 
     init {
         modelScope.launch {
@@ -33,6 +37,8 @@ class QRScannerViewModel @Inject constructor(
     fun actionHandler(action: QRScannerActionState){
         when(action){
             is QRScannerActionState.UpdateRequireCameraPermission -> { setRequireCameraPermission() }
+            is QRScannerActionState.ShowDialog -> { dialogState.value = DialogState.Show(action.dialogInfo) }
+            is QRScannerActionState.HideDialog -> { dialogState.value = DialogState.Hide }
         }
     }
 

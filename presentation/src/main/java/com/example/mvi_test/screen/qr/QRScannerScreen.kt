@@ -7,11 +7,15 @@ import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,8 +36,13 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.mvi_test.screen.random.state.QRScannerActionState
-import com.example.mvi_test.screen.random.state.QRScannerUIState
+import com.example.mvi_test.designsystem.common.BaseDialog
+import com.example.mvi_test.designsystem.common.DialogInfo
+import com.example.mvi_test.screen.home.state.DialogState
+import com.example.mvi_test.screen.home.state.HomeActionState
+import com.example.mvi_test.screen.qr.state.QRScannerActionState
+import com.example.mvi_test.screen.qr.state.QRScannerUIState
+import com.example.mvi_test.ui.theme.CommonStyle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -50,10 +59,12 @@ fun QRScannerRouth(
     viewModel: QRScannerViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val dialogState by viewModel.dialogState.collectAsStateWithLifecycle()
 
     QRScannerScreen(
         uiState,
         viewModel::actionHandler,
+        dialogState,
         modifier
     )
 }
@@ -62,42 +73,57 @@ fun QRScannerRouth(
 fun QRScannerScreen(
     uiState: QRScannerUIState = QRScannerUIState.Loading,
     actionHandler: (QRScannerActionState) -> Unit = {},
+    dialogState: DialogState<DialogInfo> = DialogState.Hide,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        modifier = modifier,
-        color = Color.Black
-    ) {
-        if(uiState is QRScannerUIState.Success) {
-            CheckPermission(
-                actionHandler,
-                uiState.isRequiredCamera
-            )
+    var permissionState  by remember { mutableStateOf(false) }
 
-            QRContainer()
 
-            TargetBox()
-        }
+    if(dialogState is DialogState.Show){
+        BaseDialog(
+            dialogInfo = dialogState.data,
+            onDismiss = { actionHandler(QRScannerActionState.HideDialog) },
+            onConfirm = {  },
+            onCancel = { actionHandler(QRScannerActionState.HideDialog) },
+        )
     }
 
+    when(uiState){
+        is QRScannerUIState.Success -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black),
+                contentAlignment = Alignment.Center
+            ) {
+                if(permissionState) {
+                    QRContainer()
+                }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black),
-        contentAlignment = Alignment.Center
-    ){
+                TargetBox(
+                    permissionState
+                )
+            }
+
+            // 권한 체크가 위에 있을 경우 이후 로직이 안보임
+            CheckPermission(
+                uiState.isRequiredCamera,
+                actionHandler,
+                { permissionState = it }
+            )
+        }
+        else -> {}
     }
 }
 
 @kotlin.OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CheckPermission(
-    actionHandler: (QRScannerActionState) -> Unit,
     isRequiredCamera: Boolean,
+    actionHandler: (QRScannerActionState) -> Unit,
+    onChangePermission: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val coroutineScope = rememberCoroutineScope()
     val permissionState = rememberPermissionState(Manifest.permission.CAMERA)
     // 요청 자체가 안되는 상황을 파악하기 위함
     var requestState by rememberSaveable { mutableStateOf(isRequiredCamera) }
@@ -108,26 +134,48 @@ fun CheckPermission(
             permissionState.launchPermissionRequest()
             actionHandler(QRScannerActionState.UpdateRequireCameraPermission)
             Timber.d("권한 비허용 + 한번 이상 거부 X + 요청한적 없는 경우")
-        // 권한 비허용 + 사용자가 여러번 거절한 상태
+        // 권한 비허용 + 헌번 이상 거부 O
         }else if(!permissionState.status.isGranted && requestState){
             // TODO 팝업창 만들어야 함
             actionHandler(QRScannerActionState.UpdateRequireCameraPermission)
+            actionHandler(QRScannerActionState.ShowDialog(DialogInfo.CAMERA_PERMISSION))
             Timber.d("권한 비허용 + 사용자가 여러번 거절한 상태")
         }else {
             Timber.d("권한 허용")
+            onChangePermission(true)
         }
     }
 }
 
 @Composable
-fun TargetBox(modifier: Modifier = Modifier) {
+fun TargetBox(
+    isGrant: Boolean = false,
+    modifier: Modifier = Modifier
+) {
+    // 화면 너비 측정
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    // 화면 노출 문구
+    val infoText = if(isGrant) "용지의 QR 코드를\n화면 중앙에 스캔해주세요." else "카메라 권한이 필요합니다."
     Box(
-        modifier = Modifier
-            .width(screenWidth - 100.dp)
-            .aspectRatio(1f)
-            .border(4.dp, color = Color.White)
-    )
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Text(
+                text = infoText,
+                style = CommonStyle.text20BoldShadow,
+                color = Color.White
+            )
+            Box(
+                modifier = Modifier
+                    .width(screenWidth - 100.dp)
+                    .aspectRatio(1f)
+                    .border(4.dp, color = Color.White)
+            )
+        }
+    }
 }
 
 @Preview

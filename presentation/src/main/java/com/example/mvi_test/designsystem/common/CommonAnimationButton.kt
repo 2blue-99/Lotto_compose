@@ -18,7 +18,7 @@ import com.example.mvi_test.ui.theme.DarkGray
 import com.example.mvi_test.ui.theme.LightGray
 
 @Composable
-fun CommonButton(
+fun CommonAnimationButton(
     modifier: Modifier = Modifier,
     enableColor: Color = DarkGray,
     disableColor: Color = LightGray,
@@ -52,6 +52,6 @@ fun CommonButton(
 
 @Preview
 @Composable
-private fun CommonButtonPreview() {
-    CommonButton()
+private fun CommonButtonAnimationPreview() {
+    CommonAnimationButton()
 }

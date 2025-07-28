@@ -44,7 +44,7 @@ import com.example.domain.model.Keyword
 import com.example.domain.type.DrawType.Companion.TYPE_LUCKY
 import com.example.domain.util.CommonMessage
 import com.example.mvi_test.R
-import com.example.mvi_test.designsystem.common.CommonButton
+import com.example.mvi_test.designsystem.common.CommonAnimationButton
 import com.example.mvi_test.designsystem.common.CommonDrawResultContent
 import com.example.mvi_test.designsystem.common.CommonExpandableBox
 import com.example.mvi_test.designsystem.common.CommonFlowRow
@@ -270,7 +270,7 @@ fun KeywordContent(
 
             HorizontalSpacer(12.dp)
 
-            CommonButton(
+            CommonAnimationButton(
                 modifier = Modifier
                     .weight(3f)
                     .height(50.dp),

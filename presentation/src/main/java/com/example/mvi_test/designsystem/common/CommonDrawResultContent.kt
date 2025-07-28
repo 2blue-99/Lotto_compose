@@ -157,7 +157,7 @@ fun CommonDrawResultContent(
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         // 저장하기 버튼
-        CommonButton(
+        CommonAnimationButton(
             modifier = Modifier
                 .weight(2f)
                 .height(50.dp),
@@ -177,7 +177,7 @@ fun CommonDrawResultContent(
             text = saveText
         )
         // 복사하기
-        CommonButton(
+        CommonAnimationButton(
             modifier = Modifier
                 .weight(1f)
                 .height(50.dp),
@@ -197,7 +197,7 @@ fun CommonDrawResultContent(
             text = "복사하기"
         )
         // 공유하기
-        CommonButton(
+        CommonAnimationButton(
             modifier = Modifier
                 .weight(1f)
                 .height(50.dp),

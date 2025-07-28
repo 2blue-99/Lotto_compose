@@ -26,11 +26,9 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,7 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.model.LottoRecode
 import com.example.domain.type.DrawType
-import com.example.mvi_test.designsystem.common.CommonButton
+import com.example.mvi_test.designsystem.common.CommonAnimationButton
 import com.example.mvi_test.designsystem.common.CommonExpandableBox
 import com.example.mvi_test.designsystem.common.CommonLottoAutoRow
 import com.example.mvi_test.designsystem.common.VerticalSpacer
@@ -62,7 +60,6 @@ import com.example.mvi_test.ui.theme.ScreenBackground
 import com.example.mvi_test.ui.theme.SubColor
 import com.example.mvi_test.util.Utils.drawResultToString
 import com.example.mvi_test.util.Utils.shareLotto
-import kotlinx.coroutines.delay
 
 @Composable
 fun RecodeRoute(
@@ -385,7 +382,7 @@ fun SelectControllerButton(
         ,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        CommonButton(
+        CommonAnimationButton(
             modifier = Modifier.weight(1f),
             enableColor = Red,
             enabled = true,
@@ -393,14 +390,14 @@ fun SelectControllerButton(
             text = "삭제하기"
         )
 
-        CommonButton(
+        CommonAnimationButton(
             modifier = Modifier.weight(1f),
             enabled = true,
             onClick = onclickCopy,
             text = "복사하기"
         )
 
-        CommonButton(
+        CommonAnimationButton(
             modifier = Modifier.weight(1f),
             enabled = true,
             onClick = onClickShare,

@@ -78,6 +78,12 @@ object CommonStyle {
     val text20 = TextStyle(fontFamily = pretendard, fontSize = 20.sp)
     val text20Bold = TextStyle(fontFamily = pretendardBold, fontSize = 20.sp)
 
+    val text20BoldShadow = TextStyle(
+        fontFamily = pretendardBold,
+        fontSize = 20.sp,
+        shadow = Shadow(color = Color.DarkGray, offset = Offset(2f, 2f), blurRadius = 4f)
+    )
+
     val text22 = TextStyle(fontFamily = pretendard, fontSize = 22.sp)
     val text22Bold = TextStyle(fontFamily = pretendardBold, fontSize = 22.sp)
 

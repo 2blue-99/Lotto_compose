@@ -1,7 +1,6 @@
 package com.example.mvi_test.designsystem.common
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,7 +37,6 @@ import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.LightGray
 import com.example.mvi_test.ui.theme.PrimaryColor
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @Composable
 fun CommonSpinnerDialog(
@@ -72,7 +70,7 @@ fun CommonSpinnerDialog(
     ) {
         Column(
             modifier = Modifier
-                .background(Color.White, RoundedCornerShape(8.dp))
+                .background(Color.White, RoundedCornerShape(10.dp))
                 .fillMaxWidth()
                 .padding(16.dp),
         ) {
@@ -140,7 +138,7 @@ fun CommonSpinnerDialog(
                     modifier = Modifier
                         .weight(1f)
                         .height(50.dp),
-                    enableColor = PrimaryColor,
+                    color = PrimaryColor,
                     text =  "확인",
                     onClick = {
                         // 맨 위에 있는 아이템 인덱스

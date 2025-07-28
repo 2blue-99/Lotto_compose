@@ -49,7 +49,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.model.StatisticItem
 import com.example.domain.type.RangeType
 import com.example.domain.util.CommonMessage
-import com.example.mvi_test.designsystem.common.CommonButton
+import com.example.mvi_test.designsystem.common.CommonAnimationButton
 import com.example.mvi_test.designsystem.common.CommonDrawResultContent
 import com.example.mvi_test.designsystem.common.CommonExpandableBox
 import com.example.mvi_test.designsystem.common.CommonLottoCircle
@@ -494,7 +494,7 @@ fun SelectDrawContent(
 
             HorizontalSpacer(8.dp)
 
-            CommonButton(
+            CommonAnimationButton(
                 enableColor = PrimaryColor,
                 enabled = drawClickable,
                 modifier = Modifier
