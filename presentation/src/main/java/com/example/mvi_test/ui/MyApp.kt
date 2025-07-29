@@ -38,6 +38,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.domain.util.CommonMessage
 import com.example.mvi_test.R
+import com.example.mvi_test.designsystem.common.AdFinishDialog
 import com.example.mvi_test.navigation.NavigationItem
 import com.example.mvi_test.screen.home.navigation.homeScreen
 import com.example.mvi_test.screen.qr.navigateToQR
@@ -57,7 +58,7 @@ fun MyApp() {
     val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    BackOnPressed(navController)
+    BackOnPressedAd(navController)
 
     Scaffold(
         snackbarHost = {
@@ -195,3 +196,25 @@ fun BackOnPressed(
         }
     }
 }
+
+@Composable
+fun BackOnPressedAd(
+    navController: NavHostController
+) {
+    val context = LocalContext.current
+    val backPressedState by remember { mutableStateOf(true) }
+    var dialogVisibleState by remember { mutableStateOf(false) }
+
+    if(dialogVisibleState){
+        AdFinishDialog(
+            onDismiss = {  },
+            onConfirm = { dialogVisibleState = false }, // 아니오 (유지)
+            onCancel = { (context as Activity).finish() } // 네 (종료)
+        )
+    }
+
+    BackHandler(enabled = backPressedState) {
+        dialogVisibleState = true
+    }
+}
+

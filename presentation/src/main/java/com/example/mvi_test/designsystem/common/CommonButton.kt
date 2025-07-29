@@ -28,7 +28,7 @@ fun CommonButton(
     ) {
         Text(
             text = text,
-            style = CommonStyle.text16,
+            style = CommonStyle.text16Bold,
             color = Color.White
         )
     }
