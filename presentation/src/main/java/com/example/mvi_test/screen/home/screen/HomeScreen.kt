@@ -95,7 +95,7 @@ fun HomeRoute(
                 is HomeEffectState.ShowToast -> { Toast.makeText(context, effect.message.message, Toast.LENGTH_SHORT).show() }
                 is HomeEffectState.ShowSnackbar -> { /*onShowSnackbar(effect.message)*/ }
                 is HomeEffectState.NavigateToQR -> navigateToQR()
-                is HomeEffectState.NavigateToSetting -> navigateToSetting()
+                is HomeEffectState.NavigateToSetting -> { /*navigateToSetting()*/ }
                 is HomeEffectState.NavigateToRandom -> navigateToRandom()
                 is HomeEffectState.NavigateToRecode -> navigateToRecode()
                 is HomeEffectState.NavigateToStatistic -> navigateToStatistic()

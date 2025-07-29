@@ -47,6 +47,7 @@ import com.example.mvi_test.screen.qr.state.QRScannerUIState
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.util.openBrowser
 import com.example.mvi_test.util.openSetting
+import com.example.mvi_test.util.startVibrate
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -257,6 +258,7 @@ fun QRContainer(
                                 if (value != lastScanned) {
                                     lastScanned = value
                                     barcode.rawValue?.let { url ->
+                                        context.startVibrate()
                                         context.openBrowser(url)
                                         effectHandler(QRScannerEffectState.PopBackStack)
                                     } ?: { effectHandler(QRScannerEffectState.ShowToast(CommonMessage.SCANNER_FAIL)) }

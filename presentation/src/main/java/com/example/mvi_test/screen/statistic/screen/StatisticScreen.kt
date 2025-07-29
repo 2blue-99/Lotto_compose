@@ -68,6 +68,7 @@ import com.example.mvi_test.ui.theme.PrimaryColor
 import com.example.mvi_test.ui.theme.ScreenBackground
 import com.example.mvi_test.util.DRAW_COMPLETE_TIME
 import com.example.mvi_test.util.Utils.toLottoColor
+import com.example.mvi_test.util.startVibrate
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
@@ -107,6 +108,7 @@ fun StatisticScreen(
     effectHandler: (StatisticEffectState) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     var rangeType by remember { mutableStateOf(RangeType.ONE_YEAR) } // 통계 조회 범위
     var expand by remember { mutableStateOf(false) }
     val selectNumberList = remember { mutableStateListOf<String>() } // 선택 로또 리스트
@@ -200,6 +202,7 @@ fun StatisticScreen(
             SelectDrawContent(
                 // 추첨하기 버튼 클릭
                 onClickDraw = {
+                    context.startVibrate()
                     expand = false
                     actionHandler(StatisticActionState.OnClickDraw(selectNumberList.toList()))
                 },

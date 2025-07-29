@@ -1,5 +1,7 @@
 package com.example.mvi_test.screen.random.screen
 
+import android.content.Context
+import android.os.Vibrator
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -63,6 +65,7 @@ import com.example.mvi_test.ui.theme.SubColor
 import com.example.mvi_test.util.DRAW_COMPLETE_TIME
 import com.example.mvi_test.util.Utils.containsKeyword
 import com.example.mvi_test.util.Utils.toKeyword
+import com.example.mvi_test.util.startVibrate
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -198,6 +201,8 @@ fun KeywordContent(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val rememberCoroutineScope = rememberCoroutineScope()
+    val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+
 //    val drawButtonColor by animateColorAsState(
 //        targetValue = if(drawState) SubColor else LightGray,
 //        animationSpec = tween(durationMillis = 500),
@@ -279,6 +284,7 @@ fun KeywordContent(
                 onClick = {
                     // Empty 체크
                     if(keyword.isNotBlank()){
+                        context.startVibrate()
                         focusManager.clearFocus()
                         keyboardController?.hide()
                         expand = false
@@ -292,7 +298,7 @@ fun KeywordContent(
                         }
                     }else{
                         rememberCoroutineScope.launch {
-                            effectHandler.invoke(RandomEffectState.ShowSnackbar(CommonMessage.RANDOM_EMPTY_KEYWORD))
+                            effectHandler.invoke(RandomEffectState.ShowToast(CommonMessage.RANDOM_EMPTY_KEYWORD))
                         }
                     }
                 },

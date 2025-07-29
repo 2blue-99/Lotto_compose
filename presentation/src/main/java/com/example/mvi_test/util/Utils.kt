@@ -3,6 +3,10 @@ package com.example.mvi_test.util
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import android.provider.Settings
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.pager.PagerState
@@ -263,8 +267,22 @@ fun Context.openBrowser(url: String){
  * 플레이 스토어 이동
  */
 fun Context.openStore(){
-    Timber.d("package name : ${this.packageName}")
     val playStoreUrl = "https://play.google.com/store/apps/details?id=${this.packageName}"
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(playStoreUrl))
     this.startActivity(intent)
+}
+
+/**
+ * 진동
+ */
+fun Context.startVibrate(){
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
+        Timber.d("버전 S 이상")
+        val manager = this.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+        manager.defaultVibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
+    }else{
+        Timber.d("버전 S 미만")
+        val manager = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        manager.vibrate(100)
+    }
 }
