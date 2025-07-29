@@ -10,7 +10,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.example.mvi_test.ui.MyApp
 import com.example.mvi_test.ui.theme.MVI_TestTheme
+import com.google.android.gms.ads.MobileAds
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -23,6 +27,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        CoroutineScope(Dispatchers.IO).launch {
+            MobileAds.initialize(this@MainActivity) // 애드몹 광고 초기화
+        }
 
         // setContentView 이전에 호출 + light 로 설정
         enableEdgeToEdge(

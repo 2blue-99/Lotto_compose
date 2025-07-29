@@ -88,6 +88,8 @@ dependencies {
 
     implementation(libs.accompanist.permissions)
 
+    implementation("com.google.android.gms:play-services-ads:24.4.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
