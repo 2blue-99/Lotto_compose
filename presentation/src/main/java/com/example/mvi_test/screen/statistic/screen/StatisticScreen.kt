@@ -279,7 +279,7 @@ fun StatisticContent(
                     }
                 ) {
                     Text(
-                        text = "최근 ${rangeType.monthText} 추첨 통계",
+                        text = "최근 ${rangeType.monthText} 추첨 번호 통계",
                         style = CommonStyle.text16Bold,
                         modifier = modifier.weight(1f)
                     )
