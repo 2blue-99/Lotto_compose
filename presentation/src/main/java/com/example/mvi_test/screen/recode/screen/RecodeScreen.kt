@@ -2,6 +2,8 @@ package com.example.mvi_test.screen.recode.screen
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -19,8 +21,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -29,13 +29,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,6 +47,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.model.LottoRecode
 import com.example.domain.type.DrawType
+import com.example.mvi_test.R
 import com.example.mvi_test.designsystem.common.CommonAnimationButton
 import com.example.mvi_test.designsystem.common.CommonExpandableBox
 import com.example.mvi_test.designsystem.common.CommonLottoAutoRow
@@ -188,7 +192,7 @@ fun RecodeItem(
     val context = LocalContext.current
 
     // 아이템 생성 시 페이드 아웃 -> 인
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(false) }
 
     // Column Background Animation 보류
 //    val backgroundColor by animateColorAsState(
@@ -213,6 +217,7 @@ fun RecodeItem(
         RecodeTitle(
             date = lottoRecode.saveDate,
             type = lottoRecode.drawType,
+            expanded = expanded
         )
         // 확장 컨텐츠
         AnimatedVisibility(expanded) {
@@ -290,8 +295,15 @@ private fun RecodeItemPreview() {
 fun RecodeTitle(
     date: String,
     type: DrawType,
+    expanded: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val rotationAngle by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f,
+        animationSpec = tween(durationMillis = 300),
+        label = "rotate"
+    )
+
     val color = if(type is DrawType.StatisticDraw) PrimaryColor else SubColor
     var (infoTitle, info) = when(type){
         is DrawType.LuckyDraw -> { "추첨키워드 : " to type.keyword }
@@ -351,8 +363,10 @@ fun RecodeTitle(
             }
         }
         Icon(
-            modifier = Modifier.size(40.dp),
-            imageVector = Icons.Default.KeyboardArrowDown,
+            modifier = Modifier
+                .size(40.dp)
+                .rotate(rotationAngle),
+            painter = painterResource(R.drawable.arrow_down_icon),
             tint = DarkGray,
             contentDescription = "expand"
         )
@@ -364,7 +378,8 @@ fun RecodeTitle(
 private fun RecodeTitlePreview() {
     RecodeTitle(
         "2025-07-25",
-        DrawType.LuckyDraw(keyword = "행운 7777777777777777777777777777777777777777777777777")
+        DrawType.LuckyDraw(keyword = "행운 7777777777777777777777777777777777777777777777777"),
+        false
     )
 }
 
