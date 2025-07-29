@@ -8,6 +8,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
 import com.example.mvi_test.R
 
@@ -66,12 +67,14 @@ object CommonStyle {
     )
 
     val text16 = TextStyle(fontFamily = pretendard, fontSize = 16.sp)
+    val text16UnderLine = TextStyle(fontFamily = pretendardBold, fontSize = 16.sp, textDecoration = TextDecoration.Underline)
     val text16Bold = TextStyle(fontFamily = pretendardBold, fontSize = 16.sp)
     val text16BoldShadow = TextStyle(
         fontFamily = pretendardBold,
         fontSize = 16.sp,
         shadow = Shadow(color = Color.DarkGray, offset = Offset(2f, 2f), blurRadius = 4f)
     )
+
     val text18 = TextStyle(fontFamily = pretendard, fontSize = 18.sp)
     val text18Bold = TextStyle(fontFamily = pretendardBold, fontSize = 18.sp)
 

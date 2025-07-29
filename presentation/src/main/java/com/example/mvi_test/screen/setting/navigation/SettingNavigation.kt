@@ -22,7 +22,6 @@ fun NavGraphBuilder.settingScreen(
 //        popEnterTransition = { slideToRightEnter() }
     ) {
         SettingRoute(
-            popBackStack,
             modifier
         )
     }

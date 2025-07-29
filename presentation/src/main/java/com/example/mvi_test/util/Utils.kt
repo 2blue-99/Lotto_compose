@@ -258,3 +258,13 @@ fun Context.openBrowser(url: String){
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
     this.startActivity(intent)
 }
+
+/**
+ * 플레이 스토어 이동
+ */
+fun Context.openStore(){
+    Timber.d("package name : ${this.packageName}")
+    val playStoreUrl = "https://play.google.com/store/apps/details?id=${this.packageName}"
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(playStoreUrl))
+    this.startActivity(intent)
+}
