@@ -21,6 +21,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -204,9 +205,7 @@ private fun MainTopBar(
         ) {
             Row {
                 IconButton(
-                    onClick = {
-                        effectHandler(HomeEffectState.NavigateToQR)
-                    }
+                    onClick = { effectHandler(HomeEffectState.NavigateToQR) }
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.qr_icon),
@@ -214,15 +213,15 @@ private fun MainTopBar(
                         tint = DarkGray
                     )
                 }
-//                IconButton(
-//                    onClick = onSettingClick
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Default.Settings,
-//                        contentDescription = "Setting",
-//                        tint = DarkGray
-//                    )
-//                }
+                IconButton(
+                    onClick = { effectHandler(HomeEffectState.NavigateToSetting) }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Setting",
+                        tint = DarkGray
+                    )
+                }
             }
         }
     }
