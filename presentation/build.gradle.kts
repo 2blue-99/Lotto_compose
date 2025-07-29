@@ -88,7 +88,9 @@ dependencies {
 
     implementation(libs.accompanist.permissions)
 
-    implementation("com.google.android.gms:play-services-ads:24.4.0")
+    // 애드몹 광고
+    implementation(libs.play.services.ads)
+    implementation(libs.play.services.ads.api)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

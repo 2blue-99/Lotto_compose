@@ -171,11 +171,6 @@ fun HomeScreen(
                 )
             }
         }
-        Box(
-            contentAlignment = Alignment.BottomCenter
-        ) {
-            CommonAdBanner()
-        }
     }
 }
 
