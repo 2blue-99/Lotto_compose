@@ -13,9 +13,13 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -138,35 +142,40 @@ fun HomeScreen(
         modifier = modifier
             .fillMaxSize(),
     ) {
-        Column(
+        LazyColumn (
             modifier = Modifier
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            contentPadding = PaddingValues(bottom = 60.dp)
         ) {
-            MainTopBar(
-                effectHandler = effectHandler,
-            )
+            item {
+                MainTopBar(
+                    effectHandler = effectHandler,
+                )
+                VerticalSpacer(10.dp)
+            }
 
-            VerticalSpacer(10.dp)
-
-            LottoPager(
-                actionHandler = actionHandler,
-                lottoRoundList = if (homeUiState is HomeUIState.Success) homeUiState.lottoRounds else listOf(
-                    LottoRound()
-                ),
-                roundPosition = if (homeUiState is HomeUIState.Success) homeUiState.initPosition else null
-            )
-
-            ButtonLayout(
-                actionHandler = actionHandler,
-                effectHandler = effectHandler,
-            )
-
-            VerticalSpacer(10.dp)
-
-            CommonAdBanner(modifier = Modifier.fillMaxSize())
+            item {
+                LottoPager(
+                    actionHandler = actionHandler,
+                    lottoRoundList = if (homeUiState is HomeUIState.Success) homeUiState.lottoRounds else listOf(
+                        LottoRound()
+                    ),
+                    roundPosition = if (homeUiState is HomeUIState.Success) homeUiState.initPosition else null
+                )
+            }
+            item {
+                ButtonLayout(
+                    actionHandler = actionHandler,
+                    effectHandler = effectHandler,
+                )
+            }
         }
-
+        Box(
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            CommonAdBanner()
+        }
     }
 }
 
@@ -184,24 +193,25 @@ private fun MainTopBar(
     effectHandler: (HomeEffectState) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
-    Surface(
+    Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(66.dp)
+            .heightIn(60.dp)
             .padding(horizontal = 20.dp),
-        color = Color.Transparent,
     ) {
         Box(
-            contentAlignment = Alignment.CenterStart
+            contentAlignment = Alignment.CenterStart,
+            modifier =  Modifier.matchParentSize()
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.main_logo),
                 tint = Color.Unspecified,
-                contentDescription = "main_logo"
+                contentDescription = "main_logo",
             )
         }
         Box(
-            contentAlignment = Alignment.CenterEnd
+            contentAlignment = Alignment.CenterEnd,
+            modifier = Modifier.matchParentSize()
         ) {
             Row {
                 IconButton(
@@ -299,11 +309,11 @@ fun LottoPager(
     }
 }
 
-@Preview
-@Composable
-private fun LottoPagerPreview() {
-    LottoPager({},emptyList(), 10)
-}
+//@Preview
+//@Composable
+//private fun LottoPagerPreview() {
+//    LottoPager({},emptyList(), 10)
+//}
 
 @Composable
 fun LottoCardItem(
@@ -571,7 +581,8 @@ private fun HomeIconButton(
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(vertical = 10.dp)
+            modifier = Modifier
+                .padding(vertical = 10.dp)
         ) {
             icon?.let {
                 Icon(
