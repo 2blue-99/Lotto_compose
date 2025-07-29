@@ -2,7 +2,7 @@ package com.example.mvi_test.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val PrimaryColor = Color(0XFF258BD2)
+val PrimaryColor = Color(0XFF0B80D2)
 val SubColor = Color(0XFF52CF5A)
 val ScreenBackground = Color(0xFFDBDFE2)
 val white50 = Color(0x80FFFFFF)
