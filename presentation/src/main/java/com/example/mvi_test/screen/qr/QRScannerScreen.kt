@@ -113,61 +113,60 @@ fun QRScannerScreen(
         )
     }
 
-    when(uiState){
-        is QRScannerUIState.Success -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black),
-                contentAlignment = Alignment.Center
-            ) {
-                if(permissionState) {
-                    QRContainer(
-                        onScanSuccess = {},
-                        effectHandler = effectHandler
-                    )
-                }
-
-                TargetBox(
-                    permissionState
-                )
-            }
-
-            // 권한 체크가 위에 있을 경우 이후 로직이 안보임
-            CheckPermission(
-                isRequiredCamera = uiState.isRequiredCamera,
-                actionHandler = actionHandler,
-                onGrantPermission = { permissionState = it }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black),
+        contentAlignment = Alignment.Center
+    ) {
+        if(permissionState) {
+            QRContainer(
+                onScanSuccess = {},
+                effectHandler = effectHandler
             )
         }
-        else -> {}
+
+        TargetBox(
+            isGrant = permissionState,
+        )
+    }
+
+    // 권한 체크가 위에 있을 경우 이후 로직이 안보임
+    if(uiState is QRScannerUIState.Success) {
+        CheckPermission(
+            isRequiredCamera = uiState.isRequiredCamera,
+            actionHandler = actionHandler,
+            onGrantPermission = { permissionState = it }
+        )
     }
 }
 
 @kotlin.OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CheckPermission(
-    isRequiredCamera: Boolean, // 과거에 권한 요청한 적이 있는지 여부
+    isRequiredCamera: Boolean, // 과거 권한 요청 여부
     actionHandler: (QRScannerActionState) -> Unit,
     onGrantPermission: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
 ) {
     val permissionState = rememberPermissionState(Manifest.permission.CAMERA)
-    // 요청 자체가 안되는 상황을 파악하기 위해 Data Store 로 저장한 데이터 조회
-    val requestState by rememberSaveable { mutableStateOf(isRequiredCamera) }
+    // 권한 요청 시 사용자가 여러번 거부할 경우 요청 자체가 안됨
+    // 요청이 안되는 상태를 조회할 수 없기 때문에, 한번 이상 요청할 경우 앱 자체적으로 요청 여부 저장으로 대응
+    val requestState by rememberSaveable { mutableStateOf(isRequiredCamera) } // 과거 권한 요청 여부
 
     // onResume 상태일 때마다 동작
     LifecycleResumeEffect(Unit) {
-        // 권한 비허용 + 한번 이상 거부 X + 요청한적 없는 경우
+        // 권한 없음 + 요청한적 없는 경우
         if(!permissionState.status.isGranted && !permissionState.status.shouldShowRationale && !requestState){
-            permissionState.launchPermissionRequest()
-            actionHandler(QRScannerActionState.UpdateRequireCameraPermission)
+            actionHandler(QRScannerActionState.UpdateRequireCameraPermission) // 요청 여부 업데이트
+            permissionState.launchPermissionRequest() // 권한 요청
         // 권한 비허용 + 헌번 이상 거부 O
         }else if(!permissionState.status.isGranted && requestState){
-            actionHandler(QRScannerActionState.UpdateRequireCameraPermission)
-            actionHandler(QRScannerActionState.ShowDialog(DialogType.CAMERA_PERMISSION))
-        // 권한 허용
-        }else {
+            actionHandler(QRScannerActionState.ShowDialog(DialogType.CAMERA_PERMISSION)) // 설정 화면으로 이동하도록 유도 다이알로그 노출
+        // 권한 요청 -> 거부
+        }else if(!permissionState.status.isGranted){
+            // TODO 뒤로가기 처리하는것도 괜찮은 것 같음
+        // 권한 요청 -> 허용
+        }else{
             onGrantPermission(true)
         }
         onPauseOrDispose {
