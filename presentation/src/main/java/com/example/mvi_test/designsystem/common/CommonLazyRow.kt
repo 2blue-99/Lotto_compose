@@ -24,6 +24,7 @@ import com.example.domain.model.Keyword
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.DarkGray
 import com.example.mvi_test.ui.theme.LightGray
+import com.example.mvi_test.ui.theme.ScreenBackground
 
 @Composable
 fun CommonLazyRow(
@@ -96,7 +97,7 @@ fun CommonChip(
         onClick = { onClickChip(keyword.title) },
         label = { Text(text = keyword.title, style = CommonStyle.text14) },
         shape = RoundedCornerShape(10.dp),
-        colors = AssistChipDefaults.assistChipColors(containerColor = LightGray),
+        colors = AssistChipDefaults.assistChipColors(containerColor = ScreenBackground),
         border = null,
         trailingIcon = {
             if(removable) {
