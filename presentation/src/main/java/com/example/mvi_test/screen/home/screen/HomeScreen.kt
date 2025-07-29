@@ -193,9 +193,10 @@ private fun MainTopBar(
         Box(
             contentAlignment = Alignment.CenterStart
         ) {
-            Text(
-                text = "행운 로또",
-                style = CommonStyle.text18
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.main_logo),
+                tint = Color.Unspecified,
+                contentDescription = "main_logo"
             )
         }
         Box(
