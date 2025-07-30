@@ -5,6 +5,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -245,7 +246,8 @@ fun RandomListItem(
         modifier = modifier
             .alpha(alpha.value)
             .background(Color.White)
-            .padding(6.dp),
+            .clickable { onCheckChange(!checkBox) }
+            .padding(vertical = 4.dp),
     ) {
         Box(
             modifier = Modifier
@@ -253,13 +255,14 @@ fun RandomListItem(
         ) {
             Checkbox(
                 checked = checkBox,
-                onCheckedChange = onCheckChange,
+                onCheckedChange = null,
                 colors = CheckboxDefaults.colors(
                     checkedColor = DarkGray,
                     uncheckedColor = DarkGray,
                 )
             )
         }
+        HorizontalSpacer(6.dp)
         Box(
             modifier = Modifier
                 .weight(1f),
