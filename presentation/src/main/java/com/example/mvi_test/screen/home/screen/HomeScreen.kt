@@ -212,7 +212,7 @@ private fun MainTopBar(
                     Icon(
                         painter = painterResource(R.drawable.qr_icon),
                         contentDescription = "QR",
-                        tint = DarkGray
+                        tint = Color.Unspecified
                     )
                 }
                 IconButton(

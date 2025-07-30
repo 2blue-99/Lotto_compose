@@ -37,20 +37,19 @@ fun BaseDialog(
             modifier = modifier
                 .fillMaxWidth()
                 .background(Color.White, RoundedCornerShape(16.dp))
-                .padding(16.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(50.dp)
         ) {
             Text(
                 text = dialogType.title,
                 style = CommonStyle.text22Bold,
             )
-            VerticalSpacer(60.dp)
             Text(
                 text = dialogType.content,
                 style = CommonStyle.text18,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
-            VerticalSpacer(60.dp)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
