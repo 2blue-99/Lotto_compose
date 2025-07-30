@@ -56,6 +56,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.model.LottoRound
 import com.example.domain.model.RoundSpinner
 import com.example.domain.util.CommonMessage
+import com.example.domain.util.Constants.PADDING_VALUE_AD_BOX
 import com.example.mvi_test.R
 import com.example.mvi_test.designsystem.common.CommonLottoContent
 import com.example.mvi_test.designsystem.common.CommonSpinnerDialog
@@ -143,7 +144,7 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            contentPadding = PaddingValues(bottom = 60.dp)
+            contentPadding = PaddingValues(bottom = PADDING_VALUE_AD_BOX.dp)
         ) {
             item {
                 MainTopBar(

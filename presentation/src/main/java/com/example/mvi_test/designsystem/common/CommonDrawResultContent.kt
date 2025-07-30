@@ -37,11 +37,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.domain.model.LottoItem
 import com.example.domain.type.DrawType
+import com.example.domain.util.Constants.DRAW_COMPLETE_TIME
+import com.example.domain.util.Constants.DRAW_ITEM_SHOW_TIME
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.DarkGray
 import com.example.mvi_test.ui.theme.LightGray
-import com.example.mvi_test.util.DRAW_COMPLETE_TIME
-import com.example.mvi_test.util.DRAW_ITEM_SHOW_TIME
 import com.example.mvi_test.util.Utils.drawResultToString
 import com.example.mvi_test.util.Utils.setAllFalse
 import com.example.mvi_test.util.Utils.setAllTrue

@@ -2,6 +2,9 @@ package com.example.mvi_test.util
 
 import java.util.concurrent.atomic.AtomicLong
 
+/**
+ * 로또 Seed 제작
+ */
 object UniqueSeed {
     private val seedUniquifier = AtomicLong(8682522807148012L)
 

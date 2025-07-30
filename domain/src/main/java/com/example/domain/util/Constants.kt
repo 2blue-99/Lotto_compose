@@ -1,6 +1,10 @@
 package com.example.domain.util
 
 object Constants {
+    const val DRAW_COMPLETE_TIME = 2000L
+    const val DRAW_ITEM_SHOW_TIME = 300L
+    const val PADDING_VALUE_AD_BOX = 70
+
     const val CODE_UN_AUTHORIZE = 401
     const val CODE_BAD_REQUEST = 404
 

@@ -53,6 +53,8 @@ import com.example.domain.model.StatisticItem
 import com.example.domain.type.DrawType
 import com.example.domain.type.RangeType
 import com.example.domain.util.CommonMessage
+import com.example.domain.util.Constants.DRAW_COMPLETE_TIME
+import com.example.domain.util.Constants.PADDING_VALUE_AD_BOX
 import com.example.mvi_test.designsystem.common.CommonAnimationButton
 import com.example.mvi_test.designsystem.common.CommonDrawResultContent
 import com.example.mvi_test.designsystem.common.CommonExpandableBox
@@ -70,7 +72,6 @@ import com.example.mvi_test.ui.theme.DarkGray
 import com.example.mvi_test.ui.theme.LightGray
 import com.example.mvi_test.ui.theme.PrimaryColor
 import com.example.mvi_test.ui.theme.ScreenBackground
-import com.example.mvi_test.util.DRAW_COMPLETE_TIME
 import com.example.mvi_test.util.Utils.toLottoColor
 import com.example.mvi_test.util.startVibrate
 import kotlinx.coroutines.delay
@@ -146,7 +147,7 @@ fun StatisticScreen(
         state = lazyState,
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally,
-        contentPadding = PaddingValues(bottom = 50.dp)
+        contentPadding = PaddingValues(bottom = PADDING_VALUE_AD_BOX.dp)
     ) {
         item {
             CommonExpandableBox(

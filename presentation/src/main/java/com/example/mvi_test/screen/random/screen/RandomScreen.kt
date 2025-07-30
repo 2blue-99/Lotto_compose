@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +47,8 @@ import com.example.domain.model.Keyword
 import com.example.domain.type.DrawType
 import com.example.domain.type.DrawType.Companion.TYPE_LUCKY
 import com.example.domain.util.CommonMessage
+import com.example.domain.util.Constants.DRAW_COMPLETE_TIME
+import com.example.domain.util.Constants.PADDING_VALUE_AD_BOX
 import com.example.mvi_test.R
 import com.example.mvi_test.designsystem.common.CommonAnimationButton
 import com.example.mvi_test.designsystem.common.CommonDrawResultContent
@@ -63,7 +66,6 @@ import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.LightGray
 import com.example.mvi_test.ui.theme.ScreenBackground
 import com.example.mvi_test.ui.theme.SubColor
-import com.example.mvi_test.util.DRAW_COMPLETE_TIME
 import com.example.mvi_test.util.Utils.containsKeyword
 import com.example.mvi_test.util.Utils.toKeyword
 import com.example.mvi_test.util.startVibrate
@@ -121,7 +123,7 @@ fun RandomScreen(
             .padding(top = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally,
-        contentPadding = PaddingValues(bottom = 60.dp)
+        contentPadding = PaddingValues(bottom = PADDING_VALUE_AD_BOX.dp)
     ) {
         item {
             CommonExpandableBox(
@@ -195,7 +197,7 @@ fun KeywordContent(
     effectHandler: (RandomEffectState) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    var expand by remember { mutableStateOf(false) }
+    var expand by rememberSaveable { mutableStateOf(false) }
     // 추첨하기 클릭 가능 여부
     var drawClickable by remember { mutableStateOf(true) }
 

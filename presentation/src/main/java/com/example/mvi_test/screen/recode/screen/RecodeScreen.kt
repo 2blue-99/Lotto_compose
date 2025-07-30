@@ -47,6 +47,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.model.LottoRecode
 import com.example.domain.type.DrawType
+import com.example.domain.util.Constants.PADDING_VALUE_AD_BOX
 import com.example.mvi_test.R
 import com.example.mvi_test.designsystem.common.CommonAnimationButton
 import com.example.mvi_test.designsystem.common.CommonExpandableBox
@@ -142,7 +143,7 @@ fun RecodeContent(
                     modifier = Modifier.heightIn(min = 200.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    contentPadding = PaddingValues(bottom = 60.dp)
+                    contentPadding = PaddingValues(bottom = PADDING_VALUE_AD_BOX.dp)
                 ) {
                     itemsIndexed(recodeList, key = { _, item -> item.saveDate }) { index, lottoRecode ->
                         Card (
