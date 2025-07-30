@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -37,6 +38,7 @@ import com.example.mvi_test.screen.setting.SettingViewModel
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.LightGray
 import com.example.mvi_test.ui.theme.ScreenBackground
+import com.example.mvi_test.util.openEmail
 import com.example.mvi_test.util.openStore
 import timber.log.Timber
 
@@ -86,14 +88,15 @@ private fun SettingScreenPreview() {
 fun MemberShipContent(modifier: Modifier = Modifier) {
     Box(
         modifier = Modifier
+            .padding(horizontal = 30.dp)
             .fillMaxWidth()
-            .height(200.dp)
+            .height(150.dp)
             .background(Color.White, RoundedCornerShape(16.dp)),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = "광고 제거 멤버십은\n추후 업데이트 예정입니다",
-            style = CommonStyle.text22Bold,
+            style = CommonStyle.text20Bold,
             color = LightGray,
             textAlign = TextAlign.Center
         )
@@ -113,9 +116,9 @@ fun SettingContent(modifier: Modifier = Modifier) {
 
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .background(Color.White, RoundedCornerShape(16.dp))
-            .heightIn(min = 300.dp)
+            .heightIn(min = 400.dp)
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
@@ -124,6 +127,16 @@ fun SettingContent(modifier: Modifier = Modifier) {
             title = "리뷰 남기기",
             content = "Click",
             onClick = { context.openStore() }
+        )
+        HorizontalDivider(
+            thickness = 0.4.dp,
+            color = ScreenBackground
+        )
+        SettingItem(
+            icon = Icons.Default.Email,
+            title = "문의하기",
+            content = "Click",
+            onClick = { context.openEmail() }
         )
         HorizontalDivider(
             thickness = 0.4.dp,
@@ -149,7 +162,7 @@ fun SettingItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 30.dp)
+            .heightIn(min = 40.dp)
             .clickable { onClick.invoke() },
         verticalAlignment = Alignment.CenterVertically
     ) {

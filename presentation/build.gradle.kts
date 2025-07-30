@@ -29,6 +29,7 @@ android {
 
         buildConfigField("String", "AD_BOTTOM_BANNER_ID", properties.getProperty("AD_BOTTOM_BANNER_ID"))
         buildConfigField("String", "AD_DIALOG_BANNER_ID", properties.getProperty("AD_DIALOG_BANNER_ID"))
+        buildConfigField("String", "DEVELOPER_EMAIL", properties.getProperty("DEVELOPER_EMAIL"))
     }
 
     buildTypes {

@@ -14,6 +14,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
 import com.example.domain.model.Keyword
 import com.example.domain.model.LottoItem
+import com.example.mvi_test.BuildConfig
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -269,6 +270,17 @@ fun Context.openBrowser(url: String){
 fun Context.openStore(){
     val playStoreUrl = "https://play.google.com/store/apps/details?id=${this.packageName}"
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(playStoreUrl))
+    this.startActivity(intent)
+}
+
+/**
+ * 이메일 이동
+ */
+fun Context.openEmail(){
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_EMAIL, arrayOf(BuildConfig.DEVELOPER_EMAIL))
+    }
     this.startActivity(intent)
 }
 
