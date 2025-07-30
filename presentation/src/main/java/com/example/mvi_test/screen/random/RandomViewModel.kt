@@ -7,14 +7,16 @@ import com.example.domain.repository.UserRepository
 import com.example.domain.type.DrawType.Companion.TYPE_LUCKY
 import com.example.domain.util.CommonMessage
 import com.example.mvi_test.base.BaseViewModel
-import com.example.mvi_test.screen.random.state.KeywordUIState
 import com.example.mvi_test.screen.random.state.LottoUIState
 import com.example.mvi_test.screen.random.state.RandomActionState
 import com.example.mvi_test.screen.random.state.RandomEffectState
+import com.example.mvi_test.screen.random.state.TitleKeywordUIState
 import com.example.mvi_test.util.Utils.makeLotto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,7 +30,7 @@ class RandomViewModel @Inject constructor(
     private val _sideEffectState = Channel<RandomEffectState>()
     val sideEffectState = _sideEffectState.receiveAsFlow()
 
-    val keywordUIState = MutableStateFlow<KeywordUIState>(KeywordUIState.Loading)
+    val titleKeywordUIState = MutableStateFlow<TitleKeywordUIState>(TitleKeywordUIState.Loading)
     val lottoUIState = MutableStateFlow<LottoUIState>(LottoUIState.Loading)
 
     //**********************************************************************************************
@@ -36,8 +38,13 @@ class RandomViewModel @Inject constructor(
     //**********************************************************************************************
     init {
         ioScope.launch {
-            userRepository.getKeywordList().collect {
-                keywordUIState.value = KeywordUIState.Success(it.reversed())
+            userRepository.getKeywordList().collectLatest { list ->
+                val isFirst = userRepository.isFirstRandomScreen.first()
+                titleKeywordUIState.value = TitleKeywordUIState.Success(
+                    isFirst = isFirst,
+                    keywordList = list
+                )
+                if(isFirst) setFirstRandomScreen() // 최초 진입으로 인한 타이틀 확장이 끝나면 즉시 false 처리
             }
         }
     }
@@ -89,8 +96,12 @@ class RandomViewModel @Inject constructor(
      * 로또 추첨
      */
     private fun drawLottoList(keyword: String){
-        val lottoItemList = makeLotto(keyword)
-        lottoUIState.value = LottoUIState.Success(lottoItemList)
+        ioScope.launch {
+            val lottoItemList = makeLotto(keyword)
+            lottoUIState.value = LottoUIState.Success(
+                lottoList = lottoItemList,
+            )
+        }
     }
 
     private fun saveLottoItemList(keyword: String, list: List<LottoItem>){
@@ -100,6 +111,12 @@ class RandomViewModel @Inject constructor(
                 drawData = keyword,
                 list = list
             )
+        }
+    }
+
+    private fun setFirstRandomScreen(){
+        ioScope.launch {
+            userRepository.setFirstRandomScreen(false)
         }
     }
 }

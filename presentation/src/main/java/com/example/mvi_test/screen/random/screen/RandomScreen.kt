@@ -58,7 +58,7 @@ import com.example.mvi_test.designsystem.common.CommonLazyRow
 import com.example.mvi_test.designsystem.common.HorizontalSpacer
 import com.example.mvi_test.designsystem.common.VerticalSpacer
 import com.example.mvi_test.screen.random.RandomViewModel
-import com.example.mvi_test.screen.random.state.KeywordUIState
+import com.example.mvi_test.screen.random.state.TitleKeywordUIState
 import com.example.mvi_test.screen.random.state.LottoUIState
 import com.example.mvi_test.screen.random.state.RandomActionState
 import com.example.mvi_test.screen.random.state.RandomEffectState
@@ -81,7 +81,7 @@ fun RandomRoute(
     viewModel: RandomViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val keywordUIState by viewModel.keywordUIState.collectAsStateWithLifecycle()
+    val titleKeywordUIState by viewModel.titleKeywordUIState.collectAsStateWithLifecycle()
     val lottoUIState by viewModel.lottoUIState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -95,7 +95,7 @@ fun RandomRoute(
 
     RandomScreen(
         popBackStack = popBackStack,
-        keywordUIState = keywordUIState,
+        titleKeywordUIState = titleKeywordUIState,
         lottoUIState = lottoUIState,
         actionHandler = viewModel::actionHandler,
         effectHandler = viewModel::effectHandler,
@@ -106,7 +106,7 @@ fun RandomRoute(
 @Composable
 fun RandomScreen(
     popBackStack: () -> Unit = {},
-    keywordUIState: KeywordUIState = KeywordUIState.Loading,
+    titleKeywordUIState: TitleKeywordUIState = TitleKeywordUIState.Loading,
     lottoUIState: LottoUIState = LottoUIState.Loading,
     actionHandler: (RandomActionState) -> Unit = {},
     effectHandler: (RandomEffectState) -> Unit = {},
@@ -126,7 +126,9 @@ fun RandomScreen(
         contentPadding = PaddingValues(bottom = PADDING_VALUE_AD_BOX.dp)
     ) {
         item {
+            val isFirst = if(titleKeywordUIState is TitleKeywordUIState.Success) titleKeywordUIState.isFirst else false
             CommonExpandableBox(
+                expand = isFirst,
                 shrinkContent = {
                     Box(
                         modifier = Modifier.fillMaxWidth(),
@@ -157,7 +159,7 @@ fun RandomScreen(
         item {
             KeywordContent(
                 keyword = keyword,
-                keywordList = if(keywordUIState is KeywordUIState.Success) keywordUIState.keywordList else emptyList(),
+                keywordList = if(titleKeywordUIState is TitleKeywordUIState.Success) titleKeywordUIState.keywordList else emptyList(),
                 onChangeKeyword = { keyword = it },
                 actionHandler = actionHandler,
                 effectHandler = effectHandler,
@@ -184,7 +186,7 @@ fun RandomScreen(
 private fun RandomScreenPreview() {
     RandomScreen(
         lottoUIState = LottoUIState.Loading,
-        keywordUIState = KeywordUIState.Loading
+        titleKeywordUIState = TitleKeywordUIState.Loading
     )
 }
 

@@ -20,6 +20,10 @@ class UserRepositoryImpl @Inject constructor(
     override val isRequireCameraPermission: Flow<Boolean> =
         userDataStore.isRequireCameraPermission
 
+    override val isFirstRandomScreen: Flow<Boolean> =
+        userDataStore.isFirstRandomScreen
+
+
 
 
     override suspend fun addKeyword(title: String) {
@@ -32,5 +36,9 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun setRequireCameraPermission(state: Boolean) {
         return userDataStore.setRequireCameraPermission(state)
+    }
+
+    override suspend fun setFirstRandomScreen(state: Boolean) {
+        return userDataStore.setFirstRandomScreen(state)
     }
 }

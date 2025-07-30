@@ -16,11 +16,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,17 +29,19 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.domain.util.Constants.LUCKY_SCREEN_TITLE_FIRST
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.SubColor
+import kotlinx.coroutines.delay
 
 @Composable
 
 fun CommonExpandableBox(
     shrinkColor: List<Color> = listOf(Color(0xFF227DBD), Color(0xFF528B35)),
     expandColor: List<Color> = listOf(Color(0xFFFF8A00), Color(0xFFFFD500)),
+    expand: Boolean = false,
     shrinkContent: @Composable () -> Unit,
     expandContent: @Composable (() -> Unit)? = null,
     modifier: Modifier = Modifier,
@@ -54,6 +54,14 @@ fun CommonExpandableBox(
     )
     val shrinkGradient = Brush.linearGradient(colors = shrinkColor)
     val expandGradient = Brush.linearGradient(colors = expandColor)
+
+    // 최초 진입 시 1회 확장
+    LaunchedEffect(expand) {
+        if(expand){
+            delay(LUCKY_SCREEN_TITLE_FIRST)
+            expanded = true
+        }
+    }
 
     Box(
         modifier = modifier
