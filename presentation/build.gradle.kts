@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     kotlin("kapt")
     alias(libs.plugins.android.application)
@@ -5,6 +7,9 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt.android)
 }
+
+val properties = Properties()
+properties.load(project.rootProject.file("local.properties").inputStream())
 
 android {
     namespace = "com.example.mvi_test"
@@ -18,6 +23,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val nativeAppKey = properties.getProperty("AD_APPLICATION_ID") ?: ""
+        manifestPlaceholders["AD_APPLICATION_ID"] = nativeAppKey
+
+        buildConfigField("String", "AD_BOTTOM_BANNER_ID", properties.getProperty("AD_BOTTOM_BANNER_ID"))
+        buildConfigField("String", "AD_DIALOG_BANNER_ID", properties.getProperty("AD_DIALOG_BANNER_ID"))
     }
 
     buildTypes {
@@ -38,6 +49,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

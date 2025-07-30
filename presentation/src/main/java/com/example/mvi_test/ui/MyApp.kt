@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -56,6 +57,7 @@ import com.example.mvi_test.screen.setting.navigation.settingScreen
 import com.example.mvi_test.screen.statistic.navigation.navigateToStatistic
 import com.example.mvi_test.screen.statistic.navigation.statisticScreen
 import com.example.mvi_test.ui.theme.ScreenBackground
+import com.example.mvi_test.util.AdMobType
 
 @Composable
 fun MyApp() {
@@ -93,7 +95,12 @@ fun MyApp() {
                     .padding(padding)
                     .align(Alignment.BottomCenter),
             ) {
-                CommonAdBanner()
+                CommonAdBanner(
+                    AdMobType.AdMobBottomBanner(
+                        context = LocalContext.current,
+                        width = LocalConfiguration.current.screenWidthDp
+                    )
+                )
             }
         }
     }

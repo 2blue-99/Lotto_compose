@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
@@ -20,7 +21,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.DarkGray
+import com.example.mvi_test.ui.theme.LightGray
 import com.example.mvi_test.ui.theme.PrimaryColor
+import com.example.mvi_test.ui.theme.ScreenBackground
+import com.example.mvi_test.util.AdMobType
 import com.google.android.gms.ads.AdSize
 
 @Composable
@@ -50,10 +54,16 @@ fun AdFinishDialog(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.LightGray, RoundedCornerShape(8.dp))
-                    .heightIn(min = 200.dp)
+                    .background(ScreenBackground, RoundedCornerShape(8.dp))
+                    .heightIn(min = 200.dp),
+                contentAlignment = Alignment.Center
             ){
-                CommonAdBanner(AdSize.MEDIUM_RECTANGLE)
+                Text(
+                    text = "Ad",
+                    style = CommonStyle.text20Bold,
+                    color = LightGray
+                )
+                CommonAdBanner(AdMobType.AdMobDialogBanner())
             }
             VerticalSpacer(30.dp)
             Row(
