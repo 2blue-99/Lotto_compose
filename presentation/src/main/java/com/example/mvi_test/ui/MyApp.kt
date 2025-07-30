@@ -3,6 +3,7 @@ package com.example.mvi_test.ui
 import android.app.Activity
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -58,13 +59,17 @@ import com.example.mvi_test.screen.statistic.navigation.navigateToStatistic
 import com.example.mvi_test.screen.statistic.navigation.statisticScreen
 import com.example.mvi_test.ui.theme.ScreenBackground
 import com.example.mvi_test.util.AdMobType
+import com.example.mvi_test.util.AdMobUtil
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun MyApp() {
     val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
+    val activity = LocalActivity.current as Activity
+    val addMobUtil = remember { AdMobUtil(activity) } // 광고 클래스 초기화
 
-    BackOnPressedAd(navController)
+    BackOnPressed(navController)
 
     Scaffold(
         snackbarHost = {
@@ -86,6 +91,7 @@ fun MyApp() {
                         message = it.message,
                     )
                 },
+                showFrontPageAd = addMobUtil::showFrontPageAd,
                 navController = navController,
                 paddingValue = padding
             )
@@ -156,6 +162,7 @@ fun BottomNavigationBar(
 @Composable
 fun NavHostContainer(
     onShowSnackbar: suspend (CommonMessage) -> Unit,
+    showFrontPageAd: () -> StateFlow<Boolean>,
     navController: NavHostController,
     paddingValue: PaddingValues,
 ) {
@@ -197,6 +204,7 @@ fun NavHostContainer(
 
         qrScannerScreen(
             navController::popBackStack,
+            showFrontPageAd = showFrontPageAd,
             modifier = Modifier.background(ScreenBackground).padding(paddingValue)
         )
     }

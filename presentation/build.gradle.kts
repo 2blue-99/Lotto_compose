@@ -27,18 +27,27 @@ android {
         val nativeAppKey = properties.getProperty("AD_APPLICATION_ID") ?: ""
         manifestPlaceholders["AD_APPLICATION_ID"] = nativeAppKey
 
-        buildConfigField("String", "AD_BOTTOM_BANNER_ID", properties.getProperty("AD_BOTTOM_BANNER_ID"))
-        buildConfigField("String", "AD_DIALOG_BANNER_ID", properties.getProperty("AD_DIALOG_BANNER_ID"))
         buildConfigField("String", "DEVELOPER_EMAIL", properties.getProperty("DEVELOPER_EMAIL"))
     }
 
     buildTypes {
         release {
+            buildConfigField("String", "AD_BOTTOM_BANNER_ID", properties.getProperty("AD_BOTTOM_BANNER_ID"))
+            buildConfigField("String", "AD_DIALOG_BANNER_ID", properties.getProperty("AD_DIALOG_BANNER_ID"))
+            buildConfigField("String", "AD_FULL_PAGE_ID", properties.getProperty("AD_TEST_FULL_PAGE_ID"))
+//            buildConfigField("String", "AD_REWORD_ID", properties.getProperty("AD_REWORD_ID"))
+
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        debug {
+            buildConfigField("String", "AD_BOTTOM_BANNER_ID", properties.getProperty("AD_TEST_BANNER_ID"))
+            buildConfigField("String", "AD_DIALOG_BANNER_ID", properties.getProperty("AD_TEST_BANNER_ID"))
+            buildConfigField("String", "AD_FULL_PAGE_ID", properties.getProperty("AD_TEST_FULL_PAGE_ID"))
+//            buildConfigField("String", "AD_REWORD_ID", properties.getProperty("AD_TEST_REWORD_ID"))
         }
     }
     compileOptions {

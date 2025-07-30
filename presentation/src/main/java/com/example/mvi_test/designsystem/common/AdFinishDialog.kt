@@ -58,11 +58,6 @@ fun AdFinishDialog(
                     .heightIn(min = 200.dp),
                 contentAlignment = Alignment.Center
             ){
-                Text(
-                    text = "Ad",
-                    style = CommonStyle.text20Bold,
-                    color = LightGray
-                )
                 CommonAdBanner(AdMobType.AdMobDialogBanner())
             }
             VerticalSpacer(30.dp)

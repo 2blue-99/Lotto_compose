@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import kotlinx.coroutines.flow.StateFlow
 
 const val qrScannerRoute = "qr_scanner"
 fun NavController.navigateToQR(navOptions: NavOptions? = null){
@@ -13,6 +14,7 @@ fun NavController.navigateToQR(navOptions: NavOptions? = null){
 
 fun NavGraphBuilder.qrScannerScreen(
     popBackStack: () -> Unit,
+    showFrontPageAd: () -> StateFlow<Boolean>,
     modifier: Modifier = Modifier,
 ){
     composable(
@@ -20,6 +22,7 @@ fun NavGraphBuilder.qrScannerScreen(
     ) {
         QRScannerRouth(
             popBackStack,
+            showFrontPageAd,
             modifier
         )
     }

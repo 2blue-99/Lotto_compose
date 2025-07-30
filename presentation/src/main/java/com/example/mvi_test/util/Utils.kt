@@ -225,7 +225,7 @@ object Utils {
                 "\n\n$drawData" +
                 "\n\n[ 추첨 결과 ]" +
                 "\n$numberList" +
-                "\n\n\"행운 로또 추첨\" 무료 다운로드" +
+                "\n\n[ 무료 다운로드 ]" +
                 "\n\n${storeUrl}".trimIndent()
     }
 

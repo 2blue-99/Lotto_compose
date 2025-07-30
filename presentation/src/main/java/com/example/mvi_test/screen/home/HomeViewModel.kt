@@ -7,7 +7,7 @@ import com.example.domain.model.RoundSpinner
 import com.example.domain.repository.LottoRepository
 import com.example.domain.util.CommonMessage
 import com.example.mvi_test.base.BaseViewModel
-import com.example.mvi_test.screen.home.state.DialogState
+import com.example.mvi_test.screen.home.state.BaseDialogState
 import com.example.mvi_test.screen.home.state.HomeActionState
 import com.example.mvi_test.screen.home.state.HomeEffectState
 import com.example.mvi_test.screen.home.state.HomeUIState
@@ -39,7 +39,7 @@ class HomeViewModel @Inject constructor(
     val sideEffectState = _sideEffectState.receiveAsFlow()
 
     val homeUIState = MutableStateFlow<HomeUIState>(HomeUIState.Loading)
-    val spinnerDialogState = MutableStateFlow<DialogState<RoundSpinner>>(DialogState.Hide)
+    val spinnerDialogState = MutableStateFlow<BaseDialogState<RoundSpinner>>(BaseDialogState.Hide)
 
     init {
         // 회차 정보 데이터 구독
@@ -72,15 +72,15 @@ class HomeViewModel @Inject constructor(
         when(intent){
             is HomeActionState.OnChangeRoundPosition -> {
                 // 다이알로그 숨김처리
-                spinnerDialogState.value = DialogState.Hide
+                spinnerDialogState.value = BaseDialogState.Hide
                 // UI State 변경
                 val uiState = homeUIState.value
                 if(uiState is HomeUIState.Success){
                     homeUIState.value = uiState.copy(initPosition = intent.targetRound)
                 }
             }
-            is HomeActionState.ShowDialog -> { spinnerDialogState.value = DialogState.Show(intent.spinnerItem) }
-            is HomeActionState.HideDialog -> { spinnerDialogState.value = DialogState.Hide }
+            is HomeActionState.ShowDialog -> { spinnerDialogState.value = BaseDialogState.Show(intent.spinnerItem) }
+            is HomeActionState.HideDialog -> { spinnerDialogState.value = BaseDialogState.Hide }
         }
     }
 
@@ -88,13 +88,6 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             when(eventState){
                 else -> {_sideEffectState.send(eventState)}
-//                is HomeEffectState.ShowToast -> sideEffectState.emit(HomeEffectState.ShowToast(eventState.message))
-//                is HomeEffectState.ShowSnackbar -> sideEffectState.emit(HomeEffectState.ShowSnackbar(eventState.message))
-//                is HomeEffectState.NavigateToSetting -> sideEffectState.emit(eventState)
-//                is HomeEffectState.NavigateToRandom -> navigateToRandom()
-//                is HomeEffectState.NavigateToRecode -> navigateToRecode()
-//                is HomeEffectState.NavigateToStatistic -> navigateToStatistic()
-//                is HomeEffectState.DialogState -> { dialogVisibleState = effect.show }
             }
         }
     }

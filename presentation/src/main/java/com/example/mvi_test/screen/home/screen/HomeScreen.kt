@@ -16,9 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -59,13 +57,12 @@ import com.example.domain.model.LottoRound
 import com.example.domain.model.RoundSpinner
 import com.example.domain.util.CommonMessage
 import com.example.mvi_test.R
-import com.example.mvi_test.designsystem.common.CommonAdBanner
 import com.example.mvi_test.designsystem.common.CommonLottoContent
 import com.example.mvi_test.designsystem.common.CommonSpinnerDialog
 import com.example.mvi_test.designsystem.common.HorizontalSpacer
 import com.example.mvi_test.designsystem.common.VerticalSpacer
 import com.example.mvi_test.screen.home.HomeViewModel
-import com.example.mvi_test.screen.home.state.DialogState
+import com.example.mvi_test.screen.home.state.BaseDialogState
 import com.example.mvi_test.screen.home.state.HomeActionState
 import com.example.mvi_test.screen.home.state.HomeEffectState
 import com.example.mvi_test.screen.home.state.HomeUIState
@@ -120,12 +117,12 @@ fun HomeRoute(
 @Composable
 fun HomeScreen(
     homeUiState: HomeUIState = HomeUIState.Loading,
-    spinnerDialogState: DialogState<RoundSpinner> = DialogState.Hide,
+    spinnerDialogState: BaseDialogState<RoundSpinner> = BaseDialogState.Hide,
     actionHandler: (HomeActionState) -> Unit = {},
     effectHandler: (HomeEffectState) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    if(spinnerDialogState is DialogState.Show){
+    if(spinnerDialogState is BaseDialogState.Show){
         CommonSpinnerDialog(
             lastIndex = spinnerDialogState.data.lastIndex,
             initIndex = spinnerDialogState.data.initIndex,

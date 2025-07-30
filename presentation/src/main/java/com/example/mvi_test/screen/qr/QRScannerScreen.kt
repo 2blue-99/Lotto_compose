@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -40,7 +41,8 @@ import com.example.domain.type.DialogType
 import com.example.domain.util.CommonMessage
 import com.example.mvi_test.designsystem.common.BaseDialog
 import com.example.mvi_test.designsystem.common.VerticalSpacer
-import com.example.mvi_test.screen.home.state.DialogState
+import com.example.mvi_test.screen.qr.state.AdDialogState
+import com.example.mvi_test.screen.qr.state.PermissionDialogState
 import com.example.mvi_test.screen.qr.state.QRScannerActionState
 import com.example.mvi_test.screen.qr.state.QRScannerEffectState
 import com.example.mvi_test.screen.qr.state.QRScannerUIState
@@ -56,18 +58,24 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @Composable
 fun QRScannerRouth(
     popBackStack: () -> Unit,
+    showFrontPageAd: () -> StateFlow<Boolean>,
     modifier: Modifier = Modifier,
     viewModel: QRScannerViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val dialogState by viewModel.dialogState.collectAsStateWithLifecycle()
+    val permissionDialogState by viewModel.permissionDialogState.collectAsStateWithLifecycle()
+    val adDialogState by viewModel.adDialogState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.sideEffectState.collectLatest { effect ->
@@ -81,11 +89,47 @@ fun QRScannerRouth(
         }
     }
 
+    // TODO 더 나은 구조가 있을지 고민
+    // 권한 확인 다이알로그
+    if(permissionDialogState is PermissionDialogState.Show){
+        BaseDialog(
+            dialogType = (permissionDialogState as PermissionDialogState.Show).dialogType,
+            onDismiss = {},
+            onConfirm = {
+                viewModel.actionHandler(QRScannerActionState.HidePermissionDialog)
+                context.openSetting()
+            },
+            onCancel = { viewModel.actionHandler(QRScannerActionState.HidePermissionDialog) },
+        )
+    }
+
+    // 광고 확인 다이알로그
+    if(adDialogState is AdDialogState.Show){
+        val dialog = adDialogState as AdDialogState.Show
+        BaseDialog(
+            dialogType = dialog.dialogType,
+            onDismiss = {},
+            onConfirm = {
+                coroutineScope.launch {
+                    // 광고 시작 처리 및 완료 Flow 체크
+                    showFrontPageAd().collectLatest { state ->
+                        if (state) {
+                            context.openBrowser(dialog.url)
+                            viewModel.effectHandler(QRScannerEffectState.PopBackStack)
+                        }
+                    }
+                }
+            },
+            onCancel = {
+                viewModel.effectHandler(QRScannerEffectState.PopBackStack)
+            }
+        )
+    }
+
     QRScannerScreen(
         uiState,
         viewModel::actionHandler,
         viewModel::effectHandler,
-        dialogState,
         modifier
     )
 }
@@ -95,24 +139,9 @@ fun QRScannerScreen(
     uiState: QRScannerUIState = QRScannerUIState.Loading,
     actionHandler: (QRScannerActionState) -> Unit,
     effectHandler: (QRScannerEffectState) -> Unit,
-    dialogState: DialogState<DialogType> = DialogState.Hide,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-
     var permissionState  by remember { mutableStateOf(false) }
-
-    if(dialogState is DialogState.Show){
-        BaseDialog(
-            dialogType = dialogState.data,
-            onDismiss = {},
-            onConfirm = {
-                actionHandler(QRScannerActionState.HideDialog)
-                context.openSetting()
-            },
-            onCancel = { actionHandler(QRScannerActionState.HideDialog) },
-        )
-    }
 
     Box(
         modifier = Modifier
@@ -122,7 +151,9 @@ fun QRScannerScreen(
     ) {
         if(permissionState) {
             QRContainer(
-                onScanSuccess = {},
+                onScanSuccess = { url ->
+                    actionHandler(QRScannerActionState.ShowAdDialog(DialogType.FRONT_PAGE_AD, url))
+                },
                 effectHandler = effectHandler
             )
         }
@@ -162,7 +193,7 @@ fun CheckPermission(
             permissionState.launchPermissionRequest() // 권한 요청
         // 권한 비허용 + 헌번 이상 거부 O
         }else if(!permissionState.status.isGranted && requestState){
-            actionHandler(QRScannerActionState.ShowDialog(DialogType.CAMERA_PERMISSION)) // 설정 화면으로 이동하도록 유도 다이알로그 노출
+            actionHandler(QRScannerActionState.ShowPermissionDialog(DialogType.CAMERA_PERMISSION)) // 설정 화면으로 이동하도록 유도 다이알로그 노출
         // 권한 요청 -> 거부
         }else if(!permissionState.status.isGranted){
             // TODO 뒤로가기 처리하는것도 괜찮은 것 같음
@@ -219,7 +250,7 @@ private fun TargetBoxPreview() {
 @OptIn(ExperimentalGetImage::class)
 @Composable
 fun QRContainer(
-    onScanSuccess: () -> Unit,
+    onScanSuccess: (String) -> Unit,
     effectHandler: (QRScannerEffectState) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -259,8 +290,7 @@ fun QRContainer(
                                     lastScanned = value
                                     barcode.rawValue?.let { url ->
                                         context.startVibrate()
-                                        context.openBrowser(url)
-                                        effectHandler(QRScannerEffectState.PopBackStack)
+                                        onScanSuccess(url)
                                     } ?: { effectHandler(QRScannerEffectState.ShowToast(CommonMessage.SCANNER_FAIL)) }
                                     return@addOnSuccessListener
                                 }
