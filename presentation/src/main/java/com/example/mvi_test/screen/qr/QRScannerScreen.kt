@@ -144,7 +144,7 @@ fun QRScannerScreen(
     var permissionState  by remember { mutableStateOf(false) }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Color.Black),
         contentAlignment = Alignment.Center
