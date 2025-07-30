@@ -519,7 +519,7 @@ fun ButtonLayout(
                 modifier = Modifier.weight(1f),
                 onClick = { effectHandler(HomeEffectState.NavigateToRandom) },
             )
-            Spacer(modifier = Modifier.width(24.dp))
+            Spacer(modifier = Modifier.width(12.dp))
             HomeIconButton(
                 containerColor = DarkGray,
                 icon = ImageVector.vectorResource(R.drawable.recode_icon),
@@ -528,7 +528,7 @@ fun ButtonLayout(
                 onClick = { effectHandler(HomeEffectState.NavigateToRecode) },
             )
         }
-        Spacer(modifier = Modifier.height(26.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         Row {
             HomeIconButton(
                 containerColor = PrimaryColor,
@@ -538,7 +538,7 @@ fun ButtonLayout(
                 modifier = Modifier.weight(1f),
                 onClick = { effectHandler(HomeEffectState.NavigateToStatistic) },
             )
-            Spacer(modifier = Modifier.width(26.dp))
+            Spacer(modifier = Modifier.width(12.dp))
             HomeIconButton(
                 containerColor = Color.LightGray,
 //                icon = Icons.Default.Star,
