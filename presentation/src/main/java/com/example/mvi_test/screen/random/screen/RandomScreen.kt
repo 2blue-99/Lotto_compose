@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.model.Keyword
+import com.example.domain.type.DrawType
 import com.example.domain.type.DrawType.Companion.TYPE_LUCKY
 import com.example.domain.util.CommonMessage
 import com.example.mvi_test.R
@@ -169,6 +170,7 @@ fun RandomScreen(
                     ))
                 },
                 lottoList = if(lottoUIState is LottoUIState.Success) lottoUIState.lottoList else emptyList(),
+                drawType = DrawType.LuckyDraw(keyword = keyword),
                 mainColor = SubColor
             )
         }

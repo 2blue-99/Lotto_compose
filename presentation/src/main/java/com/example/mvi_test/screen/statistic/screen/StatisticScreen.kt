@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.model.StatisticItem
+import com.example.domain.type.DrawType
 import com.example.domain.type.RangeType
 import com.example.domain.util.CommonMessage
 import com.example.mvi_test.designsystem.common.CommonAnimationButton
@@ -228,6 +229,7 @@ fun StatisticScreen(
                     effectHandler(StatisticEffectState.ShowToast(CommonMessage.RANDOM_SAVED_SUCCESS))
                 },
                 lottoList = if(lottoUIState is LottoUIState.Success) lottoUIState.lottoList else emptyList(),
+                drawType = DrawType.StatisticDraw(list = selectNumberList.toList().joinToString(", ")),
                 mainColor = PrimaryColor
             )
         }

@@ -1,15 +1,16 @@
 package com.example.domain.type
 
-sealed class DrawType {
-    abstract val tagName: String
+sealed interface DrawType {
+    val tagName: String
+
     data class LuckyDraw(
         override val tagName: String = TYPE_LUCKY,
         val keyword: String
-    ): DrawType()
+    ): DrawType
     data class StatisticDraw(
         override val tagName: String = TYPE_STATISTIC,
         val list: String
-    ): DrawType()
+    ): DrawType
 
     companion object {
         const val TYPE_LUCKY = "행운"

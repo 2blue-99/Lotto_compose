@@ -271,12 +271,12 @@ fun RecodeItem(
                     },
                     // 복사하기
                     onclickCopy = {
-                        val text = drawResultToString(lottoList)
+                        val text = drawResultToString(lottoRecode.drawType, lottoList, context.packageName)
                         clipboardManager.setText(AnnotatedString(text))
                     },
                     // 공유하기
                     onClickShare = {
-                        val text = drawResultToString(lottoList)
+                        val text = drawResultToString(lottoRecode.drawType, lottoList, context.packageName)
                         context.shareLotto(text)
                     }
                 )

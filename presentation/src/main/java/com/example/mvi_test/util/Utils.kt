@@ -14,6 +14,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
 import com.example.domain.model.Keyword
 import com.example.domain.model.LottoItem
+import com.example.domain.type.DrawType
 import com.example.mvi_test.BuildConfig
 import timber.log.Timber
 import java.text.SimpleDateFormat
@@ -205,18 +206,27 @@ object Utils {
     /**
      * 추첨 결과 복사하기
      */
-    fun drawResultToString(list: List<List<String>>): String {
-        val format = list.map {
+    fun drawResultToString(drawType: DrawType, list: List<List<String>>, packageName: String): String {
+        val drawData = when(drawType){
+            is DrawType.LuckyDraw -> { "[ 행운 키워드 ]\n${drawType.keyword}" }
+            is DrawType.StatisticDraw -> { "[ 포함 번호 ]\n${drawType.list}" }
+        }
+
+        val numberList = list.map {
             it.map {
                 if(it.toInt() in 1..9) "0"+it
                 else it
             }.joinToString(" ")
         }.joinToString("\n")
 
-        return "\"최신 로또 추첨\" 결과입니다." +
-                "\n\n$format\"" +
-                "\n\n\"최신 로또 추첨\" 무료 다운로드" +
-                "\nwww.naver.com".trimIndent()
+        val storeUrl = packageName.getPlayStoreUrl()
+
+        return "\"행운 로또 추첨\" 결과입니다." +
+                "\n\n$drawData" +
+                "\n\n[ 추첨 결과 ]" +
+                "\n$numberList" +
+                "\n\n\"행운 로또 추첨\" 무료 다운로드" +
+                "\n\n${storeUrl}".trimIndent()
     }
 
     /**
@@ -264,11 +274,14 @@ fun Context.openBrowser(url: String){
     this.startActivity(intent)
 }
 
+fun String.getPlayStoreUrl(): String = "https://play.google.com/store/apps/details?id=${this}"
+
 /**
  * 플레이 스토어 이동
  */
 fun Context.openStore(){
-    val playStoreUrl = "https://play.google.com/store/apps/details?id=${this.packageName}"
+    this.packageName.getPlayStoreUrl()
+    val playStoreUrl = this.packageName.getPlayStoreUrl()
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(playStoreUrl))
     this.startActivity(intent)
 }

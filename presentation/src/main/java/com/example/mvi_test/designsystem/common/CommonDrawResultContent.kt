@@ -36,6 +36,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.domain.model.LottoItem
+import com.example.domain.type.DrawType
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.DarkGray
 import com.example.mvi_test.ui.theme.LightGray
@@ -56,6 +57,7 @@ import kotlinx.coroutines.launch
 fun CommonDrawResultContent(
     onClickSave: (List<LottoItem>) -> Unit = {},
     lottoList: List<LottoItem> = testLottoList(),
+    drawType: DrawType,
     mainColor: Color,
     modifier: Modifier = Modifier
 ) {
@@ -191,7 +193,7 @@ fun CommonDrawResultContent(
                         if (checkBoxStates[index]) lottoList[index].drawList else null
                     }
                 if (checkedItemList.isNotEmpty()) {
-                    val text = drawResultToString(checkedItemList)
+                    val text = drawResultToString(drawType, checkedItemList, context.packageName)
                     clipboardManager.setText(AnnotatedString(text))
                 }
             },
@@ -211,7 +213,7 @@ fun CommonDrawResultContent(
                         if (checkBoxStates[index]) lottoList[index].drawList else null
                     }
                 if (checkedItemList.isNotEmpty()) {
-                    val text = drawResultToString(checkedItemList)
+                    val text = drawResultToString(drawType, checkedItemList, context.packageName)
                     context.shareLotto(text)
                 }
             },
