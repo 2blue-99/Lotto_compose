@@ -39,6 +39,7 @@ import com.example.mvi_test.designsystem.common.VerticalSpacer
 import com.example.mvi_test.screen.setting.SettingViewModel
 import com.example.mvi_test.ui.theme.CommonStyle
 import com.example.mvi_test.ui.theme.LightGray
+import com.example.mvi_test.ui.theme.PrimaryColor
 import com.example.mvi_test.ui.theme.ScreenBackground
 import com.example.mvi_test.util.openEmail
 import com.example.mvi_test.util.openStore
@@ -129,6 +130,7 @@ fun SettingContent(modifier: Modifier = Modifier) {
             icon = Icons.Default.Create,
             title = "리뷰 남기기",
             content = "Click",
+            contentHighlighting = true,
             onClick = { context.openStore() }
         )
         HorizontalDivider(
@@ -139,6 +141,7 @@ fun SettingContent(modifier: Modifier = Modifier) {
             icon = Icons.Default.Email,
             title = "문의하기",
             content = "Click",
+            contentHighlighting = true,
             onClick = { context.openEmail() }
         )
         HorizontalDivider(
@@ -149,6 +152,7 @@ fun SettingContent(modifier: Modifier = Modifier) {
             icon = Icons.Default.Settings,
             title = "앱 버전",
             content = packageInfo.versionName.toString(),
+            contentHighlighting = false,
             onClick = {  }
         )
     }
@@ -159,6 +163,7 @@ fun SettingItem(
     icon: ImageVector,
     title: String,
     content: String,
+    contentHighlighting: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -178,11 +183,13 @@ fun SettingItem(
         Text(
             text = title,
             style = CommonStyle.text16,
+
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
             text = content,
-            style = CommonStyle.text16,
+            style = if(contentHighlighting) CommonStyle.text16UnderLine else CommonStyle.text16,
+            color = if(contentHighlighting) PrimaryColor else Color.Black
         )
     }
 }
