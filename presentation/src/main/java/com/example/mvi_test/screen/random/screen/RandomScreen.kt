@@ -120,7 +120,7 @@ fun RandomScreen(
             .padding(top = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally,
-        contentPadding = PaddingValues(bottom = 50.dp)
+        contentPadding = PaddingValues(bottom = 60.dp)
     ) {
         item {
             CommonExpandableBox(

@@ -4,6 +4,9 @@ import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -71,6 +74,7 @@ import com.example.mvi_test.util.Utils.toLottoColor
 import com.example.mvi_test.util.startVibrate
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 
 @Composable
 fun StatisticRoute(
@@ -185,16 +189,18 @@ fun StatisticScreen(
                 rangeType = rangeType,
                 statisticUIState = statisticUIState,
                 expand = expand,
+                itemSelectList = selectNumberList,
                 onChangeExpand = { expand = it },
                 changeSelectState = { state, number ->
                     if (state) {
                         // 로또 선택 처리
                         selectNumberList.add(number)
+                        Timber.d("selectNumberList : $selectNumberList")
                     } else {
                         // 로또 선택 해제
                         selectNumberList.remove(number)
                     }
-                }
+                },
             )
         }
 
@@ -248,6 +254,7 @@ fun StatisticContent(
     rangeType: RangeType = RangeType.THREE_MONTH,
     statisticUIState: StatisticUIState = StatisticUIState.Loading,
     expand: Boolean = false,
+    itemSelectList: List<String> = emptyList(),
     onChangeExpand: (Boolean) -> Unit = {},
     changeSelectState: (Boolean, String) -> Unit,
     modifier: Modifier = Modifier
@@ -267,7 +274,6 @@ fun StatisticContent(
                     .animateContentSize()
                     .padding(16.dp)
             ) {
-
                 val itemList = statisticUIState.statisticItem
                 // 막대 그래프 비율 산정을 위한 가장 큰 값 변수화
                 val higherCount = itemList.first().count.toInt().toFloat()
@@ -305,7 +311,8 @@ fun StatisticContent(
                         StatisticItem(
                             item = item,
                             percentage = item.count.toInt() / higherCount,
-                            onclickItem = changeSelectState
+                            checked = itemSelectList.contains(item.number),
+                            onclickItem = changeSelectState,
                         )
                     }
 
@@ -318,7 +325,8 @@ fun StatisticContent(
                                 StatisticItem(
                                     item = item,
                                     percentage = item.count.toInt() / higherCount,
-                                    onclickItem = changeSelectState
+                                    checked = itemSelectList.contains(item.number),
+                                    onclickItem = changeSelectState,
                                 )
                             }
                         }
@@ -359,29 +367,32 @@ private fun StatisticContentPreview() {
 fun StatisticItem(
     item: StatisticItem,
     percentage: Float = 1f, // 0~1
+    checked: Boolean,
     onclickItem: (Boolean, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val animatedPercentage by animateFloatAsState(
+        targetValue = percentage,
+        animationSpec = tween(
+            durationMillis = 800,
+            easing = FastOutSlowInEasing
+        ),
+    )
     val gradientList = listOf(Color.White, item.number.toInt().toLottoColor())
     val shrinkGradient = Brush.linearGradient(colors = gradientList)
-    var checked by remember { mutableStateOf(false) }
 
-    // checked 초기화 처리
-    LaunchedEffect(item) {
-        checked = false
-    }
 
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onclickItem(!checked, item.number) }
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box { // CheckBox 는 Box 로 싸매야 Preview 에 범위가 나옴
             Checkbox(
                 checked = checked,
-                onCheckedChange = {
-                    checked = !checked
-                    onclickItem(checked, item.number)
-                },
+                onCheckedChange = null,
                 colors = CheckboxDefaults.colors(
                     checkedColor = DarkGray,
                     uncheckedColor = DarkGray,
@@ -389,19 +400,22 @@ fun StatisticItem(
             )
         }
 
+        HorizontalSpacer(10.dp)
+
         CommonLottoCircle(
             targetNumber = item.number,
             isAnimation = false,
             modifier = Modifier.size(30.dp)
         )
 
+        // 막대 바
         Box(
             modifier = Modifier
                 .weight(1f)
         ) {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth(percentage) // TODO 여기다가 비율 넣으면 됨
+                    .fillMaxWidth(animatedPercentage)
                     .height(30.dp)
                     .clip(RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp))
                     .background(shrinkGradient)

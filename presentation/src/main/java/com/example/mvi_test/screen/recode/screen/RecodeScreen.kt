@@ -142,7 +142,7 @@ fun RecodeContent(
                     modifier = Modifier.heightIn(min = 200.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    contentPadding = PaddingValues(bottom = 50.dp)
+                    contentPadding = PaddingValues(bottom = 60.dp)
                 ) {
                     itemsIndexed(recodeList, key = { _, item -> item.saveDate }) { index, lottoRecode ->
                         Card (
