@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.data"
+    namespace = "com.lucky_lotto.data"
     compileSdk = 35
 
     defaultConfig {

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "474629009145",
+    "project_id": "lucky-lotto-3ef62",
+    "storage_bucket": "lucky-lotto-3ef62.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:474629009145:android:9016a3889373a82b89fc28",
+        "android_client_info": {
+          "package_name": "com.lucky_lotto.mvi_test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhJE13HJ2KqIt4XO5pxVPngMrj68TuvII"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
