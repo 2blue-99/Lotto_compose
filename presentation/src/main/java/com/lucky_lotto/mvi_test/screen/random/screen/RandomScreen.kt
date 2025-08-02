@@ -261,7 +261,7 @@ fun KeywordContent(
                     focusedIndicatorColor = Color.LightGray,
                     unfocusedIndicatorColor = Color.LightGray
                 ),
-                textStyle = CommonStyle.text20.copy(textAlign = TextAlign.Start),
+                textStyle = CommonStyle.text20Bold.copy(textAlign = TextAlign.Start),
                 value = keyword,
                 onValueChange = onChangeKeyword,
                 placeholder = {

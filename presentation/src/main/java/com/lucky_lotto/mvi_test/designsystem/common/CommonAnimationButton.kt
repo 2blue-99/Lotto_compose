@@ -47,7 +47,7 @@ fun CommonAnimationButton(
             text = text,
             style = CommonStyle.text16,
             minSize = 10,
-            color = Color.White
+            color = if(enabled) Color.White else DarkGray
         )
     }
 }
