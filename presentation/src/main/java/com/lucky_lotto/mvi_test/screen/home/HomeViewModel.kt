@@ -58,7 +58,7 @@ class HomeViewModel @Inject constructor(
             if(networkMonitor.isOnline.first()) {
                 if(lottoRepo.updateLottoRound()){
                     // 업데이트 완료
-                    _sideEffectState.send(HomeEffectState.ShowToast(CommonMessage.HOME_UPDATE_SUCCESS))
+//                    _sideEffectState.send(HomeEffectState.ShowToast(CommonMessage.HOME_UPDATE_SUCCESS))
                 }else {
                     // 이미 최신
                 }
