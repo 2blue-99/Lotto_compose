@@ -45,6 +45,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -55,6 +57,7 @@ import com.lucky_lotto.domain.type.RangeType
 import com.lucky_lotto.domain.util.CommonMessage
 import com.lucky_lotto.domain.util.Constants.DRAW_COMPLETE_TIME
 import com.lucky_lotto.domain.util.Constants.PADDING_VALUE_AD_BOX
+import com.lucky_lotto.mvi_test.R
 import com.lucky_lotto.mvi_test.designsystem.common.AutoSizeText
 import com.lucky_lotto.mvi_test.designsystem.common.CommonAnimationButton
 import com.lucky_lotto.mvi_test.designsystem.common.CommonDrawResultContent
@@ -169,14 +172,14 @@ fun StatisticScreen(
                         }
                     }
                 },
-//                expandContent = {
-//                    Text(
-//                        text = stringResource(R.string.random_bar_explain),
-//                        style = CommonStyle.text14,
-//                        color = Color.White,
-//                        textAlign = TextAlign.Center,
-//                    )
-//                }
+                expandContent = {
+                    Text(
+                        text = stringResource(R.string.statistic_bar_explain),
+                        style = CommonStyle.text14,
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                    )
+                }
             )
         }
 

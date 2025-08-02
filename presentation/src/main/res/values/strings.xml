@@ -9,5 +9,20 @@
     <string name="setting">설정</string>
     <string name="qr_scanner">QR Scanner</string>
 
-    <string name="random_bar_explain">대부분의 랜덤 추첨 기능은\n난수 알고리즘에 랜덤 시드값을 넣어\n결과를 생성합니다.\n\n“행운 로또 추첨”은\n사용자의 키워드를 숫자로 변환하여\n랜덤 시드값에 반영시키는 원리로\n\n랜덤 추첨이라는 점은 변함 없으나,\n키워드를 반영하여 추첨할 수 있는\n특별한 경험을 제공 합니다.</string>
+    <string name="random_bar_explain">키워드를 입력하고 추첨해보세요!\n\n
+이름, 소원, 기분… 어떤 키워드든 괜찮아요.\n
+그 키워드를 알고리즘에 반영하여,\n
+어울리는 행운의 숫자를 뽑아드려요.\n
+\n
+평범한 랜덤 추첨이 아닌,\n
+나만의 특별한 로또 추첨을 경험해보세요.
+    </string>
+    <string name="statistic_bar_explain">어떤 숫자가 자주 나왔는지,\n
+선택한 기간에 해당하는 통계 그래프를 보여드려요.\n
+\n
+원하는 기간을 설정하고, 자주 등장한 숫자를 포함시켜\n
+조금 더 유리한 추첨을 해보세요!
+    </string>
+    <!--    <string name="random_bar_explain">대부분의 랜덤 추첨 기능은\n난수 알고리즘에 랜덤 시드값을 넣어\n결과를 생성합니다.\n\n“행운 로또 추첨”은\n사용자의 키워드를 숫자로 변환하여\n랜덤 시드값에 반영시키는 원리로\n\n랜덤 추첨이라는 점은 변함 없으나,\n키워드를 반영하여 추첨할 수 있는\n특별한 경험을 제공 합니다.</string>-->
 </resources>
+
