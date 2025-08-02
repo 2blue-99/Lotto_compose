@@ -42,7 +42,7 @@ android {
         release {
             buildConfigField("String", "AD_BOTTOM_BANNER_ID", properties.getProperty("AD_BOTTOM_BANNER_ID"))
             buildConfigField("String", "AD_DIALOG_BANNER_ID", properties.getProperty("AD_DIALOG_BANNER_ID"))
-            buildConfigField("String", "AD_FULL_PAGE_ID", properties.getProperty("AD_TEST_FULL_PAGE_ID"))
+            buildConfigField("String", "AD_FULL_PAGE_ID", properties.getProperty("AD_FULL_PAGE_ID"))
 
             isMinifyEnabled = false
             proguardFiles(

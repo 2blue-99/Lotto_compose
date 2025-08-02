@@ -107,6 +107,7 @@ fun QRScannerRouth(
         val dialog = adDialogState as AdDialogState.Show
         BaseDialog(
             dialogType = dialog.dialogType,
+            autoConfirmDialog = true,
             onDismiss = {},
             onConfirm = {
                 coroutineScope.launch {
