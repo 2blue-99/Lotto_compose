@@ -32,7 +32,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -45,7 +44,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -58,6 +56,7 @@ import com.lucky_lotto.domain.model.RoundSpinner
 import com.lucky_lotto.domain.util.CommonMessage
 import com.lucky_lotto.domain.util.Constants.PADDING_VALUE_AD_BOX
 import com.lucky_lotto.mvi_test.R
+import com.lucky_lotto.mvi_test.designsystem.common.AutoSizeText
 import com.lucky_lotto.mvi_test.designsystem.common.CommonLottoContent
 import com.lucky_lotto.mvi_test.designsystem.common.CommonSpinnerDialog
 import com.lucky_lotto.mvi_test.designsystem.common.HorizontalSpacer
@@ -336,9 +335,10 @@ fun LottoCardItem(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
+                    AutoSizeText(
                         text = lottoRoundItem.drawDate,
                         style = CommonStyle.text12,
+                        minSize = 6,
                         color = Color.White,
                         modifier = Modifier.weight(1f)
                     )
@@ -357,10 +357,10 @@ fun LottoCardItem(
                 Row(
                     verticalAlignment = Alignment.Bottom
                 ) {
-                    Text(
+                    AutoSizeText(
                         text = lottoRoundItem.drawNumber + "회",
                         style = CommonStyle.text36Bold,
-                        fontWeight = FontWeight.Bold,
+                        minSize = 30,
                         color = Color.White
                     )
                 }
@@ -377,17 +377,6 @@ fun LottoCardItem(
                     )
                 )
             }
-//            Box(
-//                modifier = Modifier.align(Alignment.TopEnd), // 우상단에 정렬
-//            ) {
-//                Text(
-//                    text = "1억",
-//                    style = CommonStyle.text30Bold,
-//                    fontWeight = FontWeight.Bold,
-//                    color = Color.White,
-//                )
-//            }
-
         }
     }
 }
@@ -468,25 +457,29 @@ fun LottoInfoItem(
             .fillMaxWidth()
             .padding(vertical = 10.dp)
     ) {
-        Text(
+        AutoSizeText(
             text = titleText,
-            color = DarkGray,
             style = CommonStyle.text14,
+            minSize = 8,
+            color = DarkGray,
             modifier = Modifier.weight(1f),
         )
-        Text(
+
+        AutoSizeText(
             text = valueText,
-            color = Red,
             style = CommonStyle.text14Bold,
+            minSize = 8,
+            color = Red,
+            textAlign = TextAlign.End,
             modifier = Modifier.weight(1f),
-            textAlign = TextAlign.End
         )
         HorizontalSpacer(2.dp)
-        Text(
+        AutoSizeText(
             text = subText,
-            color = DarkGray,
             style = CommonStyle.text14,
-            textAlign = TextAlign.End,
+            minSize = 8,
+            color = DarkGray,
+            textAlign = TextAlign.End
         )
     }
 }
@@ -587,17 +580,19 @@ private fun HomeIconButton(
             }
             titleText?.let {
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
+                AutoSizeText(
                     text = titleText,
                     style = CommonStyle.text18Bold,
+                    minSize = 12,
                     color = Color.White
                 )
             }
             descriptionText?.let {
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
+                AutoSizeText(
                     text = descriptionText,
                     style = CommonStyle.text14,
+                    minSize = 8,
                     color = Color.White
                 )
             }

@@ -50,6 +50,7 @@ import com.lucky_lotto.domain.util.CommonMessage
 import com.lucky_lotto.domain.util.Constants.DRAW_COMPLETE_TIME
 import com.lucky_lotto.domain.util.Constants.PADDING_VALUE_AD_BOX
 import com.lucky_lotto.mvi_test.R
+import com.lucky_lotto.mvi_test.designsystem.common.AutoSizeText
 import com.lucky_lotto.mvi_test.designsystem.common.CommonAnimationButton
 import com.lucky_lotto.mvi_test.designsystem.common.CommonDrawResultContent
 import com.lucky_lotto.mvi_test.designsystem.common.CommonExpandableBox
@@ -263,10 +264,14 @@ fun KeywordContent(
                 textStyle = CommonStyle.text20.copy(textAlign = TextAlign.Start),
                 value = keyword,
                 onValueChange = onChangeKeyword,
-                placeholder = { Text(
-                    text = "행운의 키워드를 입력해주세요.",
-                    style = CommonStyle.text16
-                ) },
+                placeholder = {
+                    AutoSizeText(
+                        text = "행운의 키워드를 입력해주세요.",
+                        style = CommonStyle.text16Bold,
+                        color = LightGray,
+                        minSize = 10
+                    )
+                },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Done
                 ),

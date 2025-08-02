@@ -128,10 +128,11 @@ fun CommonLottoCircle(
             ),
         contentAlignment = Alignment.Center
     ){
-        Text(
+        AutoSizeText(
             text = targetNumber,
             style = CommonStyle.text16BoldShadow,
-            color = Color.White, // 보너스 로또 구분,
+            minSize = 10,
+            color = Color.White,
         )
     }
 }
@@ -141,80 +142,3 @@ fun CommonLottoCircle(
 private fun CommonLottoCirclePreview() {
     CommonLottoCircle()
 }
-
-
-//
-//@Composable
-//fun AutoScrollItem(
-//    targetNumber: Int = 45,
-//    waitTime: Long = 0,
-//    modifier: Modifier = Modifier
-//) {
-//    var isWait by remember { mutableStateOf(false) }
-//    val pagerState = rememberPagerState(pageCount = { 45 })
-//    val coroutineScope = rememberCoroutineScope()
-//
-//    fun scrollPage(currentPage: Int){
-//        coroutineScope.launch {
-//            pagerState.animateScrollToPage(
-//                animationSpec = spring(
-//                    dampingRatio = 0.4f,
-//                    stiffness = 1000f
-//                ),
-//                page = currentPage
-//            )
-//        }
-//    }
-//
-//    // 될때까지 스크롤
-//    LaunchedEffect(targetNumber, pagerState.currentPage) {
-//        if(!isWait) {
-//            delay(waitTime)
-//            isWait = true
-//        }
-//        if(targetNumber > pagerState.currentPage)
-//            scrollPage(pagerState.currentPage+1)
-//    }
-//
-//    VerticalPager(
-//        state = pagerState,
-//        modifier = modifier
-//            .height(20.dp),
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        userScrollEnabled = false
-//    ) { page ->
-//        LottoCircle(targetNumber)
-//    }
-//}
-//
-//@Preview
-//@Composable
-//private fun AutoScrollItemPreview() {
-//    AutoScrollItem(45)
-//}
-//
-//@Composable
-//fun LottoCircle(
-//    targetNumber: Int = 77,
-//    modifier: Modifier = Modifier
-//){
-//    Box(
-//        modifier = modifier
-//            .aspectRatio(1f)
-//            .clip(CircleShape)
-//            .background(targetNumber.toLottoColor()),
-//        contentAlignment = Alignment.Center
-//    ){
-//        Text(
-//            text = targetNumber.toString(),
-//            color = Color.White, // 보너스 로또 구분
-//            style = CommonStyle.text14
-//        )
-//    }
-//}
-//
-//@Preview
-//@Composable
-//private fun LottoCirclePreview() {
-//    LottoCircle()
-//}

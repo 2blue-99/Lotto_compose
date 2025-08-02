@@ -55,6 +55,7 @@ import com.lucky_lotto.domain.type.RangeType
 import com.lucky_lotto.domain.util.CommonMessage
 import com.lucky_lotto.domain.util.Constants.DRAW_COMPLETE_TIME
 import com.lucky_lotto.domain.util.Constants.PADDING_VALUE_AD_BOX
+import com.lucky_lotto.mvi_test.designsystem.common.AutoSizeText
 import com.lucky_lotto.mvi_test.designsystem.common.CommonAnimationButton
 import com.lucky_lotto.mvi_test.designsystem.common.CommonDrawResultContent
 import com.lucky_lotto.mvi_test.designsystem.common.CommonExpandableBox
@@ -535,9 +536,10 @@ fun SelectDrawEmpty(modifier: Modifier = Modifier) {
         modifier = modifier.height(30.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(
+        AutoSizeText(
             text = "숫자를 선택해 주세요",
             style = CommonStyle.text16Bold,
+            minSize = 8,
             color = LightGray
         )
     }

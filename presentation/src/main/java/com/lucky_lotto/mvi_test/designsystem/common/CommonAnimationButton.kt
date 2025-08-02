@@ -43,9 +43,11 @@ fun CommonAnimationButton(
         contentPadding = PaddingValues(4.dp),
         onClick = onClick
     ) {
-        Text(
+        AutoSizeText(
             text = text,
-            style = CommonStyle.text16
+            style = CommonStyle.text16,
+            minSize = 10,
+            color = Color.White
         )
     }
 }

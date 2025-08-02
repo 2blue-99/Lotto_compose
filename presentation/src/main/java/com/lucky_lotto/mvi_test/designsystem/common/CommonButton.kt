@@ -26,9 +26,10 @@ fun CommonButton(
         shape = RoundedCornerShape(16.dp),
         modifier = modifier
     ) {
-        Text(
+        AutoSizeText(
             text = text,
             style = CommonStyle.text16Bold,
+            minSize = 10,
             color = Color.White
         )
     }

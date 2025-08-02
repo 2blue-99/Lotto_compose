@@ -105,10 +105,11 @@ fun DynamicHorizontalSelector(
                         .weight(1f),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
+                    AutoSizeText(
                         text = range.monthText,
-                        color = Color.DarkGray,
-                        style = CommonStyle.text14
+                        style = CommonStyle.text14,
+                        minSize = 8,
+                        color = Color.DarkGray
                     )
                 }
             }
@@ -130,10 +131,11 @@ fun DynamicHorizontalSelector(
                 },
                 label = "rangeIndicator"
             ) { rangeType ->
-                Text(
+                AutoSizeText(
                     text = rangeType.monthText,
-                    color = Color.DarkGray,
                     style = CommonStyle.text14,
+                    minSize = 8,
+                    color = Color.DarkGray,
                 )
             }
         }
