@@ -27,6 +27,7 @@ import com.lucky_lotto.mvi_test.ui.theme.DarkGray
 import com.lucky_lotto.mvi_test.ui.theme.LightGray
 import com.lucky_lotto.mvi_test.ui.theme.PrimaryColor
 import kotlinx.coroutines.delay
+import timber.log.Timber
 
 @Composable
 fun BaseDialog(
@@ -37,12 +38,13 @@ fun BaseDialog(
     onCancel: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var count by remember { mutableDoubleStateOf(3.0) }
+    Timber.d("")
+    var count by remember { mutableDoubleStateOf(2.5) }
 
     LaunchedEffect(count) {
-        if(count <= 0.0) { onConfirm() }
-        delay(1000)
-        count-=1
+        if(count == 0.0) { onConfirm() } // 두번 이상 호출되는 버그 유의
+        delay(500)
+        count-=0.5
 
     }
 
@@ -68,7 +70,7 @@ fun BaseDialog(
             )
             if(autoConfirmDialog){
                 Text(
-                    text = "${count}초 후에 광고가 시작됩니다.",
+                    text = "${count.toInt()}초 후에 광고가 시작됩니다.",
                     style = CommonStyle.text14,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,

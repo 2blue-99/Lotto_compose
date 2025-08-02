@@ -79,7 +79,7 @@ class AdMobUtil(
                 }
                 override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                     // 광고 노출 실패
-                    Timber.e("front page ad failed to show.")
+                    Timber.e("front page ad failed to show. $adError")
                     frontPageAd = null
                     loadFrontPageAd()
                     _isAdFinish.value = true
