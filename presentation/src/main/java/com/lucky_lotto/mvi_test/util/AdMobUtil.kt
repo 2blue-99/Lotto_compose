@@ -2,8 +2,6 @@ package com.lucky_lotto.mvi_test.util
 
 import android.app.Activity
 import android.widget.Toast
-import com.lucky_lotto.domain.util.CommonMessage
-import com.lucky_lotto.mvi_test.BuildConfig
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -11,6 +9,8 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.lucky_lotto.domain.util.CommonMessage
+import com.lucky_lotto.mvi_test.BuildConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

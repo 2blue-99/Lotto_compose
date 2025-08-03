@@ -69,7 +69,7 @@ fun CommonSpinnerDialog(
         onDismissRequest = onDismiss
     ) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .background(Color.White, RoundedCornerShape(10.dp))
                 .fillMaxWidth()
                 .padding(16.dp),

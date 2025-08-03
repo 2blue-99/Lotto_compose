@@ -16,14 +16,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LifecycleResumeEffect
-import com.lucky_lotto.mvi_test.ui.theme.CommonStyle
-import com.lucky_lotto.mvi_test.ui.theme.LightGray
-import com.lucky_lotto.mvi_test.ui.theme.ScreenBackground
-import com.lucky_lotto.mvi_test.util.AdMobType
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
+import com.lucky_lotto.mvi_test.ui.theme.CommonStyle
+import com.lucky_lotto.mvi_test.ui.theme.LightGray
+import com.lucky_lotto.mvi_test.ui.theme.ScreenBackground
+import com.lucky_lotto.mvi_test.util.AdMobType
 import timber.log.Timber
 
 @Composable
@@ -72,32 +72,6 @@ fun CommonAdBanner(
     DisposableEffect(Unit) {
         onDispose { adView.destroy() }
     }
-
-    //    val offsetY = remember { Animatable(0f) }
-
-//    LaunchedEffect(Unit) {
-//        offsetY.animateTo(
-//            targetValue = 8f,
-//            animationSpec = infiniteRepeatable(
-//                animation = tween(durationMillis = 800, easing = LinearEasing),
-//                repeatMode = RepeatMode.Reverse
-//            )
-//        )
-//    }
-
-//    Box(
-//        modifier = modifier.padding(start = 10.dp, end = 10.dp, bottom = 20.dp),
-//        contentAlignment = Alignment.BottomCenter
-//    ) {
-//        Surface(
-//            elevation = 2.dp,
-//            shape = RoundedCornerShape(16),
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(60.dp)
-//                .offset { IntOffset(x = 0, y = offsetY.value.roundToInt()) }
-//        ) {
-
 }
 
 @Preview

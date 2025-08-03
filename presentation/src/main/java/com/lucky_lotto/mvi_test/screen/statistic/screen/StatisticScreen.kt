@@ -185,7 +185,6 @@ fun StatisticScreen(
 
         item {
             DynamicHorizontalSelector(
-                actionHandler = actionHandler,
                 currentRange = rangeType,
                 onClickRange = { rangeType = it }
             )

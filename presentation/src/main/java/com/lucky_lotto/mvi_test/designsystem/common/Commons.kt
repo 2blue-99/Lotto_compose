@@ -1,6 +1,5 @@
 package com.lucky_lotto.mvi_test.designsystem.common
 
-import androidx.activity.SystemBarStyle
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width

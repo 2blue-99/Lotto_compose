@@ -15,7 +15,6 @@ fun NavController.navigateToRandom(navOptions: NavOptions? = null){
 
 fun NavGraphBuilder.randomScreen(
     onShowSnackbar: suspend (CommonMessage) -> Unit,
-    popBackStack: () -> Unit,
     modifier: Modifier,
 ){
     composable(
@@ -23,7 +22,6 @@ fun NavGraphBuilder.randomScreen(
     ) {
         RandomRoute(
             onShowSnackbar,
-            popBackStack,
             modifier
         )
     }

@@ -183,12 +183,10 @@ fun NavHostContainer(
 
         randomScreen(
             onShowSnackbar = onShowSnackbar,
-            popBackStack = navController::popBackStack,
             modifier = Modifier.background(ScreenBackground).padding(paddingValue)
         )
 
         statisticScreen(
-            popBackStack = {},
             modifier = Modifier.background(ScreenBackground).padding(paddingValue)
         )
 
@@ -198,7 +196,6 @@ fun NavHostContainer(
         )
 
         settingScreen(
-            navController::popBackStack,
             modifier = Modifier.background(ScreenBackground).padding(paddingValue)
         )
 

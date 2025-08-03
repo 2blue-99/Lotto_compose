@@ -10,6 +10,5 @@ sealed class HomeEffectState {
     data object NavigateToRandom: HomeEffectState()
     data object NavigateToRecode: HomeEffectState()
     data object NavigateToStatistic: HomeEffectState()
-    // TODO 단발성 다이알로그는 이쪽이 맞음
 }
 

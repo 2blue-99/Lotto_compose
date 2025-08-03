@@ -67,7 +67,8 @@ fun CommonDatePicker(
                     color = DarkGray
                 )
             }
-        }
+        },
+        modifier = modifier
     ) {
         val todayDate = today.targetTimeFormat()
         val targetDate = datePickerState.selectedDateMillis?.targetTimeFormat() ?: "2025.12.31"

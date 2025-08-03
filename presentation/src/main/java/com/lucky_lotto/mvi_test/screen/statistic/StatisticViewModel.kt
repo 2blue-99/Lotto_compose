@@ -3,7 +3,6 @@ package com.lucky_lotto.mvi_test.screen.statistic
 import androidx.lifecycle.viewModelScope
 import com.lucky_lotto.domain.model.LottoItem
 import com.lucky_lotto.domain.repository.LottoRepository
-import com.lucky_lotto.domain.repository.UserRepository
 import com.lucky_lotto.domain.type.DrawType.Companion.TYPE_STATISTIC
 import com.lucky_lotto.domain.type.RangeType
 import com.lucky_lotto.mvi_test.base.BaseViewModel
@@ -23,7 +22,6 @@ import javax.inject.Inject
 @HiltViewModel
 class StatisticViewModel @Inject constructor(
     private val lottoRepository: LottoRepository,
-    private val userRepository: UserRepository
 ) : BaseViewModel() {
     private val _sideEffectState = Channel<StatisticEffectState>()
     val sideEffectState = _sideEffectState.receiveAsFlow()

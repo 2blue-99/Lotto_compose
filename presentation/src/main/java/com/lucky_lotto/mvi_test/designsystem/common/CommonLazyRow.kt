@@ -2,7 +2,6 @@ package com.lucky_lotto.mvi_test.designsystem.common
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -54,7 +53,6 @@ private fun CommonLazyRowPreview() {
     CommonLazyRow()
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CommonFlowRow(
     keywordList: List<Keyword> = listOf(Keyword(), Keyword(), Keyword(), Keyword(), Keyword()),

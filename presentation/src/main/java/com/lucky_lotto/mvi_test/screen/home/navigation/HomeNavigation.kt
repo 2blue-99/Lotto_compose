@@ -22,8 +22,6 @@ fun NavGraphBuilder.homeScreen(
 ){
     composable(
         route = homeRoute,
-//        exitTransition = { slideToLeftExit() },
-//        popEnterTransition = { slideToRightEnter() }
     ) {
         HomeRoute(
             navigateToQR,

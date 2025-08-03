@@ -59,10 +59,10 @@ import com.lucky_lotto.mvi_test.designsystem.common.CommonLazyRow
 import com.lucky_lotto.mvi_test.designsystem.common.HorizontalSpacer
 import com.lucky_lotto.mvi_test.designsystem.common.VerticalSpacer
 import com.lucky_lotto.mvi_test.screen.random.RandomViewModel
-import com.lucky_lotto.mvi_test.screen.random.state.TitleKeywordUIState
 import com.lucky_lotto.mvi_test.screen.random.state.LottoUIState
 import com.lucky_lotto.mvi_test.screen.random.state.RandomActionState
 import com.lucky_lotto.mvi_test.screen.random.state.RandomEffectState
+import com.lucky_lotto.mvi_test.screen.random.state.TitleKeywordUIState
 import com.lucky_lotto.mvi_test.ui.theme.CommonStyle
 import com.lucky_lotto.mvi_test.ui.theme.LightGray
 import com.lucky_lotto.mvi_test.ui.theme.ScreenBackground
@@ -77,7 +77,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun RandomRoute(
     onShowSnackbar: suspend (CommonMessage) -> Unit = {},
-    popBackStack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RandomViewModel = hiltViewModel()
 ) {
@@ -95,7 +94,6 @@ fun RandomRoute(
     }
 
     RandomScreen(
-        popBackStack = popBackStack,
         titleKeywordUIState = titleKeywordUIState,
         lottoUIState = lottoUIState,
         actionHandler = viewModel::actionHandler,
@@ -106,7 +104,6 @@ fun RandomRoute(
 
 @Composable
 fun RandomScreen(
-    popBackStack: () -> Unit = {},
     titleKeywordUIState: TitleKeywordUIState = TitleKeywordUIState.Loading,
     lottoUIState: LottoUIState = LottoUIState.Loading,
     actionHandler: (RandomActionState) -> Unit = {},

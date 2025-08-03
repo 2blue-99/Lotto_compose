@@ -1,7 +1,6 @@
 package com.lucky_lotto.mvi_test.screen.home
 
 import androidx.lifecycle.viewModelScope
-import com.lucky_lotto.data.datastore.UserDataStore
 import com.lucky_lotto.data.util.connect.NetworkMonitor
 import com.lucky_lotto.domain.model.RoundSpinner
 import com.lucky_lotto.domain.repository.LottoRepository
@@ -23,7 +22,6 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val networkMonitor: NetworkMonitor,
     private val lottoRepo: LottoRepository,
-    private val userDataStore: UserDataStore,
 ): BaseViewModel() {
 
     // 네트워크 상태 - 추후에 외부로 뺄 수 있음

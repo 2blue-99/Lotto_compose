@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,14 +35,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.lucky_lotto.domain.type.RangeType
-import com.lucky_lotto.mvi_test.screen.statistic.state.StatisticActionState
 import com.lucky_lotto.mvi_test.ui.theme.CommonStyle
 import com.lucky_lotto.mvi_test.ui.theme.LightGray
 import kotlinx.coroutines.launch
 
 @Composable
 fun DynamicHorizontalSelector(
-    actionHandler: (StatisticActionState) -> Unit = {},
     selectorHeight: Dp = 50.dp,
     currentRange: RangeType = RangeType.ONE_YEAR,
     onClickRange: (RangeType) -> Unit = {},
@@ -68,7 +65,7 @@ fun DynamicHorizontalSelector(
     }
 
     BoxWithConstraints(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(selectorHeight)
             .clip(RoundedCornerShape(10.dp))

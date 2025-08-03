@@ -379,7 +379,7 @@ fun RecodeTitle(
 private fun RecodeTitlePreview() {
     RecodeTitle(
         "2025-07-25",
-        DrawType.LuckyDraw(keyword = "행운 7777777777777777777777777777777777777777777777777"),
+        DrawType.LuckyDraw(keyword = "행운 777"),
         false
     )
 }

@@ -18,8 +18,6 @@ fun NavGraphBuilder.recodeScreen(
 ) {
     composable(
         route = recodeRoute,
-//        exitTransition = { slideToLeftExit() },
-//        popEnterTransition = { slideToRightEnter() }
     ) {
         RecodeRoute(
             popBackStack,

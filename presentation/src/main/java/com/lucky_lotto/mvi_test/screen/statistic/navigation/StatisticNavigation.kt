@@ -13,13 +13,10 @@ fun NavController.navigateToStatistic(navOptions: NavOptions? = null){
 }
 
 fun NavGraphBuilder.statisticScreen(
-    popBackStack: () -> Unit,
     modifier: Modifier,
     ){
     composable(
         route = statisticRoute,
-//        exitTransition = { slideToLeftExit() },
-//        popEnterTransition = { slideToRightEnter() }
     ) {
         StatisticRoute(
             modifier

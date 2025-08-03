@@ -13,13 +13,10 @@ fun NavController.navigateToSetting(navOptions: NavOptions? = null){
 }
 
 fun NavGraphBuilder.settingScreen(
-    popBackStack: () -> Unit,
     modifier: Modifier,
 ){
     composable(
         route = settingRoute,
-//        exitTransition = { slideToLeftExit() },
-//        popEnterTransition = { slideToRightEnter() }
     ) {
         SettingRoute(
             modifier

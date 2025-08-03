@@ -1,8 +1,8 @@
 package com.lucky_lotto.mvi_test.util
 
 import android.content.Context
-import com.lucky_lotto.mvi_test.BuildConfig
 import com.google.android.gms.ads.AdSize
+import com.lucky_lotto.mvi_test.BuildConfig
 
 sealed interface AdMobType {
     val size: AdSize
