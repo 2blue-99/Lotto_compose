@@ -119,6 +119,8 @@ fun QRScannerRouth(
                     count -= 100
                 }
                 override fun onFinish() {
+                    // 다이알로그 숨기기
+                    viewModel.actionHandler(QRScannerActionState.HideAdDialog)
                     coroutineScope.launch {
                         // 광고 송출 시작 & 완료 Flow 대기
                         showFrontPageAd().collectLatest { state ->

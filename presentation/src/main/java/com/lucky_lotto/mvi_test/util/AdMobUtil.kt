@@ -44,7 +44,11 @@ class AdMobUtil(
     fun showFrontPageAd(): StateFlow<Boolean> {
         _isAdFinish.value = false
         frontPageAd?.show(activity)
-            ?: Toast.makeText(activity, CommonMessage.ADMOB_NOT_LOAD_YET.message, Toast.LENGTH_SHORT).show()
+            ?: run {
+                // 재생할 광고 없을 시, 즉시 완료 처리
+                Toast.makeText(activity, CommonMessage.ADMOB_LOAD_FAIL.message, Toast.LENGTH_SHORT).show()
+                _isAdFinish.value = true
+            }
         return isAdFinish
     }
 
