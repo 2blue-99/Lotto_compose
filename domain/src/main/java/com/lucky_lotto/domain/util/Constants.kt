@@ -5,6 +5,7 @@ object Constants {
     const val DRAW_ITEM_SHOW_TIME = 300L
     const val LUCKY_SCREEN_TITLE_FIRST = 1000L
     const val PADDING_VALUE_AD_BOX = 70
+    const val AD_DIALOG_WAIT_TIME = 2500L
 
     const val CODE_UN_AUTHORIZE = 401
     const val CODE_BAD_REQUEST = 404

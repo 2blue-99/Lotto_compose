@@ -1,6 +1,7 @@
 package com.lucky_lotto.mvi_test.screen.qr
 
 import android.Manifest
+import android.os.CountDownTimer
 import android.widget.Toast
 import androidx.annotation.OptIn
 import androidx.camera.core.ExperimentalGetImage
@@ -18,6 +19,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -47,6 +51,7 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import com.lucky_lotto.domain.type.DialogType
 import com.lucky_lotto.domain.util.CommonMessage
+import com.lucky_lotto.domain.util.Constants.AD_DIALOG_WAIT_TIME
 import com.lucky_lotto.mvi_test.designsystem.common.BaseDialog
 import com.lucky_lotto.mvi_test.designsystem.common.VerticalSpacer
 import com.lucky_lotto.mvi_test.screen.qr.state.AdDialogState
@@ -104,25 +109,37 @@ fun QRScannerRouth(
 
     // 광고 확인 다이알로그
     if(adDialogState is AdDialogState.Show){
+        var count by remember { mutableLongStateOf(AD_DIALOG_WAIT_TIME) }
         val dialog = adDialogState as AdDialogState.Show
-        BaseDialog(
-            dialogType = dialog.dialogType,
-            autoConfirmDialog = true,
-            onDismiss = {},
-            onConfirm = {
-                coroutineScope.launch {
-                    // 광고 시작 처리 및 완료 Flow 체크
-                    showFrontPageAd().collectLatest { state ->
-                        if (state) {
-                            context.openBrowser(dialog.url)
-                            viewModel.effectHandler(QRScannerEffectState.PopBackStack)
+
+        // 팝업 노출 후 자동 광고 시작 트리거
+        LaunchedEffect(Unit) {
+            object : CountDownTimer(AD_DIALOG_WAIT_TIME, 100) {
+                override fun onTick(millisUntilFinished: Long) {
+                    count -= 100
+                }
+                override fun onFinish() {
+                    coroutineScope.launch {
+                        // 광고 송출 시작 & 완료 Flow 대기
+                        showFrontPageAd().collectLatest { state ->
+                            // 완료 시
+                            if (state) {
+                                context.openBrowser(dialog.url)
+                                viewModel.effectHandler(QRScannerEffectState.PopBackStack)
+                                return@collectLatest
+                            }
                         }
                     }
                 }
-            },
-            onCancel = {
-                viewModel.effectHandler(QRScannerEffectState.PopBackStack)
-            }
+            }.start()
+        }
+
+        BaseDialog(
+            dialogType = dialog.dialogType,
+            autoConfirmWaitTime = count,
+            onDismiss = {},
+            onConfirm = {},
+            onCancel = { viewModel.effectHandler(QRScannerEffectState.PopBackStack) }
         )
     }
 

@@ -10,11 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
@@ -24,30 +19,17 @@ import androidx.compose.ui.window.Dialog
 import com.lucky_lotto.domain.type.DialogType
 import com.lucky_lotto.mvi_test.ui.theme.CommonStyle
 import com.lucky_lotto.mvi_test.ui.theme.DarkGray
-import com.lucky_lotto.mvi_test.ui.theme.LightGray
 import com.lucky_lotto.mvi_test.ui.theme.PrimaryColor
-import kotlinx.coroutines.delay
-import timber.log.Timber
 
 @Composable
 fun BaseDialog(
     dialogType: DialogType,
-    autoConfirmDialog: Boolean = false, // 취소, 확인 버튼이 없고, 3초 후 confirm call back 반환
+    autoConfirmWaitTime: Long? = null, // 자동 종료 카운트
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Timber.d("")
-    var count by remember { mutableDoubleStateOf(2.5) }
-
-    LaunchedEffect(count) {
-        if(count == 0.0) { onConfirm() } // 두번 이상 호출되는 버그 유의
-        delay(500)
-        count-=0.5
-
-    }
-
     Dialog (
         onDismissRequest = onDismiss,
     ) {
@@ -68,15 +50,17 @@ fun BaseDialog(
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
-            if(autoConfirmDialog){
+            // 타이머가 존재할 경우
+            autoConfirmWaitTime?.let {
                 Text(
-                    text = "${count.toInt()}초 후에 광고가 시작됩니다.",
+                    text = "${(autoConfirmWaitTime/1000).toInt()}초 후에 광고가 시작됩니다.",
                     style = CommonStyle.text14,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    color = LightGray
+                    color = DarkGray
                 )
-            }else{
+            } ?: run {
+                // 일반 다이알로그
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -109,6 +93,6 @@ fun BaseDialog(
 @Composable
 private fun BaseDialogPreview() {
     BaseDialog(
-        DialogType.CAMERA_PERMISSION, false,  {}, {}, {}
+        DialogType.CAMERA_PERMISSION, 0L,  {}, {}, {}
     )
 }
