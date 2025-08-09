@@ -49,8 +49,8 @@ import com.lucky_lotto.mvi_test.navigation.NavigationItem
 import com.lucky_lotto.mvi_test.screen.home.navigation.homeScreen
 import com.lucky_lotto.mvi_test.screen.qr.navigateToQR
 import com.lucky_lotto.mvi_test.screen.qr.qrScannerScreen
-import com.lucky_lotto.mvi_test.screen.random.navigation.navigateToRandom
-import com.lucky_lotto.mvi_test.screen.random.navigation.randomScreen
+import com.lucky_lotto.mvi_test.screen.keyword.navigation.navigateToKeyword
+import com.lucky_lotto.mvi_test.screen.keyword.navigation.keywordScreen
 import com.lucky_lotto.mvi_test.screen.recode.navigation.navigateToRecode
 import com.lucky_lotto.mvi_test.screen.recode.navigation.recodeScreen
 import com.lucky_lotto.mvi_test.screen.setting.navigation.navigateToSetting
@@ -174,14 +174,14 @@ fun NavHostContainer(
     ){
         homeScreen(
             navigateToQR = navController::navigateToQR,
-            navigateToRandom = navController::navigateToRandom,
+            navigateToRandom = navController::navigateToKeyword,
             navigateToRecode = navController::navigateToRecode,
             navigateToSetting = navController::navigateToSetting,
             navigateToStatistic = navController::navigateToStatistic,
             modifier = Modifier.padding(paddingValue)
         )
 
-        randomScreen(
+        keywordScreen(
             onShowSnackbar = onShowSnackbar,
             modifier = Modifier.background(ScreenBackground).padding(paddingValue)
         )

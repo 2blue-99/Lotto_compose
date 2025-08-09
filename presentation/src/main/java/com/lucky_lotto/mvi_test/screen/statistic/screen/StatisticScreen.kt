@@ -66,7 +66,7 @@ import com.lucky_lotto.mvi_test.designsystem.common.CommonLottoCircle
 import com.lucky_lotto.mvi_test.designsystem.common.DynamicHorizontalSelector
 import com.lucky_lotto.mvi_test.designsystem.common.HorizontalSpacer
 import com.lucky_lotto.mvi_test.designsystem.common.VerticalSpacer
-import com.lucky_lotto.mvi_test.screen.random.state.LottoUIState
+import com.lucky_lotto.mvi_test.screen.keyword.state.LottoUIState
 import com.lucky_lotto.mvi_test.screen.statistic.StatisticViewModel
 import com.lucky_lotto.mvi_test.screen.statistic.state.StatisticActionState
 import com.lucky_lotto.mvi_test.screen.statistic.state.StatisticEffectState

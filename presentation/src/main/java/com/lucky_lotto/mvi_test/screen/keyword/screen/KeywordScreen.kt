@@ -1,4 +1,4 @@
-package com.lucky_lotto.mvi_test.screen.random.screen
+package com.lucky_lotto.mvi_test.screen.keyword.screen
 
 import android.content.Context
 import android.os.Vibrator
@@ -58,11 +58,11 @@ import com.lucky_lotto.mvi_test.designsystem.common.CommonFlowRow
 import com.lucky_lotto.mvi_test.designsystem.common.CommonLazyRow
 import com.lucky_lotto.mvi_test.designsystem.common.HorizontalSpacer
 import com.lucky_lotto.mvi_test.designsystem.common.VerticalSpacer
-import com.lucky_lotto.mvi_test.screen.random.RandomViewModel
-import com.lucky_lotto.mvi_test.screen.random.state.LottoUIState
-import com.lucky_lotto.mvi_test.screen.random.state.RandomActionState
-import com.lucky_lotto.mvi_test.screen.random.state.RandomEffectState
-import com.lucky_lotto.mvi_test.screen.random.state.TitleKeywordUIState
+import com.lucky_lotto.mvi_test.screen.keyword.KeywordViewModel
+import com.lucky_lotto.mvi_test.screen.keyword.state.LottoUIState
+import com.lucky_lotto.mvi_test.screen.keyword.state.RandomActionState
+import com.lucky_lotto.mvi_test.screen.keyword.state.RandomEffectState
+import com.lucky_lotto.mvi_test.screen.keyword.state.TitleKeywordUIState
 import com.lucky_lotto.mvi_test.ui.theme.CommonStyle
 import com.lucky_lotto.mvi_test.ui.theme.LightGray
 import com.lucky_lotto.mvi_test.ui.theme.ScreenBackground
@@ -75,10 +75,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @Composable
-fun RandomRoute(
+fun KeywordRoute(
     onShowSnackbar: suspend (CommonMessage) -> Unit = {},
     modifier: Modifier = Modifier,
-    viewModel: RandomViewModel = hiltViewModel()
+    viewModel: KeywordViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val titleKeywordUIState by viewModel.titleKeywordUIState.collectAsStateWithLifecycle()
@@ -93,7 +93,7 @@ fun RandomRoute(
         }
     }
 
-    RandomScreen(
+    KeywordScreen(
         titleKeywordUIState = titleKeywordUIState,
         lottoUIState = lottoUIState,
         actionHandler = viewModel::actionHandler,
@@ -103,7 +103,7 @@ fun RandomRoute(
 }
 
 @Composable
-fun RandomScreen(
+fun KeywordScreen(
     titleKeywordUIState: TitleKeywordUIState = TitleKeywordUIState.Loading,
     lottoUIState: LottoUIState = LottoUIState.Loading,
     actionHandler: (RandomActionState) -> Unit = {},
@@ -182,7 +182,7 @@ fun RandomScreen(
 @Preview
 @Composable
 private fun RandomScreenPreview() {
-    RandomScreen(
+    KeywordScreen(
         lottoUIState = LottoUIState.Loading,
         titleKeywordUIState = TitleKeywordUIState.Loading
     )

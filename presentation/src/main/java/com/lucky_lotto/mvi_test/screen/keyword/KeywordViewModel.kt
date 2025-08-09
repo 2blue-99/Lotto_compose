@@ -1,4 +1,4 @@
-package com.lucky_lotto.mvi_test.screen.random
+package com.lucky_lotto.mvi_test.screen.keyword
 
 import androidx.lifecycle.viewModelScope
 import com.lucky_lotto.domain.model.LottoItem
@@ -7,10 +7,10 @@ import com.lucky_lotto.domain.repository.UserRepository
 import com.lucky_lotto.domain.type.DrawType.Companion.TYPE_LUCKY
 import com.lucky_lotto.domain.util.CommonMessage
 import com.lucky_lotto.mvi_test.base.BaseViewModel
-import com.lucky_lotto.mvi_test.screen.random.state.LottoUIState
-import com.lucky_lotto.mvi_test.screen.random.state.RandomActionState
-import com.lucky_lotto.mvi_test.screen.random.state.RandomEffectState
-import com.lucky_lotto.mvi_test.screen.random.state.TitleKeywordUIState
+import com.lucky_lotto.mvi_test.screen.keyword.state.LottoUIState
+import com.lucky_lotto.mvi_test.screen.keyword.state.RandomActionState
+import com.lucky_lotto.mvi_test.screen.keyword.state.RandomEffectState
+import com.lucky_lotto.mvi_test.screen.keyword.state.TitleKeywordUIState
 import com.lucky_lotto.mvi_test.util.Utils.makeLotto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RandomViewModel @Inject constructor(
+class KeywordViewModel @Inject constructor(
     private val lottoRepository: LottoRepository,
     private val userRepository: UserRepository
 ): BaseViewModel() {
@@ -42,7 +42,7 @@ class RandomViewModel @Inject constructor(
                 val isFirst = userRepository.isFirstRandomScreen.first()
                 titleKeywordUIState.value = TitleKeywordUIState.Success(
                     isFirst = isFirst,
-                    keywordList = list
+                    keywordList = list.reversed()
                 )
                 if(isFirst) setFirstRandomScreen() // 최초 진입으로 인한 타이틀 확장이 끝나면 즉시 false 처리
             }

@@ -6,7 +6,7 @@ import com.lucky_lotto.domain.repository.LottoRepository
 import com.lucky_lotto.domain.type.DrawType.Companion.TYPE_STATISTIC
 import com.lucky_lotto.domain.type.RangeType
 import com.lucky_lotto.mvi_test.base.BaseViewModel
-import com.lucky_lotto.mvi_test.screen.random.state.LottoUIState
+import com.lucky_lotto.mvi_test.screen.keyword.state.LottoUIState
 import com.lucky_lotto.mvi_test.screen.statistic.state.StatisticActionState
 import com.lucky_lotto.mvi_test.screen.statistic.state.StatisticEffectState
 import com.lucky_lotto.mvi_test.screen.statistic.state.StatisticUIState

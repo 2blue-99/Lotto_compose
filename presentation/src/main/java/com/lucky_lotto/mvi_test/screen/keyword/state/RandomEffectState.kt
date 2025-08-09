@@ -1,4 +1,4 @@
-package com.lucky_lotto.mvi_test.screen.random.state
+package com.lucky_lotto.mvi_test.screen.keyword.state
 
 import com.lucky_lotto.domain.util.CommonMessage
 
