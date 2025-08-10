@@ -1,6 +1,7 @@
 package com.lucky_lotto.mvi_test.util
 
 import android.app.Application
+import com.lucky_lotto.mvi_test.BuildConfig
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
@@ -11,6 +12,8 @@ class HiltApplication: Application() {
         initTimber()
     }
     private fun initTimber(){
-        Timber.plant(LogDebugTree("Lotto_App"))
+        if(BuildConfig.DEBUG) {
+            Timber.plant(LogDebugTree("Lotto_App"))
+        }
     }
 }
