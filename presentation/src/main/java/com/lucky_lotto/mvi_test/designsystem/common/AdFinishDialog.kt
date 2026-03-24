@@ -2,17 +2,14 @@ package com.lucky_lotto.mvi_test.designsystem.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
@@ -22,16 +19,12 @@ import androidx.compose.ui.window.Dialog
 import com.lucky_lotto.mvi_test.ui.theme.CommonStyle
 import com.lucky_lotto.mvi_test.ui.theme.DarkGray
 import com.lucky_lotto.mvi_test.ui.theme.PrimaryColor
-import com.lucky_lotto.mvi_test.ui.theme.ScreenBackground
-import com.google.android.gms.ads.AdView
-import com.lucky_lotto.mvi_test.util.AdMobType
 
 @Composable
 fun AdFinishDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     onCancel: () -> Unit,
-    preloadedAdView: AdView? = null,
     modifier: Modifier = Modifier
 ) {
     Dialog (
@@ -50,16 +43,16 @@ fun AdFinishDialog(
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
-            VerticalSpacer(30.dp)
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(ScreenBackground, RoundedCornerShape(8.dp))
-                    .heightIn(min = 200.dp),
-                contentAlignment = Alignment.Center
-            ){
-                CommonAdBanner(AdMobType.AdMobDialogBanner(), preloadedAdView = preloadedAdView)
-            }
+//            VerticalSpacer(30.dp)
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .background(ScreenBackground, RoundedCornerShape(8.dp))
+//                    .heightIn(min = 200.dp),
+//                contentAlignment = Alignment.Center
+//            ){
+//                CommonAdBanner(AdMobType.AdMobDialogBanner(), preloadedAdView = preloadedAdView)
+//            }
             VerticalSpacer(30.dp)
             Row(
                 modifier = Modifier.fillMaxWidth(),

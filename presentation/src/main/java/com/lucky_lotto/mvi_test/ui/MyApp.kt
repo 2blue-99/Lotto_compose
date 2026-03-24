@@ -25,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,8 +44,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.lucky_lotto.domain.util.CommonMessage
 import com.lucky_lotto.mvi_test.R
-import com.lucky_lotto.mvi_test.designsystem.common.AdFinishDialog
-import com.lucky_lotto.mvi_test.designsystem.common.CommonAdBanner
+
 import com.lucky_lotto.mvi_test.navigation.NavigationItem
 import com.lucky_lotto.mvi_test.screen.home.navigation.homeScreen
 import com.lucky_lotto.mvi_test.screen.qr.navigateToQR
@@ -58,10 +58,11 @@ import com.lucky_lotto.mvi_test.screen.setting.navigation.settingScreen
 import com.lucky_lotto.mvi_test.screen.statistic.navigation.navigateToStatistic
 import com.lucky_lotto.mvi_test.screen.statistic.navigation.statisticScreen
 import com.lucky_lotto.mvi_test.ui.theme.ScreenBackground
+import com.lucky_lotto.mvi_test.designsystem.common.AdFinishDialog
 import com.lucky_lotto.mvi_test.util.AdMobType
 import com.lucky_lotto.mvi_test.util.AdMobUtil
-import com.google.android.gms.ads.AdView
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun MyApp() {
@@ -70,7 +71,7 @@ fun MyApp() {
     val activity = LocalActivity.current as Activity
     val addMobUtil = remember { AdMobUtil(activity) } // 광고 클래스 초기화
 
-    BackOnPressedAd(navController, preloadedAdView = addMobUtil.dialogAdView)
+    BackOnPressedAd(showFrontPageAd = addMobUtil::showFrontPageAd)
 
     Scaffold(
         snackbarHost = {
@@ -229,23 +230,34 @@ fun BackOnPressed(
 
 @Composable
 fun BackOnPressedAd(
-    navController: NavHostController,
-    preloadedAdView: AdView? = null
+    showFrontPageAd: () -> StateFlow<Boolean>
 ) {
     val context = LocalContext.current
-    val backPressedState by remember { mutableStateOf(true) }
     var dialogVisibleState by remember { mutableStateOf(false) }
+    var pendingExit by remember { mutableStateOf(false) }
 
-    if(dialogVisibleState){
+    LaunchedEffect(pendingExit) {
+        if (pendingExit) {
+            showFrontPageAd().collectLatest { finished ->
+                if (finished) {
+                    (context as Activity).finish()
+                }
+            }
+        }
+    }
+
+    if (dialogVisibleState) {
         AdFinishDialog(
-            onDismiss = {  },
+            onDismiss = { },
             onConfirm = { dialogVisibleState = false }, // 아니오 (유지)
-            onCancel = { (context as Activity).finish() }, // 네 (종료)
-            preloadedAdView = preloadedAdView
+            onCancel = { // 네 (종료)
+                dialogVisibleState = false
+                pendingExit = true
+            }
         )
     }
 
-    BackHandler(enabled = backPressedState) {
+    BackHandler {
         dialogVisibleState = true
     }
 }
