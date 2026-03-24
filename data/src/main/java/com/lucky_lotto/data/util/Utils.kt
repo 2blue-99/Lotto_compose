@@ -16,7 +16,13 @@ import java.util.concurrent.TimeUnit
 object Utils {
     // TODO 요일 로직
     fun String.formatDate(): String {
-        return this.replace("-",".")+" (토)"
+        return if (this.contains("-")) {
+            // 구 API 형식: "2026-03-21" → "2026.03.21 (토)"
+            this.replace("-", ".") + " (토)"
+        } else {
+            // 신 API 형식: "20260321" → "2026.03.21 (토)"
+            "${this.substring(0, 4)}.${this.substring(4, 6)}.${this.substring(6, 8)} (토)"
+        }
     }
 
     fun Long.formatComma(): String {

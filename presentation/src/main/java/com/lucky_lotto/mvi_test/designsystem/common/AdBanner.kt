@@ -29,11 +29,12 @@ import timber.log.Timber
 @Composable
 fun CommonAdBanner(
     adMobType: AdMobType,
+    preloadedAdView: AdView? = null,
     modifier:  Modifier = Modifier
 ) {
     val context = LocalContext.current
     val adView = remember {
-        AdView(context).apply {
+        preloadedAdView ?: AdView(context).apply {
             adUnitId = adMobType.key
             setAdSize(adMobType.size)
             loadAd(AdRequest.Builder().build())
@@ -70,7 +71,7 @@ fun CommonAdBanner(
     }
 
     DisposableEffect(Unit) {
-        onDispose { adView.destroy() }
+        onDispose { if (preloadedAdView == null) adView.destroy() }
     }
 }
 

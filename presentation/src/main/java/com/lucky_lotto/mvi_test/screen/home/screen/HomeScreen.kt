@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,7 +18,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -139,34 +139,28 @@ fun HomeScreen(
         modifier = modifier
             .fillMaxSize(),
     ) {
-        LazyColumn (
-            modifier = Modifier
-                .fillMaxSize(),
+        Column(
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            contentPadding = PaddingValues(bottom = PADDING_VALUE_AD_BOX.dp)
         ) {
-            item {
-                MainTopBar(
-                    effectHandler = effectHandler,
-                )
-                VerticalSpacer(10.dp)
-            }
-
-            item {
-                LottoPager(
-                    actionHandler = actionHandler,
-                    lottoRoundList = if (homeUiState is HomeUIState.Success) homeUiState.lottoRounds else listOf(
-                        LottoRound()
-                    ),
-                    roundPosition = if (homeUiState is HomeUIState.Success) homeUiState.initPosition else null
-                )
-            }
-            item {
-                ButtonLayout(
-                    actionHandler = actionHandler,
-                    effectHandler = effectHandler,
-                )
-            }
+            MainTopBar(
+                effectHandler = effectHandler,
+            )
+            VerticalSpacer(10.dp)
+            LottoPager(
+                actionHandler = actionHandler,
+                lottoRoundList = if (homeUiState is HomeUIState.Success) homeUiState.lottoRounds else listOf(
+                    LottoRound()
+                ),
+                roundPosition = if (homeUiState is HomeUIState.Success) homeUiState.initPosition else null
+            )
+            ButtonLayout(
+                actionHandler = actionHandler,
+                effectHandler = effectHandler,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(bottom = 30.dp),
+            )
         }
     }
 }
@@ -499,15 +493,16 @@ fun ButtonLayout(
 ) {
     Column(
         modifier = modifier
+            .fillMaxSize()
             .padding(horizontal = 30.dp)
     ) {
-        Row {
+        Row(modifier = Modifier.weight(1f)) {
             HomeIconButton(
                 containerColor = SubColor,
                 icon = ImageVector.vectorResource(R.drawable.clover_icon),
                 titleText = "랜덤 로또 추첨",
                 descriptionText = "행운",
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f).fillMaxHeight(),
                 onClick = { effectHandler(HomeEffectState.NavigateToRandom) },
             )
             Spacer(modifier = Modifier.width(12.dp))
@@ -515,18 +510,18 @@ fun ButtonLayout(
                 containerColor = DarkGray,
                 icon = ImageVector.vectorResource(R.drawable.recode_icon),
                 titleText = "저장 기록",
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f).fillMaxHeight(),
                 onClick = { effectHandler(HomeEffectState.NavigateToRecode) },
             )
         }
         Spacer(modifier = Modifier.height(12.dp))
-        Row {
+        Row(modifier = Modifier.weight(1f)) {
             HomeIconButton(
                 containerColor = PrimaryColor,
                 icon = ImageVector.vectorResource(R.drawable.statistic_icon),
                 titleText = "통계 로또 추첨",
                 descriptionText = "데이터 기반",
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f).fillMaxHeight(),
                 onClick = { effectHandler(HomeEffectState.NavigateToStatistic) },
             )
             Spacer(modifier = Modifier.width(12.dp))
@@ -534,7 +529,7 @@ fun ButtonLayout(
                 containerColor = Color.LightGray,
 //                icon = Icons.Default.Star,
                 titleText = "복권 명당",
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f).fillMaxHeight(),
                 onClick = { effectHandler(HomeEffectState.ShowToast(CommonMessage.HOME_NOT_READY_YET)) },
             )
         }
@@ -562,7 +557,7 @@ private fun HomeIconButton(
         colors = ButtonDefaults.buttonColors(containerColor = containerColor),
         elevation = ButtonDefaults.buttonElevation(3.dp),
 //        border = BorderStroke(0.6.dp, outlineColor),
-        modifier = modifier.aspectRatio(1.2f)
+        modifier = modifier
     ) {
         Column(
             verticalArrangement = Arrangement.Center,

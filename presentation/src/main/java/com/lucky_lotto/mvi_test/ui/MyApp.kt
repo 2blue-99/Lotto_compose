@@ -60,6 +60,7 @@ import com.lucky_lotto.mvi_test.screen.statistic.navigation.statisticScreen
 import com.lucky_lotto.mvi_test.ui.theme.ScreenBackground
 import com.lucky_lotto.mvi_test.util.AdMobType
 import com.lucky_lotto.mvi_test.util.AdMobUtil
+import com.google.android.gms.ads.AdView
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
@@ -69,7 +70,7 @@ fun MyApp() {
     val activity = LocalActivity.current as Activity
     val addMobUtil = remember { AdMobUtil(activity) } // 광고 클래스 초기화
 
-    BackOnPressed(navController)
+    BackOnPressedAd(navController, preloadedAdView = addMobUtil.dialogAdView)
 
     Scaffold(
         snackbarHost = {
@@ -96,18 +97,18 @@ fun MyApp() {
                 paddingValue = padding
             )
             // 하단 배너 광고
-            Box(
-                modifier = Modifier
-                    .padding(padding)
-                    .align(Alignment.BottomCenter),
-            ) {
-                CommonAdBanner(
-                    AdMobType.AdMobBottomBanner(
-                        context = LocalContext.current,
-                        width = LocalConfiguration.current.screenWidthDp
-                    )
-                )
-            }
+//            Box(
+//                modifier = Modifier
+//                    .padding(padding)
+//                    .align(Alignment.BottomCenter),
+//            ) {
+//                CommonAdBanner(
+//                    AdMobType.AdMobBottomBanner(
+//                        context = LocalContext.current,
+//                        width = LocalConfiguration.current.screenWidthDp
+//                    )
+//                )
+//            }
         }
     }
 }
@@ -228,7 +229,8 @@ fun BackOnPressed(
 
 @Composable
 fun BackOnPressedAd(
-    navController: NavHostController
+    navController: NavHostController,
+    preloadedAdView: AdView? = null
 ) {
     val context = LocalContext.current
     val backPressedState by remember { mutableStateOf(true) }
@@ -238,7 +240,8 @@ fun BackOnPressedAd(
         AdFinishDialog(
             onDismiss = {  },
             onConfirm = { dialogVisibleState = false }, // 아니오 (유지)
-            onCancel = { (context as Activity).finish() } // 네 (종료)
+            onCancel = { (context as Activity).finish() }, // 네 (종료)
+            preloadedAdView = preloadedAdView
         )
     }
 

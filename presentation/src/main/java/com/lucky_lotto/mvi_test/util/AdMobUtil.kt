@@ -4,6 +4,8 @@ import android.app.Activity
 import android.widget.Toast
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
@@ -30,12 +32,18 @@ class AdMobUtil(
     private var frontPageAd: InterstitialAd? = null
 //    private var rewardedAd: RewardedAd? = null
 
+    val dialogAdView: AdView = AdView(activity).apply {
+        adUnitId = BuildConfig.AD_DIALOG_BANNER_ID
+        setAdSize(AdSize.MEDIUM_RECTANGLE)
+    }
+
     init {
         Timber.e("광고 기능 만들어짐")
         CoroutineScope(Dispatchers.IO).launch {
             MobileAds.initialize(activity) // 애드몹 광고 초기화
         }
         loadFrontPageAd()
+        dialogAdView.loadAd(AdRequest.Builder().build()) // 다이얼로그 배너 미리 로드
     }
 
     /**

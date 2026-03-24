@@ -66,20 +66,37 @@ class LottoRepositoryImpl @Inject constructor(
         }
 
         // 로컬과 최신 데이터 회차 차이 계산
-        val targetRounds = (localLatestRound+1..targetLatestRound).toList()
+        val targetRounds = (localLatestRound+1..targetLatestRound).toMutableList()
         Timber.d("targetRounds : $targetRounds")
 
         // API 응답 리스트
         val resultList = mutableListOf<LottoRoundEntity>()
         try {
-            targetRounds.forEach {
-                val response = lottoDataSource.requestLottoData(it.toString())
+            while(targetRounds.isNotEmpty()) {
+                val round = targetRounds.removeAt(0)
+                val targetRound = round + 5
+                val response = lottoDataSource.requestLottoData(targetRound.toString())
                 when(response){
                     is APIResponseState.Success -> {
                         // 변환
-                        val roundData = response.body.toLottoRoundEntity()
+                        val roundList = response.body
+
+                        // targetRounds에 존재하는 회차 정보만 선별
+                        val filteredList = roundList.filter {
+                            it.drawNumber == round || targetRounds.contains(it.drawNumber)
+                        }.map {
+                            it.toLottoRoundEntity()
+                        }.reversed().toMutableList()
+
                         // 리스트에 저장
-                        resultList.add(roundData)
+                        resultList.addAll(filteredList)
+
+                        // 선별 후 targetRounds 에서 제거
+                        filteredList
+                            .map { it.drawNumber }
+                            .onEach {
+                                targetRounds.remove(it)
+                            }
                     }
                     else -> {
                         throw Exception("Err : $response")

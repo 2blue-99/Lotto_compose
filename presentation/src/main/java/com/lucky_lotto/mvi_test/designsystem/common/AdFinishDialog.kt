@@ -23,6 +23,7 @@ import com.lucky_lotto.mvi_test.ui.theme.CommonStyle
 import com.lucky_lotto.mvi_test.ui.theme.DarkGray
 import com.lucky_lotto.mvi_test.ui.theme.PrimaryColor
 import com.lucky_lotto.mvi_test.ui.theme.ScreenBackground
+import com.google.android.gms.ads.AdView
 import com.lucky_lotto.mvi_test.util.AdMobType
 
 @Composable
@@ -30,6 +31,7 @@ fun AdFinishDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     onCancel: () -> Unit,
+    preloadedAdView: AdView? = null,
     modifier: Modifier = Modifier
 ) {
     Dialog (
@@ -56,7 +58,7 @@ fun AdFinishDialog(
                     .heightIn(min = 200.dp),
                 contentAlignment = Alignment.Center
             ){
-                CommonAdBanner(AdMobType.AdMobDialogBanner())
+                CommonAdBanner(AdMobType.AdMobDialogBanner(), preloadedAdView = preloadedAdView)
             }
             VerticalSpacer(30.dp)
             Row(

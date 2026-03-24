@@ -6,34 +6,60 @@ import com.lucky_lotto.data.util.Utils.formatDate
 import com.lucky_lotto.domain.model.LottoRound
 import com.google.gson.annotations.SerializedName
 
-data class LottoResponse(
-    @SerializedName("returnValue")
-    val responseState: String, // 응답 상태
+data class LottoApiResponse(
+    @SerializedName("resultCode")
+    val resultCode: String?,
 
-    @SerializedName("drwNo")
+    @SerializedName("resultMessage")
+    val resultMessage: String?,
+
+    @SerializedName("data")
+    val data: LottoApiData?
+)
+
+data class LottoApiData(
+    @SerializedName("list")
+    val list: List<LottoResponse>
+)
+
+data class LottoResponse(
+    @SerializedName("ltEpsd")
     val drawNumber: Int, // 회차 번호
 
-    @SerializedName("drwNoDate")
-    val drawDate: String, // 추첨일
+    @SerializedName("ltRflYmd")
+    val drawDate: String, // 추첨일 (yyyyMMdd)
 
-    @SerializedName("totSellamnt")
+    @SerializedName("rlvtEpsdSumNtslAmt")
     val totalSellAmount: Long, // 총 판매 금액
 
-    @SerializedName("firstWinamnt")
+    @SerializedName("rnk1SumWnAmt")
     val firstWinTotalAmount: Long, // 1등 총 당첨금
 
-    @SerializedName("firstPrzwnerCo")
+    @SerializedName("rnk1WnNope")
     val firstWinCount: Int, // 1등 당첨자 수
 
-    @SerializedName("firstAccumamnt")
+    @SerializedName("rnk1WnAmt")
     val firstWinPerAmount: Long, // 1등 1명당 당첨금
 
+    @SerializedName("tm1WnNo")
     val drwtNo1: Int,
+
+    @SerializedName("tm2WnNo")
     val drwtNo2: Int,
+
+    @SerializedName("tm3WnNo")
     val drwtNo3: Int,
+
+    @SerializedName("tm4WnNo")
     val drwtNo4: Int,
+
+    @SerializedName("tm5WnNo")
     val drwtNo5: Int,
+
+    @SerializedName("tm6WnNo")
     val drwtNo6: Int,
+
+    @SerializedName("bnsWnNo")
     val bnusNo: Int,
 ) {
     fun toDomain(): LottoRound {
