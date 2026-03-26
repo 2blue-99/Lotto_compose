@@ -81,10 +81,14 @@ data class LottoResponse(
     }
 
     fun toLottoRoundEntity(): LottoRoundEntity {
+        // DB 날짜 비교를 위해 "yyyy-MM-dd" 형식으로 정규화
+        // 신 API: "20260321" → "2026-03-21" / 구 API: "2026-03-21" → 그대로
+        val normalizedDate = if (drawDate.contains("-")) drawDate
+            else "${drawDate.substring(0, 4)}-${drawDate.substring(4, 6)}-${drawDate.substring(6, 8)}"
         return LottoRoundEntity(
             id = 0,
             drawNumber = drawNumber,
-            drawDate = drawDate,
+            drawDate = normalizedDate,
             totalSellAmount = totalSellAmount,
             firstWinTotalAmount = firstWinTotalAmount,
             firstWinCount = firstWinCount,
