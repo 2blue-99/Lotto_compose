@@ -22,6 +22,11 @@ class adOpeningUtil(private val activity: Activity) {
     private var isLoadingAd = false
     var isShowingAd = false
     private var loadTime: Long = 0
+    private var lastShownTime: Long = 0
+
+    companion object {
+        private const val AD_COOLDOWN_MS = 10 * 60 * 1000L // 10분
+    }
 
     init {
         loadAd()
@@ -60,6 +65,12 @@ class adOpeningUtil(private val activity: Activity) {
      * 광고가 없거나 만료된 경우 onComplete 즉시 호출
      */
     fun showAdIfAvailable(isRandom: Boolean = false, onComplete: () -> Unit = {}) {
+        if (Date().time - lastShownTime < AD_COOLDOWN_MS) {
+            Timber.e("AppOpenAd cooldown active.")
+            onComplete()
+            return
+        }
+
         if(isRandom && !isShowRandomAd()) {
             onComplete()
             return
@@ -95,6 +106,7 @@ class adOpeningUtil(private val activity: Activity) {
 
             override fun onAdShowedFullScreenContent() {
                 Timber.e("AppOpenAd showed fullscreen content.")
+                lastShownTime = Date().time
             }
 
             override fun onAdImpression() {
