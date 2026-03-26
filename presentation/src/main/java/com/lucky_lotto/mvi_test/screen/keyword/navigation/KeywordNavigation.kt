@@ -15,6 +15,7 @@ fun NavController.navigateToKeyword(navOptions: NavOptions? = null){
 
 fun NavGraphBuilder.keywordScreen(
     onShowSnackbar: suspend (CommonMessage) -> Unit,
+    showOpeningAd: (onComplete: () -> Unit) -> Unit,
     modifier: Modifier,
 ){
     composable(
@@ -22,6 +23,7 @@ fun NavGraphBuilder.keywordScreen(
     ) {
         KeywordRoute(
             onShowSnackbar,
+            showOpeningAd,
             modifier
         )
     }

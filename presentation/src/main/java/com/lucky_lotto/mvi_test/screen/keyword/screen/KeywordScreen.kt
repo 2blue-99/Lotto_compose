@@ -77,6 +77,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun KeywordRoute(
     onShowSnackbar: suspend (CommonMessage) -> Unit = {},
+    showOpeningAd: (onComplete: () -> Unit) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: KeywordViewModel = hiltViewModel()
 ) {
@@ -96,6 +97,7 @@ fun KeywordRoute(
     KeywordScreen(
         titleKeywordUIState = titleKeywordUIState,
         lottoUIState = lottoUIState,
+        showOpeningAd = showOpeningAd,
         actionHandler = viewModel::actionHandler,
         effectHandler = viewModel::effectHandler,
         modifier = modifier
@@ -106,6 +108,7 @@ fun KeywordRoute(
 fun KeywordScreen(
     titleKeywordUIState: TitleKeywordUIState = TitleKeywordUIState.Loading,
     lottoUIState: LottoUIState = LottoUIState.Loading,
+    showOpeningAd: (onComplete: () -> Unit) -> Unit = { it() },
     actionHandler: (RandomActionState) -> Unit = {},
     effectHandler: (RandomEffectState) -> Unit = {},
     modifier: Modifier = Modifier
@@ -159,6 +162,7 @@ fun KeywordScreen(
                 keyword = keyword,
                 keywordList = if(titleKeywordUIState is TitleKeywordUIState.Success) titleKeywordUIState.keywordList else emptyList(),
                 onChangeKeyword = { keyword = it },
+                showOpeningAd = showOpeningAd,
                 actionHandler = actionHandler,
                 effectHandler = effectHandler,
             )
@@ -193,6 +197,7 @@ fun KeywordContent(
     keyword: String = TYPE_LUCKY, // 행운 키워드
     keywordList: List<Keyword> = listOf(Keyword(), Keyword(), Keyword(), Keyword(), Keyword()),
     onChangeKeyword: (String) -> Unit = {},
+    showOpeningAd: (onComplete: () -> Unit) -> Unit = { it() },
     actionHandler: (RandomActionState) -> Unit = {},
     effectHandler: (RandomEffectState) -> Unit = {},
     modifier: Modifier = Modifier
@@ -292,17 +297,19 @@ fun KeywordContent(
                 onClick = {
                     // Empty 체크
                     if(keyword.isNotBlank()){
-                        context.startVibrate()
                         focusManager.clearFocus()
                         keyboardController?.hide()
                         expand = false
                         drawClickable = false
-                        rememberCoroutineScope.launch {
-                            delay(100) // TODO 해당 딜레이가 없으면 부모 컴포넌트가 숨겨지기 전에 업데이트된게 보여서 추가한 임시방편
-                            if(!keywordList.containsKeyword(keyword)){
-                                actionHandler.invoke(RandomActionState.AddKeyword(keyword))
+                        showOpeningAd {
+                            context.startVibrate()
+                            rememberCoroutineScope.launch {
+                                delay(100) // TODO 해당 딜레이가 없으면 부모 컴포넌트가 숨겨지기 전에 업데이트된게 보여서 추가한 임시방편
+                                if(!keywordList.containsKeyword(keyword)){
+                                    actionHandler.invoke(RandomActionState.AddKeyword(keyword))
+                                }
+                                actionHandler.invoke(RandomActionState.OnClickDraw(keyword))
                             }
-                            actionHandler.invoke(RandomActionState.OnClickDraw(keyword))
                         }
                     }else{
                         rememberCoroutineScope.launch {

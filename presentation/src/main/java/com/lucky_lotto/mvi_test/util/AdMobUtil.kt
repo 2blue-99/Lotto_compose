@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 /**
- * 광고 유틸 클래스
+ * 광고 유틸 클래스 (QR 전면 광고 전용)
  */
 class AdMobUtil(
     private val activity: Activity,
@@ -28,12 +28,11 @@ class AdMobUtil(
     val _isAdFinish = MutableStateFlow(false)
     val isAdFinish = _isAdFinish.asStateFlow()
     private var frontPageAd: InterstitialAd? = null
-//    private var rewardedAd: RewardedAd? = null
 
     init {
         Timber.e("광고 기능 만들어짐")
         CoroutineScope(Dispatchers.IO).launch {
-            MobileAds.initialize(activity) // 애드몹 광고 초기화
+            MobileAds.initialize(activity)
         }
         loadFrontPageAd()
     }
@@ -45,7 +44,6 @@ class AdMobUtil(
         _isAdFinish.value = false
         frontPageAd?.show(activity)
             ?: run {
-                // 재생할 광고 없을 시, 즉시 완료 처리
                 Toast.makeText(activity, CommonMessage.ADMOB_LOAD_FAIL.message, Toast.LENGTH_SHORT).show()
                 _isAdFinish.value = true
             }
@@ -55,7 +53,7 @@ class AdMobUtil(
     /**
      * 전면 광고 로드
      */
-    private fun loadFrontPageAd(){
+    private fun loadFrontPageAd() {
         InterstitialAd.load(
             activity,
             BuildConfig.AD_FULL_PAGE_ID,
@@ -75,21 +73,18 @@ class AdMobUtil(
             frontPageAd = ad
             frontPageAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                 override fun onAdDismissedFullScreenContent() {
-                    // 광고 종료
                     Timber.e("front page ad was dismissed.")
                     frontPageAd = null
                     loadFrontPageAd()
                     _isAdFinish.value = true
                 }
                 override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                    // 광고 노출 실패
                     Timber.e("front page ad failed to show. $adError")
                     frontPageAd = null
                     loadFrontPageAd()
                     _isAdFinish.value = true
                 }
                 override fun onAdShowedFullScreenContent() {
-                    // 전면에 광고 노출
                     Timber.e("front page ad showed fullscreen content.")
                 }
                 override fun onAdImpression() {
@@ -106,32 +101,4 @@ class AdMobUtil(
             frontPageAd = null
         }
     }
-
-//    fun showRewordAd(){
-//        rewardedAd?.show(activity, OnUserEarnedRewardListener { rewardItem ->
-//            Timber.d("User earned the reward")
-//            Timber.d("rewardItem.amount : ${rewardItem.amount}")
-//            Timber.d("rewardItem.type : ${rewardItem.type}")
-//        })
-//            ?: Toast.makeText(activity, CommonMessage.ADMOB_NOT_LOAD_YET.message, Toast.LENGTH_SHORT).show()
-//    }
-
-//    private fun loadRewordAd(){
-//        RewardedAd.load(
-//            activity,
-//            BuildConfig.AD_REWORD_ID,
-//            AdRequest.Builder().build(),
-//            object : RewardedAdLoadCallback() {
-//                override fun onAdLoaded(ad: RewardedAd) {
-//                    Timber.d("onAdLoaded reword")
-//                    rewardedAd = ad
-//                }
-//
-//                override fun onAdFailedToLoad(adError: LoadAdError) {
-//                    Timber.d("onAdFailedToLoad reword : $adError")
-//                    rewardedAd = null
-//                }
-//            },
-//        )
-//    }
 }

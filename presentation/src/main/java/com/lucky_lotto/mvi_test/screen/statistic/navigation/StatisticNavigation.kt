@@ -13,12 +13,14 @@ fun NavController.navigateToStatistic(navOptions: NavOptions? = null){
 }
 
 fun NavGraphBuilder.statisticScreen(
+    showOpeningAd: (onComplete: () -> Unit) -> Unit,
     modifier: Modifier,
-    ){
+){
     composable(
         route = statisticRoute,
     ) {
         StatisticRoute(
+            showOpeningAd,
             modifier
         )
     }

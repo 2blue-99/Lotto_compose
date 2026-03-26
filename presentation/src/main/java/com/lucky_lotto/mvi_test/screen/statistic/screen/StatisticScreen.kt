@@ -84,6 +84,7 @@ import timber.log.Timber
 
 @Composable
 fun StatisticRoute(
+    showOpeningAd: (onComplete: () -> Unit) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: StatisticViewModel = hiltViewModel()
 ) {
@@ -104,6 +105,7 @@ fun StatisticRoute(
     StatisticScreen(
         statisticUIState = statisticUIState,
         lottoUIState = lottoUIState,
+        showOpeningAd = showOpeningAd,
         actionHandler = viewModel::actionHandler,
         effectHandler = viewModel::effectHandler,
         modifier = modifier
@@ -114,8 +116,9 @@ fun StatisticRoute(
 fun StatisticScreen(
     statisticUIState: StatisticUIState = StatisticUIState.Loading,
     lottoUIState: LottoUIState = LottoUIState.Loading,
-    actionHandler: (StatisticActionState) -> Unit,
-    effectHandler: (StatisticEffectState) -> Unit,
+    showOpeningAd: (onComplete: () -> Unit) -> Unit = { it() },
+    actionHandler: (StatisticActionState) -> Unit = {},
+    effectHandler: (StatisticEffectState) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -213,9 +216,11 @@ fun StatisticScreen(
             SelectDrawContent(
                 // 추첨하기 버튼 클릭
                 onClickDraw = {
-                    context.startVibrate()
-                    expand = false
-                    actionHandler(StatisticActionState.OnClickDraw(selectNumberList.toList()))
+                    showOpeningAd {
+                        context.startVibrate()
+                        expand = false
+                        actionHandler(StatisticActionState.OnClickDraw(selectNumberList.toList()))
+                    }
                 },
                 selectList = selectNumberList.toList()
             )
@@ -250,6 +255,7 @@ private fun StatisticScreenPreview() {
     StatisticScreen(
         StatisticUIState.Loading,
         LottoUIState.Loading,
+        {},
         {},
         {}
     )
