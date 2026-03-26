@@ -19,8 +19,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,6 +58,7 @@ import com.lucky_lotto.mvi_test.screen.qr.state.QRScannerActionState
 import com.lucky_lotto.mvi_test.screen.qr.state.QRScannerEffectState
 import com.lucky_lotto.mvi_test.screen.qr.state.QRScannerUIState
 import com.lucky_lotto.mvi_test.ui.theme.CommonStyle
+import com.lucky_lotto.mvi_test.util.AppEvent
 import com.lucky_lotto.mvi_test.util.openBrowser
 import com.lucky_lotto.mvi_test.util.openSetting
 import com.lucky_lotto.mvi_test.util.startVibrate
@@ -82,6 +81,7 @@ fun QRScannerRouth(
     val adDialogState by viewModel.adDialogState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
+        AppEvent.log(AppEvent.Event.ScreenQr)
         viewModel.sideEffectState.collectLatest { effect ->
             when (effect) {
                 is QRScannerEffectState.ShowToast -> {

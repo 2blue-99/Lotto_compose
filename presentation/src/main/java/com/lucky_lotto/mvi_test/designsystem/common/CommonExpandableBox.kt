@@ -42,6 +42,7 @@ fun CommonExpandableBox(
     shrinkColor: List<Color> = listOf(Color(0xFF227DBD), Color(0xFF528B35)),
     expandColor: List<Color> = listOf(Color(0xFFFF8A00), Color(0xFFFFD500)),
     expand: Boolean = false,
+    onExpand: (() -> Unit)? = null,
     shrinkContent: @Composable () -> Unit,
     expandContent: @Composable (() -> Unit)? = null,
     modifier: Modifier = Modifier,
@@ -72,6 +73,7 @@ fun CommonExpandableBox(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
+                if (!expanded) onExpand?.invoke()
                 expanded = !expanded
             }
     ){
@@ -107,7 +109,10 @@ fun CommonExpandableBox(
                             .size(22.dp)
                             .clip(CircleShape)
                             .background(Color.White)
-                            .clickable { expanded = !expanded },
+                            .clickable {
+                                if (!expanded) onExpand?.invoke()
+                                expanded = !expanded
+                            },
                         contentAlignment = Alignment.Center
                     ) {
                         Text(

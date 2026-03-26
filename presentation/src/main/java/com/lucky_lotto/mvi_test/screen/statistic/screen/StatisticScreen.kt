@@ -76,6 +76,7 @@ import com.lucky_lotto.mvi_test.ui.theme.DarkGray
 import com.lucky_lotto.mvi_test.ui.theme.LightGray
 import com.lucky_lotto.mvi_test.ui.theme.PrimaryColor
 import com.lucky_lotto.mvi_test.ui.theme.ScreenBackground
+import com.lucky_lotto.mvi_test.util.AppEvent
 import com.lucky_lotto.mvi_test.util.Utils.toLottoColor
 import com.lucky_lotto.mvi_test.util.startVibrate
 import kotlinx.coroutines.delay
@@ -93,6 +94,7 @@ fun StatisticRoute(
     val lottoUIState by viewModel.lottoUIState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
+        AppEvent.log(AppEvent.Event.ScreenStatistic)
         viewModel.sideEffectState.collectLatest { effect ->
             when(effect){
                 is StatisticEffectState.ShowToast -> { Toast.makeText(context, effect.message.message, Toast.LENGTH_SHORT).show() }
@@ -158,6 +160,7 @@ fun StatisticScreen(
     ) {
         item {
             CommonExpandableBox(
+                onExpand = { AppEvent.log(AppEvent.Event.TitleExpandStatistic) },
                 shrinkContent = {
                     Box(
                         modifier = Modifier.fillMaxWidth(),
@@ -189,7 +192,10 @@ fun StatisticScreen(
         item {
             DynamicHorizontalSelector(
                 currentRange = rangeType,
-                onClickRange = { rangeType = it }
+                onClickRange = {
+                    AppEvent.log(AppEvent.Event.StatisticRangeSelect)
+                    rangeType = it
+                }
             )
         }
         item {
@@ -202,6 +208,7 @@ fun StatisticScreen(
                 changeSelectState = { state, number ->
                     if (state) {
                         // 로또 선택 처리
+                        AppEvent.log(AppEvent.Event.StatisticNumberSelect)
                         selectNumberList.add(number)
                         Timber.d("selectNumberList : $selectNumberList")
                     } else {
@@ -529,6 +536,7 @@ fun SelectDrawContent(
                 modifier = Modifier
                     .weight(3f),
                 onClick = {
+                    AppEvent.log(AppEvent.Event.RecommendStatisticButton)
                     drawClickable = false
                     onClickDraw()
                 },

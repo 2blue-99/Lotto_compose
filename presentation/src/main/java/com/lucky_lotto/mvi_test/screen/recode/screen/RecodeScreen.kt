@@ -26,6 +26,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,6 +64,7 @@ import com.lucky_lotto.mvi_test.ui.theme.PrimaryColor
 import com.lucky_lotto.mvi_test.ui.theme.Red
 import com.lucky_lotto.mvi_test.ui.theme.ScreenBackground
 import com.lucky_lotto.mvi_test.ui.theme.SubColor
+import com.lucky_lotto.mvi_test.util.AppEvent
 import com.lucky_lotto.mvi_test.util.Utils.drawResultToString
 import com.lucky_lotto.mvi_test.util.Utils.shareLotto
 
@@ -73,6 +75,10 @@ fun RecodeRoute(
     viewModel: RecodeViewModel = hiltViewModel()
 ) {
     val recodeUIState by viewModel.recodeUIState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        AppEvent.log(AppEvent.Event.ScreenRecord)
+    }
 
     RecodeScreen(
         recodeUIState = recodeUIState,

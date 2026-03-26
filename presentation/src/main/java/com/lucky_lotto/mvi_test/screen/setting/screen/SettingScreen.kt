@@ -24,6 +24,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,6 +42,7 @@ import com.lucky_lotto.mvi_test.ui.theme.CommonStyle
 import com.lucky_lotto.mvi_test.ui.theme.LightGray
 import com.lucky_lotto.mvi_test.ui.theme.PrimaryColor
 import com.lucky_lotto.mvi_test.ui.theme.ScreenBackground
+import com.lucky_lotto.mvi_test.util.AppEvent
 import com.lucky_lotto.mvi_test.util.openEmail
 import com.lucky_lotto.mvi_test.util.openStore
 import timber.log.Timber
@@ -53,6 +55,10 @@ fun SettingRoute(
     viewModel: SettingViewModel = hiltViewModel()
 ) {
     Timber.d("settingScreen")
+
+    LaunchedEffect(Unit) {
+        AppEvent.log(AppEvent.Event.ScreenSetting)
+    }
 
     SettingScreen(
         modifier = modifier

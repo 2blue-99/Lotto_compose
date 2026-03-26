@@ -42,6 +42,7 @@ import com.lucky_lotto.domain.util.Constants.DRAW_ITEM_SHOW_TIME
 import com.lucky_lotto.mvi_test.ui.theme.CommonStyle
 import com.lucky_lotto.mvi_test.ui.theme.DarkGray
 import com.lucky_lotto.mvi_test.ui.theme.LightGray
+import com.lucky_lotto.mvi_test.util.AppEvent
 import com.lucky_lotto.mvi_test.util.Utils.drawResultToString
 import com.lucky_lotto.mvi_test.util.Utils.setAllFalse
 import com.lucky_lotto.mvi_test.util.Utils.setAllTrue
@@ -173,6 +174,7 @@ fun CommonDrawResultContent(
                         if (checkBoxStates[index]) lottoList[index] else null
                     }
                 if (checkedItemList.isNotEmpty()) {
+                    AppEvent.log(AppEvent.Event.SaveButton)
                     onClickSave(checkedItemList)
                     isSaved = true
                 }
@@ -193,6 +195,7 @@ fun CommonDrawResultContent(
                         if (checkBoxStates[index]) lottoList[index].drawList else null
                     }
                 if (checkedItemList.isNotEmpty()) {
+                    AppEvent.log(AppEvent.Event.CopyButton)
                     val text = drawResultToString(drawType, checkedItemList, context.packageName)
                     clipboardManager.setText(AnnotatedString(text))
                 }
@@ -213,6 +216,7 @@ fun CommonDrawResultContent(
                         if (checkBoxStates[index]) lottoList[index].drawList else null
                     }
                 if (checkedItemList.isNotEmpty()) {
+                    AppEvent.log(AppEvent.Event.ShareButton)
                     val text = drawResultToString(drawType, checkedItemList, context.packageName)
                     context.shareLotto(text)
                 }

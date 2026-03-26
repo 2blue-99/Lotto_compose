@@ -11,6 +11,7 @@ class HiltApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         initTimber()
+        AppEvent.init(this)
     }
 
     private fun initTimber() {

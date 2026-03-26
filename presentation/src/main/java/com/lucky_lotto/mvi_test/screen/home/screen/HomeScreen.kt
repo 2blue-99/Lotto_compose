@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -54,7 +53,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lucky_lotto.domain.model.LottoRound
 import com.lucky_lotto.domain.model.RoundSpinner
 import com.lucky_lotto.domain.util.CommonMessage
-import com.lucky_lotto.domain.util.Constants.PADDING_VALUE_AD_BOX
 import com.lucky_lotto.mvi_test.R
 import com.lucky_lotto.mvi_test.designsystem.common.AutoSizeText
 import com.lucky_lotto.mvi_test.designsystem.common.CommonLottoContent
@@ -72,6 +70,7 @@ import com.lucky_lotto.mvi_test.ui.theme.PrimaryColor
 import com.lucky_lotto.mvi_test.ui.theme.Red
 import com.lucky_lotto.mvi_test.ui.theme.SubColor
 import com.lucky_lotto.mvi_test.ui.theme.white50
+import com.lucky_lotto.mvi_test.util.AppEvent
 import com.lucky_lotto.mvi_test.util.baseAnimateScrollToPage
 import timber.log.Timber
 import kotlin.math.absoluteValue
@@ -91,6 +90,7 @@ fun HomeRoute(
     val spinnerDialogState by viewModel.spinnerDialogState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
+        AppEvent.log(AppEvent.Event.ScreenHome)
         viewModel.sideEffectState.collect { effect ->
             when(effect){
                 is HomeEffectState.ShowToast -> { Toast.makeText(context, effect.message.message, Toast.LENGTH_SHORT).show() }

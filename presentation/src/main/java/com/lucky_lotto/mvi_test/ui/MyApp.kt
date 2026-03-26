@@ -38,8 +38,8 @@ import com.lucky_lotto.mvi_test.screen.setting.navigation.settingScreen
 import com.lucky_lotto.mvi_test.screen.statistic.navigation.navigateToStatistic
 import com.lucky_lotto.mvi_test.screen.statistic.navigation.statisticScreen
 import com.lucky_lotto.mvi_test.ui.theme.ScreenBackground
-import com.lucky_lotto.mvi_test.util.AdMobUtil
-import com.lucky_lotto.mvi_test.util.AppOpenAdManager
+import com.lucky_lotto.mvi_test.util.add.AdMobUtil
+import com.lucky_lotto.mvi_test.util.add.adOpeningUtil
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
@@ -48,9 +48,9 @@ fun MyApp() {
     val snackbarHostState = remember { SnackbarHostState() }
     val activity = LocalContext.current as Activity
     val addMobUtil = remember { AdMobUtil(activity) }
-    val appOpenAdManager = remember { AppOpenAdManager(activity) }
+    val adOpeningUtil = remember { adOpeningUtil(activity) }
 
-    BackOnPressedFinish(activity = activity, appOpenAdManager = appOpenAdManager)
+    BackOnPressedFinish(activity = activity, adOpeningUtil = adOpeningUtil)
 
     Scaffold(
         snackbarHost = {
@@ -71,7 +71,7 @@ fun MyApp() {
                 },
                 showFrontPageAd = addMobUtil::showFrontPageAd,
                 showOpeningAd = {
-                    appOpenAdManager.showAdIfAvailable(isRandom = true) { it() }
+                    adOpeningUtil.showAdIfAvailable(isRandom = true) { it() }
                 },
                 navController = navController,
                 paddingValue = padding
@@ -145,7 +145,7 @@ fun NavHostContainer(
 }
 
 @Composable
-fun BackOnPressedFinish(activity: Activity, appOpenAdManager: AppOpenAdManager) {
+fun BackOnPressedFinish(activity: Activity, adOpeningUtil: adOpeningUtil) {
     var dialogVisibleState by remember { mutableStateOf(false) }
 
     if (dialogVisibleState) {
@@ -154,7 +154,7 @@ fun BackOnPressedFinish(activity: Activity, appOpenAdManager: AppOpenAdManager) 
             onConfirm = { dialogVisibleState = false }, // 아니오 (유지)
             onCancel = { // 네 (종료)
                 dialogVisibleState = false
-                appOpenAdManager.showAdIfAvailable {
+                adOpeningUtil.showAdIfAvailable {
                     activity.finish()
                 }
             }

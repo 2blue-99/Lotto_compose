@@ -1,13 +1,14 @@
-package com.lucky_lotto.mvi_test.util
+package com.lucky_lotto.mvi_test.util.add
 
 import android.app.Activity
-import android.app.Application
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.lucky_lotto.mvi_test.BuildConfig
+import com.lucky_lotto.mvi_test.util.AppEvent
+import com.lucky_lotto.mvi_test.util.isShowRandomAd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.Date
 
-class AppOpenAdManager(private val activity: Activity) {
+class adOpeningUtil(private val activity: Activity) {
 
     private var appOpenAd: AppOpenAd? = null
     private var isLoadingAd = false
@@ -28,6 +29,7 @@ class AppOpenAdManager(private val activity: Activity) {
 
     fun loadAd() {
         if (isLoadingAd || isAdAvailable()) return
+        AppEvent.log(AppEvent.Event.AdOpeningShown)
         isLoadingAd = true
 
         CoroutineScope(Dispatchers.Main).launch {

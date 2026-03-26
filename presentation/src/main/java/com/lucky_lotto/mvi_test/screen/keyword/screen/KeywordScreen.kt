@@ -67,6 +67,7 @@ import com.lucky_lotto.mvi_test.ui.theme.CommonStyle
 import com.lucky_lotto.mvi_test.ui.theme.LightGray
 import com.lucky_lotto.mvi_test.ui.theme.ScreenBackground
 import com.lucky_lotto.mvi_test.ui.theme.SubColor
+import com.lucky_lotto.mvi_test.util.AppEvent
 import com.lucky_lotto.mvi_test.util.Utils.containsKeyword
 import com.lucky_lotto.mvi_test.util.Utils.toKeyword
 import com.lucky_lotto.mvi_test.util.startVibrate
@@ -86,6 +87,7 @@ fun KeywordRoute(
     val lottoUIState by viewModel.lottoUIState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
+        AppEvent.log(AppEvent.Event.ScreenKeyword)
         viewModel.sideEffectState.collectLatest { effect ->
             when(effect){
                 is RandomEffectState.ShowToast -> { Toast.makeText(context, effect.message.message, Toast.LENGTH_SHORT).show() }
@@ -130,6 +132,7 @@ fun KeywordScreen(
             val isFirst = if(titleKeywordUIState is TitleKeywordUIState.Success) titleKeywordUIState.isFirst else false
             CommonExpandableBox(
                 expand = isFirst,
+                onExpand = { AppEvent.log(AppEvent.Event.TitleExpandKeyword) },
                 shrinkContent = {
                     Box(
                         modifier = Modifier.fillMaxWidth(),
@@ -297,6 +300,7 @@ fun KeywordContent(
                 onClick = {
                     // Empty 체크
                     if(keyword.isNotBlank()){
+                        AppEvent.log(AppEvent.Event.RecommendKeywordButton)
                         focusManager.clearFocus()
                         keyboardController?.hide()
                         expand = false
@@ -338,6 +342,7 @@ fun KeywordContent(
                         keywordList = keywordList,
                         removable = true,
                         onClickChip = {
+                            AppEvent.log(AppEvent.Event.RecentKeywordChip)
                             onChangeKeyword(it)
                             expand = false
                             focusManager.clearFocus()
@@ -358,6 +363,7 @@ fun KeywordContent(
                     keywordList = context.resources.getStringArray(R.array.keyword_list).map { it.toKeyword() },
                     removable = false,
                     onClickChip = {
+                        AppEvent.log(AppEvent.Event.SuggestKeywordChip)
                         onChangeKeyword(it)
                         expand = false
                         focusManager.clearFocus()

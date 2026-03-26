@@ -1,4 +1,4 @@
-package com.lucky_lotto.mvi_test.util
+package com.lucky_lotto.mvi_test.util.add
 
 import android.app.Activity
 import android.widget.Toast
@@ -11,6 +11,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.lucky_lotto.domain.util.CommonMessage
 import com.lucky_lotto.mvi_test.BuildConfig
+import com.lucky_lotto.mvi_test.util.AppEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,6 +42,7 @@ class AdMobUtil(
      * 전면 광고 시작
      */
     fun showFrontPageAd(): StateFlow<Boolean> {
+        AppEvent.log(AppEvent.Event.AdFrontVideoShown)
         _isAdFinish.value = false
         frontPageAd?.show(activity)
             ?: run {
