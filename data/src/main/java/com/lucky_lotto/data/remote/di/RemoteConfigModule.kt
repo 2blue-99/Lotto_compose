@@ -19,7 +19,7 @@ object RemoteConfigModule {
     @Provides
     @Singleton
     fun provideFirebaseRemoteConfig(): FirebaseRemoteConfig {
-        val fetchInterval = if (BuildConfig.DEBUG) 0L else 3600L
+        val fetchInterval = if (BuildConfig.DEBUG) 0L else 300L // 5분
 
         val configSettings = FirebaseRemoteConfigSettings.Builder()
             .setMinimumFetchIntervalInSeconds(fetchInterval)
