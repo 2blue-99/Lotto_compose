@@ -21,8 +21,8 @@ android {
         applicationId = "com.lucky_lotto.mvi_test"
         minSdk = 24
         targetSdk = 35
-        versionCode = 9
-        versionName = "1.1"
+        versionCode = 10
+        versionName = "1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
