@@ -2,6 +2,8 @@ package com.lucky_lotto.mvi_test.ui
 
 import android.app.Activity
 import androidx.activity.compose.BackHandler
+import com.lucky_lotto.mvi_test.designsystem.common.ForceUpdateDialog
+import com.lucky_lotto.mvi_test.util.openStore
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -19,11 +21,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.lucky_lotto.domain.util.CommonMessage
+import com.lucky_lotto.mvi_test.RequestUpdate
 import com.lucky_lotto.mvi_test.designsystem.common.AdFinishDialog
 import com.lucky_lotto.mvi_test.navigation.NavigationItem
 import com.lucky_lotto.mvi_test.screen.home.navigation.homeScreen
@@ -39,18 +41,27 @@ import com.lucky_lotto.mvi_test.screen.statistic.navigation.navigateToStatistic
 import com.lucky_lotto.mvi_test.screen.statistic.navigation.statisticScreen
 import com.lucky_lotto.mvi_test.ui.theme.ScreenBackground
 import com.lucky_lotto.mvi_test.util.add.AdMobUtil
-import com.lucky_lotto.mvi_test.util.add.adOpeningUtil
+import com.lucky_lotto.mvi_test.util.add.AdOpeningUtil
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
-fun MyApp() {
+fun MyApp(
+    activity: Activity,
+    requestUpdate: RequestUpdate
+) {
     val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
-    val activity = LocalContext.current as Activity
     val addMobUtil = remember { AdMobUtil(activity) }
-    val adOpeningUtil = remember { adOpeningUtil(activity) }
+    val adOpeningUtil = remember { AdOpeningUtil(activity) }
 
     BackOnPressedFinish(activity = activity, adOpeningUtil = adOpeningUtil)
+
+    if(requestUpdate.isUpdate) {
+        ForceUpdateDialog(
+            fetchNote = requestUpdate.fetchNote,
+            onConfirm = { activity.openStore() }
+        )
+    }
 
     Scaffold(
         snackbarHost = {
@@ -145,7 +156,7 @@ fun NavHostContainer(
 }
 
 @Composable
-fun BackOnPressedFinish(activity: Activity, adOpeningUtil: adOpeningUtil) {
+fun BackOnPressedFinish(activity: Activity, adOpeningUtil: AdOpeningUtil) {
     var dialogVisibleState by remember { mutableStateOf(false) }
 
     if (dialogVisibleState) {

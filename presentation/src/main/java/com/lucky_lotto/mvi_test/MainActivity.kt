@@ -6,8 +6,10 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lucky_lotto.mvi_test.ui.MyApp
 import com.lucky_lotto.mvi_test.ui.theme.MVI_TestTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +34,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MVI_TestTheme {
-                MyApp()
+                val remoteConfig by viewModel.requestUpdate.collectAsStateWithLifecycle()
+                MyApp(
+                    activity = this,
+                    requestUpdate = remoteConfig
+                )
             }
         }
     }

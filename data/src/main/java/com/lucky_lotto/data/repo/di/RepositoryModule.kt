@@ -1,8 +1,10 @@
 package com.lucky_lotto.data.repo.di
 
 import com.lucky_lotto.data.repo.LottoRepositoryImpl
+import com.lucky_lotto.data.repo.RemoteConfigRepositoryImpl
 import com.lucky_lotto.data.repo.UserRepositoryImpl
 import com.lucky_lotto.domain.repository.LottoRepository
+import com.lucky_lotto.domain.repository.RemoteConfigRepository
 import com.lucky_lotto.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -17,4 +19,7 @@ interface RepositoryModule {
 
     @Binds
     abstract fun bindKeywordRepository(userRepoImpl: UserRepositoryImpl): UserRepository
+
+    @Binds
+    abstract fun bindRemoteConfigRepository(remoteConfigRepoImpl: RemoteConfigRepositoryImpl): RemoteConfigRepository
 }

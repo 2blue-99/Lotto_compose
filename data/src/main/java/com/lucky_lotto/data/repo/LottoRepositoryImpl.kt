@@ -74,7 +74,7 @@ class LottoRepositoryImpl @Inject constructor(
         try {
             while(targetRounds.isNotEmpty()) {
                 val round = targetRounds.removeAt(0)
-                val targetRound = round + 5
+                val targetRound = if(round < targetLatestRound-5) round+5 else round
                 val response = lottoDataSource.requestLottoData(targetRound.toString())
                 when(response){
                     is APIResponseState.Success -> {

@@ -2,6 +2,9 @@ package com.lucky_lotto.data.remote.di
 
 import com.lucky_lotto.data.remote.datasource.LottoDataSource
 import com.lucky_lotto.data.remote.datasource.LottoDataSourceImpl
+import com.lucky_lotto.data.remote.datasource.RemoteConfigDataSource
+import com.lucky_lotto.data.remote.datasource.RemoteConfigDataSourceImpl
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,10 +13,19 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DataSourceModule {
-    @Provides
+abstract class DataSourceModule {
+
+    @Binds
     @Singleton
-    fun provideLottoDataSource(
-        dataSource: LottoDataSource
-    ): LottoDataSourceImpl = LottoDataSourceImpl(dataSource)
+    abstract fun bindRemoteConfigDataSource(
+        impl: RemoteConfigDataSourceImpl
+    ): RemoteConfigDataSource
+
+    companion object {
+        @Provides
+        @Singleton
+        fun provideLottoDataSource(
+            dataSource: LottoDataSource
+        ): LottoDataSourceImpl = LottoDataSourceImpl(dataSource)
+    }
 }

@@ -1,19 +1,39 @@
 package com.lucky_lotto.mvi_test
 
-import com.lucky_lotto.data.util.connect.NetworkMonitor
+import androidx.lifecycle.viewModelScope
+import com.lucky_lotto.domain.model.RemoteConfig
+import com.lucky_lotto.domain.repository.RemoteConfigRepository
 import com.lucky_lotto.mvi_test.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
+data class RequestUpdate(
+    val isUpdate: Boolean = false, // Ture : 강제 업데이트 필요
+    val fetchNote: String = ""
+)
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val networkMonitor: NetworkMonitor
+    private val remoteConfigRepository: RemoteConfigRepository
 ): BaseViewModel() {
-//    val isConnected = networkMonitor
-//        .isOnline
-//        .stateIn(
-//            scope = ioScope,
-//            started = SharingStarted.WhileSubscribed(5_000),
-//            initialValue = false
-//        )
+
+    private val _requestUpdate = MutableStateFlow<RequestUpdate>(RequestUpdate())
+    val requestUpdate: StateFlow<RequestUpdate> = _requestUpdate.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            remoteConfigRepository.fetchAndActivate()
+                .onSuccess { config ->
+                    Timber.e("config : $config")
+                    _requestUpdate.value = RequestUpdate(
+                        isUpdate = config.isRequestUpdate,
+                        fetchNote = config.fetchNote
+                    )
+                }
+        }
+    }
 }

@@ -7,6 +7,7 @@ import com.lucky_lotto.domain.model.LottoRecode
 import com.lucky_lotto.domain.model.StatisticItem
 import com.lucky_lotto.domain.type.DrawType
 import com.lucky_lotto.domain.type.DrawType.Companion.TYPE_LUCKY
+import timber.log.Timber
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -142,5 +143,23 @@ object Utils {
             set(Calendar.MILLISECOND, 0)
         }
         return today.before(target)
+    }
+
+    fun isUpdateRequired(currentVersion: String, forceVersion: String): Boolean {
+        Timber.e("currentVersion : $currentVersion / forceVersion : $forceVersion")
+
+        val currentVersionSplit = currentVersion.split(".").mapNotNull { it.toIntOrNull() }
+        val forceVersionSplit = forceVersion.split(".").mapNotNull { it.toIntOrNull() }
+
+        val maxLength = maxOf(currentVersionSplit.size, forceVersionSplit.size)
+
+        for (i in 0 until maxLength) {
+            val currentPart = currentVersionSplit.getOrElse(i) { 0 }
+            val forcePart = forceVersionSplit.getOrElse(i) { 0 }
+
+            if (currentPart < forcePart) return true // 현재 버전이 낮음. 강제 업데이트 O
+        }
+
+        return false // 강제 업데이트 X
     }
 }

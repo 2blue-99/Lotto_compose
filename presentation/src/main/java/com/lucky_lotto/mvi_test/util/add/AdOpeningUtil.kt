@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.Date
 
-class adOpeningUtil(private val activity: Activity) {
+class AdOpeningUtil(private val activity: Activity) {
 
     private var appOpenAd: AppOpenAd? = null
     private var isLoadingAd = false

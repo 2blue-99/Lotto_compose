@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultsMap>
+    <!-- 광고 노출 확률 (%) -->
+    <entry>
+        <key>ad_show_probability</key>
+        <value>30</value>
+    </entry>
+    <!-- 광고 노출 후 쿨다운 (분) -->
+    <entry>
+        <key>ad_cooldown_minutes</key>
+        <value>10</value>
+    </entry>
+    <!-- 점검 모드 여부 -->
+    <entry>
+        <key>is_maintenance_mode</key>
+        <value>"1.0"</value>
+    </entry>
+    <!-- 점검 메시지 -->
+    <entry>
+        <key>maintenance_message</key>
+        <value>""</value>
+    </entry>
+</defaultsMap>
