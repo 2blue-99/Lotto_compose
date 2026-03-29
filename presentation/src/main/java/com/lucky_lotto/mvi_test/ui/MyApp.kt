@@ -2,6 +2,8 @@ package com.lucky_lotto.mvi_test.ui
 
 import android.app.Activity
 import androidx.activity.compose.BackHandler
+import androidx.compose.runtime.LaunchedEffect
+import com.lucky_lotto.mvi_test.AdConfig
 import com.lucky_lotto.mvi_test.designsystem.common.ForceUpdateDialog
 import com.lucky_lotto.mvi_test.util.openStore
 import androidx.compose.animation.core.tween
@@ -47,12 +49,20 @@ import kotlinx.coroutines.flow.StateFlow
 @Composable
 fun MyApp(
     activity: Activity,
-    requestUpdate: RequestUpdate
+    requestUpdate: RequestUpdate,
+    adConfig: AdConfig
 ) {
     val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
     val addMobUtil = remember { AdMobUtil(activity) }
     val adOpeningUtil = remember { AdOpeningUtil(activity) }
+
+    LaunchedEffect(adConfig) {
+        adOpeningUtil.updateConfig(
+            probabilityPercent = adConfig.probabilityPercent,
+            cooldownMinutes = adConfig.cooldownMinutes
+        )
+    }
 
     BackOnPressedFinish(activity = activity, adOpeningUtil = adOpeningUtil)
 
@@ -165,7 +175,7 @@ fun BackOnPressedFinish(activity: Activity, adOpeningUtil: AdOpeningUtil) {
             onConfirm = { dialogVisibleState = false }, // 아니오 (유지)
             onCancel = { // 네 (종료)
                 dialogVisibleState = false
-                adOpeningUtil.showAdIfAvailable {
+                adOpeningUtil.showAdIfAvailable(ignoreCooldown = true) {
                     activity.finish()
                 }
             }

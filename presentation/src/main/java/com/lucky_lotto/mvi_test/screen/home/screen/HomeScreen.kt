@@ -388,8 +388,6 @@ fun LottoInfo(
     lottoRoundItem: LottoRound = LottoRound(),
     modifier: Modifier = Modifier
 ) {
-    val gradient = Brush.verticalGradient(colors = listOf(PrimaryColor, Color.White))
-
     Surface(
         modifier = modifier
             .padding(horizontal = 30.dp)
@@ -407,6 +405,13 @@ fun LottoInfo(
                 .padding(top = 20.dp)
         ) {
             LottoInfoItem(
+                titleText = "1등 당첨금",
+                valueText = lottoRoundItem.firstWinPerAmount,
+                subText = "원",
+                emphasize = true
+            )
+            HorizontalDivider(color = Color.LightGray)
+            LottoInfoItem(
                 titleText = "총 판매금액",
                 valueText = lottoRoundItem.totalSellAmount,
                 subText = "원"
@@ -423,12 +428,6 @@ fun LottoInfo(
                 valueText = lottoRoundItem.firstWinCount,
                 subText = "명"
             )
-            HorizontalDivider(color = Color.LightGray)
-            LottoInfoItem(
-                titleText = "1등 1명당 당첨금",
-                valueText = lottoRoundItem.firstWinPerAmount,
-                subText = "원"
-            )
         }
     }
 }
@@ -444,35 +443,35 @@ fun LottoInfoItem(
     titleText: String = "Title",
     valueText: String = "Value",
     subText: String = "Sub",
+    emphasize: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 10.dp)
+            .padding(vertical = 10.dp),
+        verticalAlignment = Alignment.Bottom
     ) {
         AutoSizeText(
             text = titleText,
-            style = CommonStyle.text14,
+            style = if(emphasize) CommonStyle.text18Bold else CommonStyle.text14,
             minSize = 8,
             color = DarkGray,
             modifier = Modifier.weight(1f),
         )
-
         AutoSizeText(
             text = valueText,
-            style = CommonStyle.text14Bold,
+            style = if(emphasize) CommonStyle.text18Bold else CommonStyle.text14Bold,
             minSize = 8,
-            color = Red,
+            color = if(emphasize) Red else DarkGray,
             textAlign = TextAlign.End,
             modifier = Modifier.weight(1f),
         )
-        HorizontalSpacer(2.dp)
         AutoSizeText(
             text = subText,
-            style = CommonStyle.text14,
+            style = if(emphasize) CommonStyle.text18Bold else CommonStyle.text14Bold,
             minSize = 8,
-            color = DarkGray,
+            color = if(emphasize) Red else DarkGray,
             textAlign = TextAlign.End
         )
     }

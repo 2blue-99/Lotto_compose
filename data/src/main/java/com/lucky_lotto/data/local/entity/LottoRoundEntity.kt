@@ -2,7 +2,7 @@ package com.lucky_lotto.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.lucky_lotto.data.util.Utils.formatComma
+import com.lucky_lotto.data.util.Utils.toKoreanAmount
 import com.lucky_lotto.data.util.Utils.formatDate
 import com.lucky_lotto.domain.model.LottoRound
 
@@ -28,10 +28,10 @@ data class LottoRoundEntity(
     fun toDomain(): LottoRound = LottoRound(
         drawNumber.toString(),
         drawDate.formatDate(),
-        totalSellAmount.formatComma(),
-        firstWinTotalAmount.formatComma(),
+        totalSellAmount.toKoreanAmount(),
+        firstWinTotalAmount.toKoreanAmount(),
         firstWinCount.toString(),
-        firstWinPerAmount.formatComma(),
+        firstWinPerAmount.toKoreanAmount(),
         drwtNo1.toString(),
         drwtNo2.toString(),
         drwtNo3.toString(),

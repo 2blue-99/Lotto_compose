@@ -1,7 +1,7 @@
 package com.lucky_lotto.data.remote.model
 
 import com.lucky_lotto.data.local.entity.LottoRoundEntity
-import com.lucky_lotto.data.util.Utils.formatComma
+import com.lucky_lotto.data.util.Utils.toKoreanAmount
 import com.lucky_lotto.data.util.Utils.formatDate
 import com.lucky_lotto.domain.model.LottoRound
 import com.google.gson.annotations.SerializedName
@@ -66,10 +66,10 @@ data class LottoResponse(
         return LottoRound(
             drawNumber.toString(),
             drawDate.formatDate(),
-            totalSellAmount.formatComma(),
-            firstWinTotalAmount.formatComma(),
+            totalSellAmount.toKoreanAmount(),
+            firstWinTotalAmount.toKoreanAmount(),
             firstWinCount.toString(),
-            firstWinPerAmount.formatComma(),
+            firstWinPerAmount.toKoreanAmount(),
             drwtNo1.toString(),
             drwtNo2.toString(),
             drwtNo3.toString(),

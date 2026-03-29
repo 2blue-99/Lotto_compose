@@ -31,6 +31,26 @@ object Utils {
     }
 
     /**
+     * 금액 → 한국 단위 표기
+     * ex) 12_351_230_000 → "123억 5천 123만"
+     */
+    fun Long.toKoreanAmount(): String {
+        val uk = this / 100_000_000L
+        val remainder = this % 100_000_000L
+        val cheonMan = remainder / 10_000_000L
+        val man = (remainder % 10_000_000L) / 10_000L
+
+        return buildString {
+            if (uk > 0) append("${uk}억 ")
+            if (cheonMan > 0) append("${cheonMan}천")
+            if (man > 0) {
+                if (cheonMan > 0) append(" ")
+                append("${man}만")
+            }
+        }.trim()
+    }
+
+    /**
      * Lotto Recode Grouping
      * 기록 화면에 노출될 수 있도록 LottoRecodeEntity 그룹핑
      */

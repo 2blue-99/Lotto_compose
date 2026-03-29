@@ -34,10 +34,12 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MVI_TestTheme {
-                val remoteConfig by viewModel.requestUpdate.collectAsStateWithLifecycle()
+                val requestUpdate by viewModel.requestUpdate.collectAsStateWithLifecycle()
+                val adConfig by viewModel.adConfig.collectAsStateWithLifecycle()
                 MyApp(
                     activity = this,
-                    requestUpdate = remoteConfig
+                    requestUpdate = requestUpdate,
+                    adConfig = adConfig
                 )
             }
         }

@@ -24,8 +24,13 @@ class AdOpeningUtil(private val activity: Activity) {
     private var loadTime: Long = 0
     private var lastShownTime: Long = 0
 
-    companion object {
-        private const val AD_COOLDOWN_MS = 10 * 60 * 1000L // 10분
+    private var adShowProbabilityPercent: Int = 30
+    private var adCooldownMs: Long = 10 * 60 * 1000L
+
+    fun updateConfig(probabilityPercent: Int, cooldownMinutes: Int) {
+        adShowProbabilityPercent = probabilityPercent
+        adCooldownMs = cooldownMinutes * 60 * 1000L
+        Timber.e("AdOpeningUtil config updated - probability: $probabilityPercent%, cooldown: ${cooldownMinutes}min")
     }
 
     init {
@@ -64,14 +69,14 @@ class AdOpeningUtil(private val activity: Activity) {
      * 앱 오픈 광고 표시
      * 광고가 없거나 만료된 경우 onComplete 즉시 호출
      */
-    fun showAdIfAvailable(isRandom: Boolean = false, onComplete: () -> Unit = {}) {
-        if (Date().time - lastShownTime < AD_COOLDOWN_MS) {
+    fun showAdIfAvailable(isRandom: Boolean = false, ignoreCooldown: Boolean = false, onComplete: () -> Unit = {}) {
+        if (!ignoreCooldown && Date().time - lastShownTime < adCooldownMs) {
             Timber.e("AppOpenAd cooldown active.")
             onComplete()
             return
         }
 
-        if(isRandom && !isShowRandomAd()) {
+        if (isRandom && !isShowRandomAd(adShowProbabilityPercent)) {
             onComplete()
             return
         }

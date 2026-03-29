@@ -313,13 +313,9 @@ fun Context.startVibrate(){
 }
 
 /**
- * 랜덤 전면 광고 노출 (40% 확률로 True)
+ * 랜덤 전면 광고 노출
+ * @param probabilityPercent 노출 확률 (0~100)
  */
-fun isShowRandomAd(): Boolean {
-    val winProbability = 40 // 30% 확률
-
-    // 0부터 99 사이의 무작위 정수 생성
-    val randomNumber = Random.nextInt(100)
-
-    return randomNumber < winProbability
+fun isShowRandomAd(probabilityPercent: Int): Boolean {
+    return Random.nextInt(100) < probabilityPercent
 }
