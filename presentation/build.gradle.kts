@@ -21,7 +21,7 @@ android {
         applicationId = "com.lucky_lotto.mvi_test"
         minSdk = 24
         targetSdk = 35
-        versionCode = 10
+        versionCode = 11
         versionName = "1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -125,6 +125,9 @@ dependencies {
     // 애드몹 광고
     implementation(libs.play.services.ads)
     implementation(libs.play.services.ads.api)
+
+    // Google Play Billing
+    implementation(libs.billing)
 
     implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
     implementation("com.google.firebase:firebase-analytics")

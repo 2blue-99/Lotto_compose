@@ -23,8 +23,14 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import android.app.Activity
+import android.widget.Toast
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,7 +48,10 @@ import com.lucky_lotto.mvi_test.ui.theme.CommonStyle
 import com.lucky_lotto.mvi_test.ui.theme.LightGray
 import com.lucky_lotto.mvi_test.ui.theme.PrimaryColor
 import com.lucky_lotto.mvi_test.ui.theme.ScreenBackground
+import com.lucky_lotto.mvi_test.ui.theme.SubColor
 import com.lucky_lotto.mvi_test.util.AppEvent
+import com.lucky_lotto.mvi_test.util.BillingManager
+import com.lucky_lotto.mvi_test.util.BillingState
 import com.lucky_lotto.mvi_test.util.openEmail
 import com.lucky_lotto.mvi_test.util.openStore
 import timber.log.Timber
@@ -55,18 +64,44 @@ fun SettingRoute(
     viewModel: SettingViewModel = hiltViewModel()
 ) {
     Timber.d("settingScreen")
+    val context = LocalContext.current
+    val activity = context as Activity
+    val billingManager = remember { BillingManager(activity) }
+    val billingState by billingManager.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         AppEvent.log(AppEvent.Event.ScreenSetting)
     }
 
+    LaunchedEffect(billingState) {
+        when (billingState) {
+            is BillingState.Success -> {
+                Toast.makeText(context, "☕ 커피 감사합니다!", Toast.LENGTH_SHORT).show()
+                billingManager.resetState()
+            }
+            is BillingState.Error -> {
+                Toast.makeText(context, (billingState as BillingState.Error).message, Toast.LENGTH_SHORT).show()
+                billingManager.resetState()
+            }
+            else -> {}
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose { billingManager.endConnection() }
+    }
+
     SettingScreen(
+        onCoffeeClick = { billingManager.startPurchase() },
         modifier = modifier
     )
 }
 
 @Composable
-fun SettingScreen(modifier: Modifier = Modifier) {
+fun SettingScreen(
+    onCoffeeClick: () -> Unit = {},
+    modifier: Modifier = Modifier
+) {
     LazyColumn (
         modifier = modifier
             .fillMaxSize()
@@ -80,7 +115,9 @@ fun SettingScreen(modifier: Modifier = Modifier) {
             VerticalSpacer(20.dp)
         }
         item {
-            MemberShipContent()
+            MemberShipContent(
+                onClick = onCoffeeClick
+            )
         }
         item {
             SettingContent()
@@ -95,32 +132,49 @@ private fun SettingScreenPreview() {
 }
 
 @Composable
-fun MemberShipContent(modifier: Modifier = Modifier) {
+fun MemberShipContent(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .padding(horizontal = 30.dp)
             .fillMaxWidth()
             .height(150.dp)
-            .background(Color.White, RoundedCornerShape(16.dp)),
+            .background(SubColor, RoundedCornerShape(16.dp))
+            .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = "광고 제거 멤버십은\n추후 업데이트 예정입니다",
-            style = CommonStyle.text20Bold,
-            color = LightGray,
-            textAlign = TextAlign.Center
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "☕ 개발자 커피 사주기 ☕",
+                style = CommonStyle.text24Bold,
+                textAlign = TextAlign.Center,
+                color = Color.White
+            )
+            VerticalSpacer(12.dp)
+            Text(
+                text = "Click",
+                style = CommonStyle.text20Bold,
+                textAlign = TextAlign.Center,
+                color = Color.White
+            )
+        }
     }
 }
 
 @Preview
 @Composable
 private fun MemberShipContentPreview() {
-    MemberShipContent()
+    MemberShipContent({})
 }
 
 @Composable
-fun SettingContent(modifier: Modifier = Modifier) {
+fun SettingContent(
+    modifier: Modifier = Modifier
+) {
     val context = LocalContext.current
     val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
 

@@ -38,6 +38,7 @@ truthJava8Extension = "1.4.4"
 truthJava8ExtensionVersion = "1.4.4"
 truthVersion = "1.4.4"
 playServicesAds = "24.5.0"
+billing = "7.1.1"
 gmsServices="4.4.3"
 crashlytics="3.0.5"
 firebaseConfigKtx = "23.0.1"
@@ -108,6 +109,7 @@ truth = { module = "com.google.truth:truth", version.ref = "truth" }
 truth-java8-extension = { module = "com.google.truth.extensions:truth-java8-extension", version.ref = "truthJava8Extension" }
 play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAds" }
 play-services-ads-api = { group = "com.google.android.gms", name = "play-services-ads-api", version.ref = "playServicesAds" }
+billing = { module = "com.android.billingclient:billing-ktx", version.ref = "billing" }
 
 
 [plugins]
